@@ -1,7 +1,7 @@
 {
-  "name": "mern-starter",
-  "version": "2.0.0",
-  "description": "Boilerplate project for building Isomorphic apps using React and Redux",
+  "name": "social-pulse",
+  "version": "0.0.1",
+  "description": "A web application for posting to all of your social media accounts at once.",
   "scripts": {
     "test": "cross-env NODE_ENV=test PORT=8080 MONGO_URL=mongodb://localhost:27017/mern-test node_modules/.bin/nyc node --harmony-proxies node_modules/.bin/ava",
     "watch:test": "npm run test -- --watch",
@@ -22,13 +22,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hashnode/mern-starter.git"
+    "url": ""
   },
   "bugs": {
-    "url": "https://github.com/Hashnode/mern-starter/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/Hashnode/mern-starter#readme",
-  "author": "Prashant Abhishek <prashant.abhishek7g@gmail.com>, Mayank Chandola <imayankchd@gmail.com>, Sandeep Panda <sandeep@hashnode.com>, Syed Fazle Rahman <fazle@hashnode.com>, Alkshendra Maurya <alkshendra@hashnode.com>",
+  "homepage": "",
+  "author": "Brett Oberg (brett@obergmail.com), Casey Jordan (cjjordan234@gmail.com), Eli Wrenn (ewrenn@wisc.edu), Ivan Pereda-Zorrilla (ivanpereda95@gmail.com), Kenny Gao (kgao9@wisc.edu), Lucas Stefanski (lstefanski@wisc.edu), and Oscar Juarez (oscarjuarez66@gmail.com)",
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.9.1",
