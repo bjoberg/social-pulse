@@ -16,6 +16,15 @@ db.once("open", function(err) {
   console.log("db connection successful.");
   var Schema = mongoose.Schema;
 
+  // Social_Media
+  const socialMediaSchema = new Schema({
+    user_id: {},
+    social_title: {type: 'String', required: true},
+    date_added: {type: 'Date', default: Date.now, required: true},
+    date_modified: {type: 'Date', default: Date.now, required: true},
+    auth_token: {type: 'String', required: true}
+  });
+
   // User
   const userSchema = new Schema({
     username: {type: 'String', required: true},
