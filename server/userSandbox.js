@@ -16,15 +16,6 @@ db.once("open", function(err) {
   console.log("db connection successful.");
   var Schema = mongoose.Schema;
 
-  // Social_Media
-  const socialMediaSchema = new Schema({
-    user_id: {},
-    social_title: {type: 'String', required: true},
-    date_added: {type: 'Date', default: Date.now, required: true},
-    date_modified: {type: 'Date', default: Date.now, required: true},
-    auth_token: {type: 'String', required: true}
-  });
-
   // User
   const userSchema = new Schema({
     username: {type: 'String', required: true},
@@ -32,10 +23,17 @@ db.once("open", function(err) {
     last_name: {type: 'String', required: true},
     password: {type: 'String', required: true},
     email: {type: 'String', required: true},
-    verified_email: {type: 'Boolean', default: false, required: true},
+    email_is_verified: {type: 'Boolean', default: false, required: true},
     signup_date: {type: 'Date', default: Date.now, required: true},
     last_user_interaction: {type: 'Date', default: Date.now, required: true},
-    social_media: [socialMediaSchema],
+    social_media: [
+      {
+        social_title: {type: 'String'},
+        date_added: {type: 'Date', default: Date.now},
+        date_modified: {type: 'Date', default: Date.now},
+        auth_token: {type: 'String'}
+      }
+    ],
     notification_list: [
       {type: mongoose.Schema.Types.ObjectId, ref: 'Notification'}
     ],
@@ -56,12 +54,20 @@ db.once("open", function(err) {
   var User = mongoose.model("User", userSchema);
 
   // Create the test user
-  var testUser = new User({
-    username: "test.user",
-    first_name: "test",
-    last_name: "user",
-    password: "password123",
-    email: "test.user@gmail.com"
+  var testUser1 = new User({
+    username: "test.user.1",
+    first_name: "test.1",
+    last_name: "user.1",
+    password: "password123.1",
+    email: "test.user.1@gmail.com"
+  });
+
+  var testUser2 = new User({
+    username: "test.user.2",
+    first_name: "test.2",
+    last_name: "user.2",
+    password: "password123.2",
+    email: "test.user.2@gmail.com"
   });
 
   /**
@@ -75,11 +81,15 @@ db.once("open", function(err) {
     } else {
         console.log("All data removed!")
     }
-    testUser.save(function(err){
+    testUser1.save(function(err){
       if(err) console.error("Save failed.", err);
-      else console.log("Saved!");
-      db.close(function() {
-        console.log("db connection closed.");
+      else console.log("Saved test user 1!");
+      testUser2.save(function(err){
+        if(err) console.error("Save failed.", err);
+        else console.log("Saved test user 2!");
+        db.close(function() {
+          console.log("db connection closed.");
+        });
       });
     });
   });

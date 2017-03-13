@@ -1,0 +1,346 @@
+'use strict';
+
+import User from '../models/user';
+
+/********************************** GET Requests **********************************/
+
+/**
+ * Get all users
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUsers(req, res) {
+  User.find().exec((err, users) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ users });
+    }
+  });
+}
+
+/**
+ * Get a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUser(req, res) {
+  User.findOne({ _id: req.params.userId }).exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get username for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserUsername(req, res) {
+  User.findOne({ _id: req.params.userId }, 'username').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get first_name for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserFirstName(req, res) {
+  User.findOne({ _id: req.params.userId }, 'first_name').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get last_name for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserLastName(req, res) {
+  User.findOne({ _id: req.params.userId }, 'last_name').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get password for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserPassword(req, res) {
+  User.findOne({ _id: req.params.userId }, 'password').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get email for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserEmail(req, res) {
+  User.findOne({ _id: req.params.userId }, 'email').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get email_is_verified for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserEmailIsVerified(req, res) {
+  User.findOne({ _id: req.params.userId }, 'email_is_verified').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get signup_date for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserSignupDate(req, res) {
+  User.findOne({ _id: req.params.userId }, 'signup_date').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get last_user_interaction for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserLastUserInteraction(req, res) {
+  User.findOne({ _id: req.params.userId }, 'last_user_interaction').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get social for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserSocial(req, res) {
+  User.findOne({ _id: req.params.userId }, 'social_media').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get notification_list for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserNotificationList(req, res) {
+  User.findOne({ _id: req.params.userId }, 'notification_list').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get notification_preferences for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserNotificationPreferences(req, res) {
+  User.findOne({ _id: req.params.userId }, 'notification_preferences').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/**
+ * Get security for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserSecurity(req, res) {
+  User.findOne({ _id: req.params.userId }, 'security').exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ user });
+    }
+  });
+}
+
+/********************************** PUT Requests **********************************/
+
+/**
+ * Update the User object based on the specific User object field that is being updated.
+ * 
+ * @param request (string) is the field within the User object being updated
+ * @param err
+ * @param req
+ * @param res
+ * @returns void
+ */
+function updateUser(request, err, user, req, res) {
+  if (err) {
+    res.status(500).send(err);
+    isError = true;
+  } else if(!req.body[request]) {
+    let customError = new Error("Bad request");
+    customError.status = 400;
+
+    res.status(400).send(customError);
+  } else {
+    user[request] = req.body[request]
+
+    user.save(function(err, saved) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json({ output: "Success! the " + request + " has been save with value " + saved});
+      }
+    });
+  }
+}
+
+/**
+ * PUT username for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserUsername(req, res) {
+  User.findOne({ _id: req.params.userId }, 'username').exec((err, user) => {
+    updateUser('username', err, user, req, res);
+  });
+}
+
+/**
+ * PUT fist_name for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserFirstName(req, res) {
+  User.findOne({ _id: req.params.userId }, 'first_name').exec((err, user) => {
+    updateUser('first_name', err, user, req, res);
+  });
+}
+
+/**
+ * PUT last_name for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserLastName(req, res) {
+  User.findOne({ _id: req.params.userId }, 'last_name').exec((err, user) => {
+    updateUser('last_name', err, user, req, res);
+  });
+}
+
+/**
+ * PUT password for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserPassword(req, res) {
+  User.findOne({ _id: req.params.userId }, 'password').exec((err, user) => {
+    updateUser('password', err, user, req, res);
+  });
+}
+
+/**
+ * PUT email for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserEmail(req, res) {
+  User.findOne({ _id: req.params.userId }, 'email').exec((err, user) => {
+    updateUser('email', err, user, req, res);
+  });
+}
+
+/**
+ * PUT email_is_verified for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserEmailIsVerified(req, res) {
+  User.findOne({ _id: req.params.userId }, 'email_is_verified').exec((err, user) => {
+    updateUser('email_is_verified', err, user, req, res);
+  });
+}
+
+/**
+ * PUT last_user_interaction for a specific user based on userId
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function putUserLastUserInteraction(req, res) {
+  User.findOne({ _id: req.params.userId }, 'last_user_interaction').exec((err, user) => {
+    updateUser('last_user_interaction', err, user, req, res);
+  });
+}

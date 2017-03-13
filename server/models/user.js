@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import socialMediaSchema from './socialMedia';
 
 const Schema = mongoose.Schema;
 
@@ -10,10 +9,17 @@ const userSchema = new Schema({
   last_name: {type: 'String', required: true},
   password: {type: 'String', required: true},
   email: {type: 'String', required: true},
-  verified_email: {type: 'Boolean', default: false, required: true},
+  email_is_verified: {type: 'Boolean', default: false, required: true},
   signup_date: {type: 'Date', default: Date.now, required: true},
   last_user_interaction: {type: 'Date', default: Date.now, required: true},
-  social_media: [socialMediaSchema],
+  social_media: [
+    {
+      social_title: {type: 'String'},
+      date_added: {type: 'Date', default: Date.now},
+      date_modified: {type: 'Date', default: Date.now},
+      auth_token: {type: 'String'}
+    }
+  ],
   notification_list: [
     {type: mongoose.Schema.Types.ObjectId, ref: 'Notification'}
   ],
