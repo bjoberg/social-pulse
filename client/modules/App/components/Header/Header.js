@@ -7,14 +7,21 @@ import styles from './Header.css';
 // context?
 export function Header() {
   return (
-    <div className={styles.header}>
-      <ul>
-        <li><Link to="/about">About</Link></li>
-        <li><Link to="/docs">Docs</Link></li>
-        <li><Link to="/contact">Contact</Link></li>
-        <li><Link to="/team">Team</Link></li>
-      </ul>
-    </div>
+    <header>
+      <div id={styles.container}>
+        <div id={styles.logo}>Logo</div>
+        <div id={styles.links}>
+          <Link to="/about"><div className={styles.link}>About</div></Link>
+          <Link to="/docs"><div className={styles.link}>Docs</div></Link>
+          <Link to="/contact"><div className={styles.link}>Contact</div></Link>
+          <Link to="/team"><div className={styles.link}>Team</div></Link>
+        </div>
+        <div id={styles.account}>
+          <div className={styles.link}>Sign up</div>
+          <div className={styles.link}>Login</div>
+        </div>
+      </div>
+    </header>
   );
 }
 

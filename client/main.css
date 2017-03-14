@@ -2,13 +2,18 @@
 /*
 Global CSS file
  */
-*{
+* {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   line-height: normal;
+  font-family: 'Lato' sans-serif;
+}
+
+a:link {
+  text-decoration: none;
 }
 
 ::-webkit-input-placeholder {
@@ -30,6 +35,5 @@ input:-moz-placeholder {
 
 body {
   background: #FFF;
-  font-family: 'Lato' sans-serif;
   font-size: 16px;
 }
