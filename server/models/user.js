@@ -24,15 +24,15 @@ const userSchema = new Schema({
     {type: mongoose.Schema.Types.ObjectId, ref: 'Notification'}
   ],
   notification_preferences: {
-    newsletter: {type: 'Boolean', default: true, required: true},
-    updates: {type: 'Boolean', default: true, required: true},
-    password_reminder: {type: 'Boolean', default: true, required: true},
-    backup_email_reminder: {type: 'Boolean', default: true, required: true}
+    newsletter: {type: 'Boolean', default: true},
+    updates: {type: 'Boolean', default: true},
+    password_reminder: {type: 'Boolean', default: true},
+    backup_email_reminder: {type: 'Boolean', default: true}
   },
   security: {
-    two_factor_auth: {type: 'Boolean', default: false, required: true},
-    backup_email: {type: 'String', default: null, required: true},
-    verification_code: {type: 'Number', default: null, required: true}
+    two_factor_auth: {type: 'Boolean', default: false},
+    backup_email: {type: 'String', default: null},
+    verification_code: {type: 'Number', default: null}
   }
 });
 

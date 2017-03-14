@@ -76,5 +76,14 @@ router.route('/user/:userId/last_user_interaction').put(UserController.putUserLa
 // // PUT security by userId
 // router.route('/user/:userId/security').put(UserController.putUserSecurity);
 
+/********************************** POST Requests **********************************/
+
+// POST a new user
+router.route('/user').post(UserController.postNewUser);
+
+/********************************** DELETE Requests **********************************/
+
+// DELETE a new user
+router.route('/user/:userId').delete(UserController.deleteUser);
 
 export default router;

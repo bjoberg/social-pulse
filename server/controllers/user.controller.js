@@ -5,6 +5,23 @@ import User from '../models/user';
 /********************************** GET Requests **********************************/
 
 /**
+ * Return the User object based on the specific User object field that is being requested.
+ * 
+ * @param request (string) is the field within the User object being updated
+ * @param err
+ * @param req
+ * @param res
+ * @returns void
+ */
+function getUserHelper(err, user, req, res) {
+  if (err) {
+    res.status(500).send(err);
+  } else {
+    res.json({ user });
+  }
+}
+
+/**
  * Get all users
  * @param req
  * @param res
@@ -28,11 +45,7 @@ export function getUsers(req, res) {
  */
 export function getUser(req, res) {
   User.findOne({ _id: req.params.userId }).exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -44,11 +57,7 @@ export function getUser(req, res) {
  */
 export function getUserUsername(req, res) {
   User.findOne({ _id: req.params.userId }, 'username').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -60,11 +69,7 @@ export function getUserUsername(req, res) {
  */
 export function getUserFirstName(req, res) {
   User.findOne({ _id: req.params.userId }, 'first_name').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -76,11 +81,7 @@ export function getUserFirstName(req, res) {
  */
 export function getUserLastName(req, res) {
   User.findOne({ _id: req.params.userId }, 'last_name').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -92,11 +93,7 @@ export function getUserLastName(req, res) {
  */
 export function getUserPassword(req, res) {
   User.findOne({ _id: req.params.userId }, 'password').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -108,11 +105,7 @@ export function getUserPassword(req, res) {
  */
 export function getUserEmail(req, res) {
   User.findOne({ _id: req.params.userId }, 'email').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -124,11 +117,7 @@ export function getUserEmail(req, res) {
  */
 export function getUserEmailIsVerified(req, res) {
   User.findOne({ _id: req.params.userId }, 'email_is_verified').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -140,11 +129,7 @@ export function getUserEmailIsVerified(req, res) {
  */
 export function getUserSignupDate(req, res) {
   User.findOne({ _id: req.params.userId }, 'signup_date').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -156,11 +141,7 @@ export function getUserSignupDate(req, res) {
  */
 export function getUserLastUserInteraction(req, res) {
   User.findOne({ _id: req.params.userId }, 'last_user_interaction').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -172,11 +153,7 @@ export function getUserLastUserInteraction(req, res) {
  */
 export function getUserSocial(req, res) {
   User.findOne({ _id: req.params.userId }, 'social_media').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -188,11 +165,7 @@ export function getUserSocial(req, res) {
  */
 export function getUserNotificationList(req, res) {
   User.findOne({ _id: req.params.userId }, 'notification_list').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -204,11 +177,7 @@ export function getUserNotificationList(req, res) {
  */
 export function getUserNotificationPreferences(req, res) {
   User.findOne({ _id: req.params.userId }, 'notification_preferences').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -220,11 +189,7 @@ export function getUserNotificationPreferences(req, res) {
  */
 export function getUserSecurity(req, res) {
   User.findOne({ _id: req.params.userId }, 'security').exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ user });
-    }
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -239,10 +204,9 @@ export function getUserSecurity(req, res) {
  * @param res
  * @returns void
  */
-function updateUser(request, err, user, req, res) {
+function putUserHelper(request, err, user, req, res) {
   if (err) {
     res.status(500).send(err);
-    isError = true;
   } else if(!req.body[request]) {
     let customError = new Error("Bad request");
     customError.status = 400;
@@ -269,7 +233,7 @@ function updateUser(request, err, user, req, res) {
  */
 export function putUserUsername(req, res) {
   User.findOne({ _id: req.params.userId }, 'username').exec((err, user) => {
-    updateUser('username', err, user, req, res);
+    putUserHelper('username', err, user, req, res);
   });
 }
 
@@ -281,7 +245,7 @@ export function putUserUsername(req, res) {
  */
 export function putUserFirstName(req, res) {
   User.findOne({ _id: req.params.userId }, 'first_name').exec((err, user) => {
-    updateUser('first_name', err, user, req, res);
+    putUserHelper('first_name', err, user, req, res);
   });
 }
 
@@ -293,7 +257,7 @@ export function putUserFirstName(req, res) {
  */
 export function putUserLastName(req, res) {
   User.findOne({ _id: req.params.userId }, 'last_name').exec((err, user) => {
-    updateUser('last_name', err, user, req, res);
+    putUserHelper('last_name', err, user, req, res);
   });
 }
 
@@ -305,7 +269,7 @@ export function putUserLastName(req, res) {
  */
 export function putUserPassword(req, res) {
   User.findOne({ _id: req.params.userId }, 'password').exec((err, user) => {
-    updateUser('password', err, user, req, res);
+    putUserHelper('password', err, user, req, res);
   });
 }
 
@@ -317,7 +281,7 @@ export function putUserPassword(req, res) {
  */
 export function putUserEmail(req, res) {
   User.findOne({ _id: req.params.userId }, 'email').exec((err, user) => {
-    updateUser('email', err, user, req, res);
+    putUserHelper('email', err, user, req, res);
   });
 }
 
@@ -329,7 +293,7 @@ export function putUserEmail(req, res) {
  */
 export function putUserEmailIsVerified(req, res) {
   User.findOne({ _id: req.params.userId }, 'email_is_verified').exec((err, user) => {
-    updateUser('email_is_verified', err, user, req, res);
+    putUserHelper('email_is_verified', err, user, req, res);
   });
 }
 
@@ -341,6 +305,50 @@ export function putUserEmailIsVerified(req, res) {
  */
 export function putUserLastUserInteraction(req, res) {
   User.findOne({ _id: req.params.userId }, 'last_user_interaction').exec((err, user) => {
-    updateUser('last_user_interaction', err, user, req, res);
+    putUserHelper('last_user_interaction', err, user, req, res);
+  });
+}
+
+/********************************** POST Requests **********************************/
+
+/**
+ * Create a new
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function postNewUser(req, res) {
+  if (!req.body.user.username || !req.body.user.first_name || !req.body.user.last_name || !req.body.user.password || !req.body.user.email) {
+    res.status(403).end();
+  } else {
+    const newUser = new User(req.body.user);
+
+    newUser.save((err, saved) => {
+      if (err) { res.status(500).send(err); }
+      res.json({ user: saved });
+      res.status(200).end();
+    });
+  }
+}
+
+/********************************** DELETE Requests **********************************/
+
+/**
+ * Delete a user
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function deleteUser(req, res) {
+  User.findOne({ _id: req.params.userId }).exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    user.remove((err, saved) => {
+      if(err) {res.status(500).send(err); }
+      res.json({ user: saved });
+      res.status(200).end();
+    });
   });
 }

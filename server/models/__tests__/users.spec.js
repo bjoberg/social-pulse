@@ -2,42 +2,46 @@ import test from 'ava';
 import request from 'supertest';
 import app from '../../server';
 import User from '../user';
-import { connectDB, dropDB } from '../../util/test-helpers';
+
+import mongoose from 'mongoose';
 
 // Initial users added into test db
 const users = [
-  new User({
-    username: "test.user",
-    first_name: "test",
-    last_name: "user",
-    password: "password123",
-    email: "test.user@gmail.com"
-  })
+  new User({ username: "test.user", first_name: "test", last_name: "user", password: "password123.1", email: "test.user.1@gmail.com"}),
+  new User({ username: "test.user2", first_name: "test2", last_name: "user2", password: "password123.2", email: "test.user.2@gmail.com"})
 ];
 
-test.beforeEach('connect and add one user', t => {
-  connectDB(t, () => {
-    User.create(users, err => {
-      if (err) t.fail('Unable to add user');
-    });
+const mongooseInstance = new mongoose.Mongoose;
+
+test.beforeEach('connect to the database', async t => {  
+  User.remove(function (err) {
+    if (err) console.log("Model not removed.")
+  });
+  await mongooseInstance.createConnection("mongodb://localhost:27017/social-pulse-test");
+  await User.create(users, function(err){
+    if(err) console.error("Save failed.", err);
+    else console.log("Saved the user.");
+
   });
 });
 
-test.afterEach.always(t => {
-  dropDB(t);
+test.afterEach(t => {
+  User.remove(function (err) {
+    if (err) console.log("Model not removed.")
+  });
+
+  mongooseInstance.disconnect(err => {
+    if(err) return console.log(err);
+  });
 });
 
 test.serial('Should correctly give number of Users', async t => {
-  t.plan(1);
+  t.plan(2);
 
   const res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');
 
   t.is(res.status, 200);
-  console.log(users.length);
-  console.log(res.body);
-  // t.deepEqual(users.length, res.body.users.length);
+  t.deepEqual(users.length, res.body.users.length);
 });
-
-
