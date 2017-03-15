@@ -16,8 +16,14 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
-  require('./modules/Post/pages/PostListPage/PostListPage');
-  require('./modules/Post/pages/PostDetailPage/PostDetailPage');
+  require('./components/Home/Home');
+  require('./components/About/About');
+  // require('./components/Contact/Contact');
+  // require('./components/Team/Team');
+  // require('./components/Terms/Terms');
+  // require('./components/Privacy/Privacy');
+  // require('./components/Security/Security');
+  // require('./components/Status/Status');
 }
 
 // react-router setup with code-splitting
@@ -27,15 +33,63 @@ export default (
     <IndexRoute
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Post/pages/PostListPage/PostListPage').default);
+          cb(null, require('./components/Home/Home').default);
         });
       }}
     />
     <Route
-      path="/posts/:slug-:cuid"
+      path="/about"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Post/pages/PostDetailPage/PostDetailPage').default);
+          cb(null, require('./components/About/About').default);
+        });
+      }}
+    />
+    <Route
+      path="/contact"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/Contact/Contact').default);
+        });
+      }}
+    />
+    <Route
+      path="/team"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/Team/Team').default);
+        });
+      }}
+    />
+    <Route
+      path="/privacy"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/Privacy/Privacy').default);
+        });
+      }}
+    />
+    <Route
+      path="/terms"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/Terms/Terms').default);
+        });
+      }}
+    />
+    <Route
+      path="/security"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/Security/Security').default);
+        });
+      }}
+    />
+    <Route
+      path="/status"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./components/Status/Status').default);
         });
       }}
     />
