@@ -1,17 +1,75 @@
-.footer{
-  text-align: center;
-  padding: 56px 0;
-  background-size: cover;
+@import '../../../../theme/colors.css';
+
+footer {
+  position: absolute;
+  bottom: 0;
+  color: #e5cdd4;
+  background-color: var(--blue);
+  width: 100%;
 }
 
-.footer p{
-  margin: 0 0 8px 0;
-  font-size: 56px;
-  color: #aaa;
+#container {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100px;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
 }
 
-.footer a{
-  color: #aaa;
+#subcontainer {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+#logo {
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
+#links {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 25px;
+  padding-left: 25px;
+  height: 100%;
+  cursor: pointer;
+  transition: 0.5s;
+} .link:hover {
+  background-color: rgba(0, 0, 0, .1);
+  color: #FFF;
+} .link {
   text-decoration: none;
-  font-weight: 700;
+  color: #e5cdd4;
+}
+
+#socials {
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+#copyright {
+  display: flex;
+  align-items: center;
+  height: 50px;
 }
