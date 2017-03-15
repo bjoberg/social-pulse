@@ -1,11 +1,11 @@
 import React from 'react';
 
-export function Home() {
+export function Privacy() {
   return (
     <div>
-      Test
+      Privacy Page
     </div>
   );
 }
 
-export default Home;
+export default Privacy;

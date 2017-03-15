@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router';
 
 // Import Style
-// import styles from './Footer.css';
+import styles from './Footer.css';
 
 export function Footer() {
   return (
-    <div>
+    <div className={styles.footer}>
       <ul>
         <li><Link to="/terms">Terms</Link></li>
         <li><Link to="/privacy">Privacy</Link></li>

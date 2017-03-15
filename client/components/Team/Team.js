@@ -1,11 +1,11 @@
 import React from 'react';
 
-export function Home() {
+export function Team() {
   return (
     <div>
-      Test
+      Team Page
     </div>
   );
 }
 
-export default Home;
+export default Team;

@@ -1,11 +1,11 @@
 import React from 'react';
 
-export function Home() {
+export function Security() {
   return (
     <div>
-      Test
+      Security Page
     </div>
   );
 }
 
-export default Home;
+export default Security;

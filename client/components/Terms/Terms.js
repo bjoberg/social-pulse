@@ -1,11 +1,11 @@
 import React from 'react';
 
-export function Home() {
+export function Terms() {
   return (
     <div>
-      Test
+      Terms Page
     </div>
   );
 }
 
-export default Home;
+export default Terms;
