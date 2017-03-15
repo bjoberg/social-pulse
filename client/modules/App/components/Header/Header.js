@@ -9,7 +9,7 @@ export function Header() {
   return (
     <header>
       <div id={styles.container}>
-        <div id={styles.logo}>Logo</div>
+        <div id={styles.logo}><Link to="/">Logo</Link></div>
         <div id={styles.links}>
           <Link to="/about"><div className={styles.link}>About</div></Link>
           <Link to="/docs"><div className={styles.link}>Docs</div></Link>
