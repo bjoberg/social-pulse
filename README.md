@@ -1,32 +1,28 @@
 # Social Pulse: CS 506 Software Engineering - Spring 2017
 
-A web application for posting to all of your social media accounts at once.
+A web application for posting to all of your social media accounts at once. 
 
 ## Getting Started
 
 To get a working copy of the Social Pulse project, feel free to follow the instructions provided below.
 
-### Prerequisites
+### Steps
 
-
-
-### Installing
+Please refer to the Progress Report document on how to clone your own copy and start our project successfully.
 
 ## Technologies Used
 
-### Setup
-
-* [npm](URL)
-* [Node Express](URL)
-
-### Back-End
-
-* [MERN](URL)
-* [Postman](URL)
-
-### Front-End
-* [React.js](URL)
-* [Material UI](URL)
+* [NPM](https://www.npmjs.com)
+* [Node.js](https://nodejs.org/en/)
+* [Express.js](https://expressjs.com)
+* [MERN](http://mern.io)
+* [mongoDB](https://www.mongodb.com)
+* [Postman](https://www.getpostman.com)
+* [Redux](http://redux.js.org)
+* [PostCSS](http://postcss.org)
+* [AVA](https://github.com/avajs/ava)
+* [React.js](https://facebook.github.io/react/)
+* [Material UI](https://www.material-ui.com/#/)
 
 
 ## Contributors
@@ -44,7 +40,6 @@ To get a working copy of the Social Pulse project, feel free to follow the instr
 ### Oscar Juarez
 
 ### Kenny Gao
-
 
 
 ## The MIT License (MIT)
