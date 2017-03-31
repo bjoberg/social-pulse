@@ -1,11 +1,11 @@
 import React from 'react';
 import test from 'ava';
 import { shallow } from 'enzyme';
-import { Home } from '../Home/Home';
+import { About } from '../About/About';
 
-test('renders home properly', t => {
+test('renders about properly', t => {
   const wrapper = shallow(
-    <Home />
+    <About />
   );
 
   t.is(wrapper.find('p').length, 2);
