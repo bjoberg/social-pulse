@@ -5,9 +5,11 @@ export function Team() {
     <div>
     <h1>Team</h1>
     <h2>Brett Oberg</h2>
+    <td><img src="https://www.brettoberg.com/assets/images/headshot.jpg" width="150" height="150" /></td>
     <p>{placeHolderText1}</p>
     <hr />
     <h2>Lucas Stefanski</h2>
+ 	<td><img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAh8AAAAJDU2MTdiMjJhLWM2OGMtNDBiMS05NGU1LTU1MmNkZmJlMDAyYw.jpg" width="150" height="150" /></td>
     <p>{placeHolderText1}</p>
     <hr />
     <h2>Casey Jordan</h2>
