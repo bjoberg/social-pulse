@@ -3,7 +3,7 @@ import React from 'react';
 export function Terms() {
   return (
     <div>
-      Terms Page
+      <h1>Terms</h1>
     </div>
   );
 }
