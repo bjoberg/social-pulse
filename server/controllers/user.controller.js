@@ -6,7 +6,6 @@ import User from '../models/user';
 
 /**
  * Return the User object based on the specific User object field that is being requested.
- * 
  * @param request (string) is the field within the User object being updated
  * @param err
  * @param req
@@ -34,6 +33,18 @@ export function getUsers(req, res) {
     } else {
       res.json({ users });
     }
+  });
+}
+
+/**
+ * Get a specific userId based on username
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function getUserId(req, res) {
+  User.findOne({ username: req.params.username }, '_id').exec((err, user) => {
+    getUserHelper(err, user, req, res);
   });
 }
 
@@ -197,7 +208,6 @@ export function getUserSecurity(req, res) {
 
 /**
  * Update the User object based on the specific User object field that is being updated.
- * 
  * @param request (string) is the field within the User object being updated
  * @param err
  * @param req
@@ -207,19 +217,19 @@ export function getUserSecurity(req, res) {
 function putUserHelper(request, err, user, req, res) {
   if (err) {
     res.status(500).send(err);
-  } else if(!req.body[request]) {
-    let customError = new Error("Bad request");
+  } else if (!req.body[request]) {
+    let customError = new Error('Bad request');
     customError.status = 400;
 
     res.status(400).send(customError);
   } else {
-    user[request] = req.body[request]
+    user[request] = req.body[request];
 
     user.save(function(err, saved) {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.json({ output: "Success! the " + request + " has been save with value " + saved});
+        res.json({ output: 'Success! the ' + request + ' has been save with value ' + saved });
       }
     });
   }
@@ -346,7 +356,7 @@ export function deleteUser(req, res) {
     }
 
     user.remove((err, saved) => {
-      if(err) {res.status(500).send(err); }
+      if (err) { res.status(500).send(err); }
       res.json({ user: saved });
       res.status(200).end();
     });

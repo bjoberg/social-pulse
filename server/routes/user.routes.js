@@ -6,6 +6,9 @@ const router = new Router();
 // Get all users
 router.route('/users').get(UserController.getUsers);
 
+// GET userId by username
+router.route('/user/:username').get(UserController.getUserId);
+
 // GET user by userId
 router.route('/user/:userId').get(UserController.getUser);
 
