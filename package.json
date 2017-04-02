@@ -15,8 +15,7 @@
     "clean": "rimraf dist",
     "slate": "rimraf node_modules && npm install",
     "lint": "eslint client server",
-    "heroku-prebuild": "npm build && npm build:server",
-    "heroku-postbuild": "npm start:prod"
+    "heroku-postbuild": "npm start bs"
   },
   "pre-commit": [
     "lint",
