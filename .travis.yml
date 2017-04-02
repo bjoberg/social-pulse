@@ -6,6 +6,14 @@ node_js:
 branches:
   only:
   - testing
+notifications:
+  email:
+    - cjjordan234@gmail.com
+    - ewrenn@wisc.edu
+    - ivanpereda95@gmail.com
+    - kgao9@wisc.edu
+    - lstefanski@wisc.edu
+    - oscarjuarez66@gmail.com
 before_install:
   - 'npm install -g npm@latest'
 services:

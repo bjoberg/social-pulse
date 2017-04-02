@@ -1,4 +1,5 @@
 # Social Pulse: CS 506 Software Engineering - Spring 2017
+[![Build Status](https://travis-ci.org/bjoberg/social-pulse.svg?branch=master)](https://travis-ci.org/bjoberg/social-pulse)
 
 A web application for posting to all of your social media accounts at once. 
 
