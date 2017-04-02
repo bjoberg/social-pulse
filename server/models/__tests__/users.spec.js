@@ -13,7 +13,7 @@ const users = [
 
 const mongooseInstance = new mongoose.Mongoose;
 
-test.before('connect to the database', async t => {
+test.beforeEach('connect to the database', async t => {
   User.remove({}, err => {
     if (err) console.log('Model not removed.');
   });
@@ -24,7 +24,7 @@ test.before('connect to the database', async t => {
   });
 });
 
-test.after(t => {
+test.afterEach(t => {
   User.remove({}, err => {
     if (err) console.log('Model not removed.');
   });
@@ -46,35 +46,3 @@ test.serial('Should correctly give number of Users', async t => {
   t.deepEqual(users.length, res.body.users.length);
 });
 
-test.serial('Test of getUserId, should return correct userId', async t => {
-  console.log('test 2');
-  t.plan(2);
-  const res1 = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  console.log(res1.body);
-
-  const res = await request(app)
-    .get('/api/v1/user/test.user')
-    .set('Accept', 'application/json');
-  t.is(res1.status, 200);
-  t.deepEqual(res1.body.users[0]._id, res.body.user._id);
-});
-
-/**
-test.serial('Test of getUserUsername, should return correct username', async t => {
-  console.log('test 3');
-  t.plan(2);
-  const uname = 'test.user';
-  const res1 = await request(app)
-    .get('/api/v1/user/test.user')
-    .set('Accept', 'application/json');
-
-  console.log('/api/v1/user/' + res1.body.user._id + '/username');
-  const res = await request(app)
-    .get('/api/v1/user/' + res1.body.user._id + '/username')
-    .set('Accept', 'application/json');
-  console.log(res.body.username);
-  t.is(res1.status, 200);
-  t.deepEqual(res.body.username, 'test.user');
-});*/

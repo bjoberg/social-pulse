@@ -1,8 +1,22 @@
-'use strict';
-
 import User from '../models/user';
 
-/********************************** GET Requests **********************************/
+// ///////////////////////////////// Helpers ///////////////////////////////////
+/**
+ * FOR TESTING PURPOSES.
+ * Return the _id values of all the users in the database.
+ */
+export function getUserIds(req, res) {
+  User.find('_id').exec((err, users) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ users });
+    }
+  });
+}
+
+
+// ///////////////////////////////// GET Requests ///////////////////////////////////
 
 /**
  * Return the User object based on the specific User object field that is being requested.
@@ -33,18 +47,6 @@ export function getUsers(req, res) {
     } else {
       res.json({ users });
     }
-  });
-}
-
-/**
- * Get a specific userId based on username
- * @param req
- * @param res
- * @returns void
- */
-export function getUserId(req, res) {
-  User.findOne({ username: req.params.username }, '_id').exec((err, user) => {
-    getUserHelper(err, user, req, res);
   });
 }
 
@@ -204,7 +206,7 @@ export function getUserSecurity(req, res) {
   });
 }
 
-/********************************** PUT Requests **********************************/
+// ///////////////////////////////// PUT Requests ///////////////////////////////////
 
 /**
  * Update the User object based on the specific User object field that is being updated.
@@ -218,18 +220,18 @@ function putUserHelper(request, err, user, req, res) {
   if (err) {
     res.status(500).send(err);
   } else if (!req.body[request]) {
-    let customError = new Error('Bad request');
+    const customError = new Error('Bad request');
     customError.status = 400;
 
     res.status(400).send(customError);
   } else {
     user[request] = req.body[request];
 
-    user.save(function(err, saved) {
+    user.save(err, saved => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.json({ output: 'Success! the ' + request + ' has been save with value ' + saved });
+        res.json({ output: `Success! the ${request} has been save with value ${saved}` });
       }
     });
   }
@@ -319,7 +321,7 @@ export function putUserLastUserInteraction(req, res) {
   });
 }
 
-/********************************** POST Requests **********************************/
+// ///////////////////////////////// POST Requests ///////////////////////////////////
 
 /**
  * Create a new
@@ -341,7 +343,7 @@ export function postNewUser(req, res) {
   }
 }
 
-/********************************** DELETE Requests **********************************/
+// ///////////////////////////////// DELETE Requests ///////////////////////////////////
 
 /**
  * Delete a user
@@ -355,10 +357,20 @@ export function deleteUser(req, res) {
       res.status(500).send(err);
     }
 
+<<<<<<< HEAD
     user.remove((err, saved) => {
       if (err) { res.status(500).send(err); }
       res.json({ user: saved });
       res.status(200).end();
+=======
+    user.remove(err, saved => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json({ user: saved });
+        res.status(200).end();
+      }
+>>>>>>> 97d17a8d59c9b9f363dc67aacc8e6ee562b58123
     });
   });
 }

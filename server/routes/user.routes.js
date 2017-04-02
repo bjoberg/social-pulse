@@ -3,11 +3,12 @@ import * as UserController from '../controllers/user.controller';
 const router = new Router();
 
 /********************************** GET Requests **********************************/
-// Get all users
+
+// GET all users
 router.route('/users').get(UserController.getUsers);
 
-// GET userId by username
-router.route('/user/:username').get(UserController.getUserId);
+// GET all userId's
+router.route('/user/userIds').get(UserController.getUserIds);
 
 // GET user by userId
 router.route('/user/:userId').get(UserController.getUser);
