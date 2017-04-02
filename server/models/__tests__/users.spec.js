@@ -1,9 +1,11 @@
+// External modules
 import test from 'ava';
 import request from 'supertest';
+import mongoose from 'mongoose';
+
+// Local modules
 import app from '../../server';
 import User from '../user';
-
-import mongoose from 'mongoose';
 
 // Test users
 const users = [
@@ -11,54 +13,65 @@ const users = [
   new User({ username: 'test.user2', first_name: 'test2', last_name: 'user2', password: 'password123.2', email: 'test.user.2@gmail.com' }),
 ];
 
+// MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
-test.before('connect to the database', async () => {
-  // Connect to the mongo test database instance.
-  await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test');
-});
-
-test.beforeEach('refresh the data', async () => {
-  // Remove any unwanted, modified, users.
-  User.remove(err => {
+/**
+ * Connect to the mongoDb test database instance.
+ */
+test.before.serial('Connect to the database', async () => {
+  await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
     if (err) {
-      console.log('Model not removed.');
+      console.error('Connection failed', err);
     } else {
-      console.log('Removed the users.');
+      console.log('Connected.');
     }
   });
-  // Add the new users to the test database.
+});
+
+/**
+ * Add the new users to the test database.
+ */
+test.beforeEach('Refresh the data', async () => {
   await User.create(users, err => {
     if (err) {
       console.error('Save failed.', err);
     } else {
-      console.log('Saved the user.');
+      console.log('Saved the users.');
     }
   });
 });
 
-test.afterEach(() => {
-  // Remove all of the modified users from the test database.
-  User.remove(err => {
+/**
+ * Remove user data from the test database.
+ */
+test.afterEach.serial.always('Remove any modified data', async () => {
+  await User.remove(err => {
     if (err) {
-      console.log('Model not removed.');
+      console.error('Could not remove the user.', err);
     } else {
       console.log('Removed the users.');
     }
   });
 });
 
-test.after(() => {
-  // Disconnect from the test database instance.
-  mongooseInstance.disconnect(err => {
+/**
+ * Disconnect from the mongoDb test database instance.
+ */
+test.after.always('Disconnect from the database', async () => {
+  await mongooseInstance.disconnect(err => {
     if (err) {
-      return console.log(err);
+      return console.error('Disconnection failed.', err);
     }
     return console.log('Disconnected.');
   });
 });
 
-test.serial('test getUsers', async t => {
+/**
+ * Test the GET method 'getUsers'
+ */
+test.serial('Test getUsers method', async t => {
+  console.log("getUsers");
   // 1. Setup
   t.plan(2);
 
@@ -67,19 +80,65 @@ test.serial('test getUsers', async t => {
     .get('/api/v1/users')
     .set('Accept', 'application/json');
 
+  console.log(res.body.users);
+
   // 3. Test
-  t.is(res.status, 200);
-  t.deepEqual(users.length, res.body.users.length);
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.true(res.body.users.length >= users.length);
+  // t.fail();
 });
 
-test.serial('test getUserLastName Method', async t => {
+/**
+ * Test the GET method 'getUser'
+ */
+test.serial('Test getUser method', async t => {
+  console.log("getUser");
   // 1. Setup
-  t.plan(3);
-  // Request all of the users in the db
+  t.plan(4);
+
+  User.find().exec((err, f) => {
+    console.log(f);
+  });
+
+  // Get the _id value of the first user in the database.
   let res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');
+  console.log(res.body.users);
+  const userId = res.body.users[0]._id;
+
+  // 2. Request
+  res = await request(app)
+    .get(`/api/v1/user/${userId}`)
+    .set('Accept', 'application/json');
+
+  console.log(res.body.users);
+
+  // 3. Test
+  const numberOfUsersValue = Object.keys(res.body).length;
+  const numberOfUsersExpected = 1;
+  const usernameValue = res.body.user.username;
+  const usernameExpected = users[0].username;
+  const emailValue = res.body.user.email;
+  const emailExpected = users[0].email;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUsersValue, numberOfUsersExpected, [`REAMDE: value == ${numberOfUsersValue} || expected == ${numberOfUsersExpected}`]);
+  t.deepEqual(usernameValue, usernameExpected, [`REAMDE: value == ${usernameValue} || expected == ${usernameExpected}`]);
+  t.deepEqual(emailValue, emailExpected, [`REAMDE: value == ${emailValue} || expected == ${emailExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserLastName'
+ */
+test.serial('Test getUserLastName method', async t => {
+  console.log("getUserLastNAme");
+  // 1. Setup
+  t.plan(3);
   // Get the _id value of the first user in the database.
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
   const userId = res.body.users[0]._id;
 
   // 2. Request
@@ -88,11 +147,42 @@ test.serial('test getUserLastName Method', async t => {
     .set('Accept', 'application/json');
 
   // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
   const lastNameValue = res.body.user.last_name;
   const lastNameExpected = users[0].last_name;
-  const userlengthValue = Object.keys(res.body.user).length;
 
-  t.is(res.status, 200);
-  t.deepEqual(userlengthValue, 2, [`REAMDE: value == ${userlengthValue} || expected == 2`]);
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
   t.deepEqual(lastNameValue, lastNameExpected, [`REAMDE: value == ${lastNameValue} || expected == ${lastNameExpected}`]);
 });
+
+/**
+ * Test the GET method 'getUserEmailIsVerified'
+ */
+test.serial('Test getUserEmailIsVerified method', async t => {
+  console.log("getUserEmailIsVerified");
+  // 1. Setup
+  t.plan(3);
+  // Get the _id value of the first user in the database.
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
+  const userId = res.body.users[0]._id;
+
+  // 2. Request
+  res = await request(app)
+    .get(`/api/v1/user/${userId}/email_is_verified`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const emailIsVerifiedValue = res.body.user.email_is_verified;
+  const emailIsVerifiedExpected = false;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(emailIsVerifiedValue, emailIsVerifiedExpected, [`REAMDE: value == ${emailIsVerifiedValue} || expected == ${emailIsVerifiedExpected}`]);
+});
+
