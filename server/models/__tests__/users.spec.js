@@ -16,10 +16,8 @@ const users = [
 // MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
-/**
- * Connect to the mongoDb test database instance.
- */
 test.before.serial('Connect to the database', async () => {
+  // Connect to the mongoDb test database instance.
   await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
     if (err) {
       console.error('Connection failed', err);
@@ -27,38 +25,48 @@ test.before.serial('Connect to the database', async () => {
       console.log('Connected.');
     }
   });
-});
 
-/**
- * Add the new users to the test database.
- */
-test.beforeEach('Refresh the data', async () => {
+  // Add the new users to the test database.
   await User.create(users, err => {
     if (err) {
       console.error('Save failed.', err);
     } else {
-      console.log('Saved the users.');
+      console.log(`Saved ${users.length} new users.`);
     }
   });
 });
 
-/**
- * Remove user data from the test database.
- */
+test.beforeEach.serial('Refresh the data', async () => {
+  // await User.create(users, err => {
+  //   if (err) {
+  //     console.error('Save failed.', err);
+  //   } else {
+  //     console.log('Saved the users.');
+  //   }
+  // });
+});
+
 test.afterEach.serial.always('Remove any modified data', async () => {
+  // await User.remove(err => {
+  //   if (err) {
+  //     console.error('Could not remove the user.', err);
+  //   } else {
+  //     console.log('Removed the users.');
+  //   }
+  // });
+});
+
+test.after.always('Disconnect from the database', async () => {
+  // Remove all of the users.
   await User.remove(err => {
     if (err) {
       console.error('Could not remove the user.', err);
     } else {
-      console.log('Removed the users.');
+      console.log('Removed all of the users.');
     }
   });
-});
 
-/**
- * Disconnect from the mongoDb test database instance.
- */
-test.after.always('Disconnect from the database', async () => {
+  // Disconnect from the mongoDb test database intance.
   await mongooseInstance.disconnect(err => {
     if (err) {
       return console.error('Disconnection failed.', err);
@@ -70,8 +78,7 @@ test.after.always('Disconnect from the database', async () => {
 /**
  * Test the GET method 'getUsers'
  */
-test.serial('Test getUsers method', async t => {
-  console.log("getUsers");
+test('Test getUsers method', async t => {
   // 1. Setup
   t.plan(2);
 
@@ -79,8 +86,6 @@ test.serial('Test getUsers method', async t => {
   const res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');
-
-  console.log(res.body.users);
 
   // 3. Test
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
@@ -91,28 +96,20 @@ test.serial('Test getUsers method', async t => {
 /**
  * Test the GET method 'getUser'
  */
-test.serial('Test getUser method', async t => {
-  console.log("getUser");
+test('Test getUser method', async t => {
   // 1. Setup
   t.plan(4);
-
-  User.find().exec((err, f) => {
-    console.log(f);
-  });
 
   // Get the _id value of the first user in the database.
   let res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');
-  console.log(res.body.users);
   const userId = res.body.users[0]._id;
 
   // 2. Request
   res = await request(app)
     .get(`/api/v1/user/${userId}`)
     .set('Accept', 'application/json');
-
-  console.log(res.body.users);
 
   // 3. Test
   const numberOfUsersValue = Object.keys(res.body).length;
@@ -131,8 +128,7 @@ test.serial('Test getUser method', async t => {
 /**
  * Test the GET method 'getUserLastName'
  */
-test.serial('Test getUserLastName method', async t => {
-  console.log("getUserLastNAme");
+test('Test getUserLastName method', async t => {
   // 1. Setup
   t.plan(3);
   // Get the _id value of the first user in the database.
@@ -160,8 +156,7 @@ test.serial('Test getUserLastName method', async t => {
 /**
  * Test the GET method 'getUserEmailIsVerified'
  */
-test.serial('Test getUserEmailIsVerified method', async t => {
-  console.log("getUserEmailIsVerified");
+test('Test getUserEmailIsVerified method', async t => {
   // 1. Setup
   t.plan(3);
   // Get the _id value of the first user in the database.
