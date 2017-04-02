@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 
-
-class SignupForm extends Component {
+class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
+      password: ''
     }
 
     //This line makes sure "this" does not refer to the event in onChange method
@@ -23,10 +20,11 @@ class SignupForm extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    this.props.userSignupRequest(this.state);
+    this.props.loginRequest(this.state);
+    //this.props.userSignupRequest(this.state);
   }
 
-  render() {
+    render() {
     return (
       <form onSubmit={this.onSubmit}>
         <div>Join our community!</div>
@@ -40,15 +38,6 @@ class SignupForm extends Component {
           />
         </div>
         <div>
-          <label>Email</label>
-          <input
-            value={this.state.email}
-            onChange={this.onChange}
-            type="text"
-            name="email"
-          />
-        </div>
-        <div>
           <label>Password</label>
           <input
             value={this.state.password}
@@ -57,18 +46,10 @@ class SignupForm extends Component {
             name="password"
           />
         </div>
-        <div>
-          <label>Confirm Password</label>
-          <input
-            value={this.state.confirmPassword}
-            onChange={this.onChange}
-            type="password"
-            name="confirmPassword"
-          />
-        </div>
+       
         <div>
           <button>
-            Sign up
+            Login
           </button>
         </div>
       </form>
@@ -76,8 +57,8 @@ class SignupForm extends Component {
   }
 }
 
-SignupForm.propTypes = {
-  userSignupRequest: React.PropTypes.func.isRequired
+LoginForm.propTypes = {
+  loginRequest: React.PropTypes.func.isRequired
 }
 
-export default SignupForm;
+export default LoginForm;
