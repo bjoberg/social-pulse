@@ -17,8 +17,8 @@ export function Header() {
           <Link to="/team"><div className={styles.link}>Team</div></Link>
         </div>
         <div id={styles.account}>
-          <div className={styles.link}>Sign up</div>
-          <div className={styles.link}>Login</div>
+          <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
+          <Link to="/login"><div className={styles.link}>Login</div></Link>
         </div>
       </div>
     </header>
