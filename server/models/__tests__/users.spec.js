@@ -1,7 +1,7 @@
 // External modules
 import test from 'ava';
-import request from 'supertest';
 import mongoose from 'mongoose';
+import request from 'supertest';
 
 // Local modules
 import app from '../../server';
@@ -75,6 +75,13 @@ test.after.always('Disconnect from the database', async () => {
   });
 });
 
+async function getTestUserIdByIndex(userIndex) {
+  const res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
+  return res.body.users[userIndex]._id;
+}
+
 /**
  * Test the GET method 'getUsers'
  */
@@ -99,15 +106,10 @@ test('Test getUsers method', async t => {
 test('Test getUser method', async t => {
   // 1. Setup
   t.plan(4);
-
-  // Get the _id value of the first user in the database.
-  let res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  const userId = res.body.users[0]._id;
+  const userId = await getTestUserIdByIndex(0);
 
   // 2. Request
-  res = await request(app)
+  const res = await request(app)
     .get(`/api/v1/user/${userId}`)
     .set('Accept', 'application/json');
 
@@ -131,14 +133,10 @@ test('Test getUser method', async t => {
 test('Test getUserLastName method', async t => {
   // 1. Setup
   t.plan(3);
-  // Get the _id value of the first user in the database.
-  let res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  const userId = res.body.users[0]._id;
+  const userId = await getTestUserIdByIndex(0);
 
   // 2. Request
-  res = await request(app)
+  const res = await request(app)
     .get(`/api/v1/user/${userId}/last_name`)
     .set('Accept', 'application/json');
 
@@ -159,14 +157,10 @@ test('Test getUserLastName method', async t => {
 test('Test getUserEmailIsVerified method', async t => {
   // 1. Setup
   t.plan(3);
-  // Get the _id value of the first user in the database.
-  let res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  const userId = res.body.users[0]._id;
+  const userId = await getTestUserIdByIndex(0);
 
   // 2. Request
-  res = await request(app)
+  const res = await request(app)
     .get(`/api/v1/user/${userId}/email_is_verified`)
     .set('Accept', 'application/json');
 
@@ -181,3 +175,99 @@ test('Test getUserEmailIsVerified method', async t => {
   t.deepEqual(emailIsVerifiedValue, emailIsVerifiedExpected, [`REAMDE: value == ${emailIsVerifiedValue} || expected == ${emailIsVerifiedExpected}`]);
 });
 
+/**
+ * Test the GET method 'getUserSocial'
+ */
+test('Test getUserSocial', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/social`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const socialValue = res.body.user.social_media;
+  const socialExpected = [];
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(socialValue, socialExpected, [`REAMDE: value == ${socialValue} || expected == ${socialExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserSecurity'
+ */
+test('Test getUserSecurity', async t => {
+  // 1. Setup
+  t.plan(6);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/security`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const numberOfSecurityKeysValue = Object.keys(res.body.user.security).length;
+  const numberOfSecurityKeysExpected = 3;
+  const securityVerificationCodeValue = res.body.user.security.verification_code;
+  const securityVerificationCodeExpected = null;
+  const securityBackupEmailValue = res.body.user.security.backup_email;
+  const securityBackupEmailExpected = null;
+  const securityTwoFactorAuthValue = res.body.user.security.two_factor_auth;
+  const securityTwoFactorAuthExpected = false;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(numberOfSecurityKeysValue, numberOfSecurityKeysExpected, [`REAMDE: value == ${numberOfSecurityKeysValue} || expected == ${numberOfSecurityKeysExpected}`]);
+  t.deepEqual(securityVerificationCodeValue, securityVerificationCodeExpected, [`REAMDE: value == ${securityVerificationCodeValue} || expected == ${securityVerificationCodeExpected}`]);
+  t.deepEqual(securityBackupEmailValue, securityBackupEmailExpected, [`REAMDE: value == ${securityBackupEmailValue} || expected == ${securityBackupEmailExpected}`]);
+  t.deepEqual(securityTwoFactorAuthValue, securityTwoFactorAuthExpected, [`REAMDE: value == ${securityTwoFactorAuthValue} || expected == ${securityTwoFactorAuthExpected}`]);
+});
+
+// /**
+//  * Test the PUT method 'putUserUsername'
+//  */
+// test.only('Test putUserUsername', async t => {
+//   // 1. Setup
+//   t.plan(1);
+//   const userId = await getTestUserIdByIndex(1);
+//   const updatedUsername = 'updated';
+  
+//   // 2. Request
+//   const res = await request(app)
+//     .put(`/api/v1/user/${userId}/username`, (err) => {
+//       if (err) {
+//         console.error("Error with the put.", err);
+//       }
+//     })
+//     .send({ username: test })
+//     .set('Content-Type', 'application/json');
+
+
+
+//     // .put(`/api/v1/user/${userId}/username`, { username: 'test' })
+//     // .send('{ username: test }').
+//     // .set('Content-Type', 'application/json');
+
+//   // 3. Test
+//   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+// //   t.plan(2);
+
+// //   const res = await request(app)
+// //     .post('/api/posts')
+// //     .send({ post: { name: 'Foo', title: 'bar', content: 'Hello Mern says Foo' } })
+// //     .set('Accept', 'application/json');
+
+// //   t.is(res.status, 200);
+
+// //   const savedPost = await Post.findOne({ title: 'bar' }).exec();
+// //   t.is(savedPost.name, 'Foo');
+// });
