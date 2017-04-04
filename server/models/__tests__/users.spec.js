@@ -240,7 +240,7 @@ test('Test putUserUsername', async t => {
   // 1. Setup
   t.plan(3);
   const userId = await getTestUserIdByIndex(1);
-  const updatedUsernameExpected = 'updated';
+  const updatedUsernameExpected = 'updatedUsername';
 
   // 2. Request
   const res = await request(app)
@@ -252,9 +252,63 @@ test('Test putUserUsername', async t => {
   const updatedUsernameValueObject = await User.findOne({ _id: userId }, 'username');
   const updatedUsernameValue = updatedUsernameValueObject.username;
   const responseValue = res.body.output;
-  const responseExpected = `Success! the username has been save with value { _id: ${userId}, username: '${updatedUsernameExpected}' }`;
+  const responseExpected = 'Success! the username has been saved.';
 
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.deepEqual(updatedUsernameValue, updatedUsernameExpected, [`REAMDE: value == ${updatedUsernameValue} || expected == ${updatedUsernameExpected}`]);
   t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
 });
+
+/**
+ * Test the PUT method 'putUserPassword'
+ */
+test('Test putUserPassword', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedPasswordExpected = 'updatedPassword';
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/password`)
+    .send({ password: updatedPasswordExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedPasswordValueObject = await User.findOne({ _id: userId }, 'password');
+  const updatedPasswordValue = updatedPasswordValueObject.password;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the password has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedPasswordValue, updatedPasswordExpected, [`REAMDE: value == ${updatedPasswordValue} || expected == ${updatedPasswordExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserLastUserInteraction'
+ */
+test('Test putUserLastUserInteraction', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedLastUserInteractionExpected = new Date();
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/last_user_interaction`)
+    .send({ last_user_interaction: updatedLastUserInteractionExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedLastUserInteractionValueObject = await User.findOne({ _id: userId }, 'last_user_interaction');
+  const updatedLastUserInteractionValue = updatedLastUserInteractionValueObject.last_user_interaction;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the last_user_interaction has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedLastUserInteractionValue, updatedLastUserInteractionExpected, [`REAMDE: value == ${updatedLastUserInteractionValue} || expected == ${updatedLastUserInteractionExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+

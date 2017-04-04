@@ -227,11 +227,11 @@ function putUserHelper(request, err, user, req, res) {
   } else {
     user[request] = req.body[request];
 
-    user.save((err, saved) => {
+    user.save(err => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.json({ output: `Success! the ${request} has been save with value ${saved}` });
+        res.json({ output: `Success! the ${request} has been saved.` });
       }
     });
   }
