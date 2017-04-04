@@ -31,6 +31,7 @@
   "author": "Brett Oberg (brett@obergmail.com), Casey Jordan (cjjordan234@gmail.com), Eli Wrenn (ewrenn@wisc.edu), Ivan Pereda-Zorrilla (ivanpereda95@gmail.com), Kenny Gao (kgao9@wisc.edu), Lucas Stefanski (lstefanski@wisc.edu), and Oscar Juarez (oscarjuarez66@gmail.com)",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.0",
     "babel-core": "^6.9.1",
     "body-parser": "^1.15.1",
     "compression": "^1.6.2",
