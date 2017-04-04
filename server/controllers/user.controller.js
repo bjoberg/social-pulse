@@ -227,7 +227,7 @@ function putUserHelper(request, err, user, req, res) {
   } else {
     user[request] = req.body[request];
 
-    user.save(err, saved => {
+    user.save((err, saved) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -330,6 +330,9 @@ export function putUserLastUserInteraction(req, res) {
  * @returns void
  */
 export function postNewUser(req, res) {
+
+  // TODO: Add more checking to make sure all data is valid.
+
   if (!req.body.user.username || !req.body.user.first_name || !req.body.user.last_name || !req.body.user.password || !req.body.user.email) {
     res.status(403).end();
   } else {

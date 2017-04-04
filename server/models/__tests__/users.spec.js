@@ -76,6 +76,7 @@ test.after.always('Disconnect from the database', async () => {
 });
 
 async function getTestUserIdByIndex(userIndex) {
+  // TODO: Use find function instead of GET reqest.
   const res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');
@@ -232,42 +233,28 @@ test('Test getUserSecurity', async t => {
   t.deepEqual(securityTwoFactorAuthValue, securityTwoFactorAuthExpected, [`REAMDE: value == ${securityTwoFactorAuthValue} || expected == ${securityTwoFactorAuthExpected}`]);
 });
 
-// /**
-//  * Test the PUT method 'putUserUsername'
-//  */
-// test.only('Test putUserUsername', async t => {
-//   // 1. Setup
-//   t.plan(1);
-//   const userId = await getTestUserIdByIndex(1);
-//   const updatedUsername = 'updated';
-  
-//   // 2. Request
-//   const res = await request(app)
-//     .put(`/api/v1/user/${userId}/username`, (err) => {
-//       if (err) {
-//         console.error("Error with the put.", err);
-//       }
-//     })
-//     .send({ username: test })
-//     .set('Content-Type', 'application/json');
+/**
+ * Test the PUT method 'putUserUsername'
+ */
+test('Test putUserUsername', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedUsernameExpected = 'updated';
 
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/username`)
+    .send({ username: updatedUsernameExpected })
+    .set('Content-Type', 'application/json');
 
+  // 3. Test
+  const updatedUsernameValueObject = await User.findOne({ _id: userId }, 'username');
+  const updatedUsernameValue = updatedUsernameValueObject.username;
+  const responseValue = res.body.output;
+  const responseExpected = `Success! the username has been save with value { _id: ${userId}, username: '${updatedUsernameExpected}' }`;
 
-//     // .put(`/api/v1/user/${userId}/username`, { username: 'test' })
-//     // .send('{ username: test }').
-//     // .set('Content-Type', 'application/json');
-
-//   // 3. Test
-//   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
-// //   t.plan(2);
-
-// //   const res = await request(app)
-// //     .post('/api/posts')
-// //     .send({ post: { name: 'Foo', title: 'bar', content: 'Hello Mern says Foo' } })
-// //     .set('Accept', 'application/json');
-
-// //   t.is(res.status, 200);
-
-// //   const savedPost = await Post.findOne({ title: 'bar' }).exec();
-// //   t.is(savedPost.name, 'Foo');
-// });
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedUsernameValue, updatedUsernameExpected, [`REAMDE: value == ${updatedUsernameValue} || expected == ${updatedUsernameExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
