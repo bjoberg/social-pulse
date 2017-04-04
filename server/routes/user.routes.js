@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as UserController from '../controllers/user.controller';
 const router = new Router();
 
-/********************************** GET Requests **********************************/
+// //////////////////////////////// GET Requests ////////////////////////////////
 
 // GET all users
 router.route('/users').get(UserController.getUsers);
@@ -49,7 +49,7 @@ router.route('/user/:userId/notification_preferences').get(UserController.getUse
 // GET security by userId
 router.route('/user/:userId/security').get(UserController.getUserSecurity);
 
-/********************************** PUT Requests **********************************/
+// //////////////////////////////// PUT Requests ////////////////////////////////
 // PUT username by userId
 router.route('/user/:userId/username').put(UserController.putUserUsername);
 
@@ -80,12 +80,12 @@ router.route('/user/:userId/last_user_interaction').put(UserController.putUserLa
 // // PUT security by userId
 // router.route('/user/:userId/security').put(UserController.putUserSecurity);
 
-/********************************** POST Requests **********************************/
+// //////////////////////////////// POST Requests ////////////////////////////////
 
 // POST a new user
 router.route('/user').post(UserController.postNewUser);
 
-/********************************** DELETE Requests **********************************/
+// //////////////////////////////// DELETE Requests ////////////////////////////////
 
 // DELETE a new user
 router.route('/user/:userId').delete(UserController.deleteUser);

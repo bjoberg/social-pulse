@@ -16,7 +16,7 @@ const users = [
 // MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
-test.before.serial('Connect to the database', async () => {
+test.before.serial('Connect to the database && add the test users.', async () => {
   // Connect to the mongoDb test database instance.
   await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
     if (err) {
@@ -36,27 +36,7 @@ test.before.serial('Connect to the database', async () => {
   });
 });
 
-test.beforeEach.serial('Refresh the data', async () => {
-  // await User.create(users, err => {
-  //   if (err) {
-  //     console.error('Save failed.', err);
-  //   } else {
-  //     console.log('Saved the users.');
-  //   }
-  // });
-});
-
-test.afterEach.serial.always('Remove any modified data', async () => {
-  // await User.remove(err => {
-  //   if (err) {
-  //     console.error('Could not remove the user.', err);
-  //   } else {
-  //     console.log('Removed the users.');
-  //   }
-  // });
-});
-
-test.after.always('Disconnect from the database', async () => {
+test.after.always('Remove all of the user && disconnect from the database.', async () => {
   // Remove all of the users.
   await User.remove(err => {
     if (err) {
@@ -76,11 +56,14 @@ test.after.always('Disconnect from the database', async () => {
 });
 
 async function getTestUserIdByIndex(userIndex) {
-  // TODO: Use find function instead of GET reqest.
-  const res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  return res.body.users[userIndex]._id;
+  let userId = '';
+  await User.find().exec((err, user) => {
+    if (err) {
+      console.error('Error getting the userId.', err);
+    }
+    userId = user[userIndex]._id;
+  });
+  return userId;
 }
 
 /**
@@ -249,7 +232,7 @@ test('Test putUserUsername', async t => {
     .set('Content-Type', 'application/json');
 
   // 3. Test
-  const updatedUsernameValueObject = await User.findOne({ _id: userId }, 'username');
+  const updatedUsernameValueObject = await User.findOne({ _id: userId }, 'username').exec();
   const updatedUsernameValue = updatedUsernameValueObject.username;
   const responseValue = res.body.output;
   const responseExpected = 'Success! the username has been saved.';
@@ -275,7 +258,7 @@ test('Test putUserPassword', async t => {
     .set('Content-Type', 'application/json');
 
   // 3. Test
-  const updatedPasswordValueObject = await User.findOne({ _id: userId }, 'password');
+  const updatedPasswordValueObject = await User.findOne({ _id: userId }, 'password').exec();
   const updatedPasswordValue = updatedPasswordValueObject.password;
   const responseValue = res.body.output;
   const responseExpected = 'Success! the password has been saved.';
@@ -301,7 +284,7 @@ test('Test putUserLastUserInteraction', async t => {
     .set('Content-Type', 'application/json');
 
   // 3. Test
-  const updatedLastUserInteractionValueObject = await User.findOne({ _id: userId }, 'last_user_interaction');
+  const updatedLastUserInteractionValueObject = await User.findOne({ _id: userId }, 'last_user_interaction').exec();
   const updatedLastUserInteractionValue = updatedLastUserInteractionValueObject.last_user_interaction;
   const responseValue = res.body.output;
   const responseExpected = 'Success! the last_user_interaction has been saved.';
@@ -310,5 +293,3 @@ test('Test putUserLastUserInteraction', async t => {
   t.deepEqual(updatedLastUserInteractionValue, updatedLastUserInteractionExpected, [`REAMDE: value == ${updatedLastUserInteractionValue} || expected == ${updatedLastUserInteractionExpected}`]);
   t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
 });
-
-
