@@ -4,8 +4,8 @@
 A web application for posting to all of your social media accounts at once. 
 
 ## Resources
-* [**Wiki**](https://github.com/bjoberg/social-pulse/wiki)
-* [**API Documentation**](https://github.com/bjoberg/social-pulse/wiki/API-Documentation-Overview)
+* [Wiki](https://github.com/bjoberg/social-pulse/wiki)
+* [API Documentation](https://github.com/bjoberg/social-pulse/wiki/API-Documentation-Overview)
 
 ## Installation
 
