@@ -178,8 +178,8 @@ test('Test getUserSignupDate method', async t => {
   // Get the dates and format them for comparison
   const dateValue = res.body.user.signup_date;
   const dateExpected = new Date();
-  const userSignupDateValue = `${new Date(dateValue).getFullYear()}-${new Date(dateValue).getMonth()}-${new Date(dateValue).getDay()}-${new Date(dateValue).getSeconds()}`;
-  const userSignupDateExpected = `${dateExpected.getFullYear()}-${dateExpected.getMonth()}-${dateExpected.getDay()}-${dateExpected.getSeconds()}`;
+  const userSignupDateValue = `${new Date(dateValue).getFullYear()}-${new Date(dateValue).getMonth()}-${new Date(dateValue).getDay()}-${new Date(dateValue).getMinutes()}`;
+  const userSignupDateExpected = `${dateExpected.getFullYear()}-${dateExpected.getMonth()}-${dateExpected.getDay()}-${dateExpected.getMinutes()}`;
 
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
