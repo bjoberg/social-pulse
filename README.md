@@ -3,13 +3,26 @@
 
 A web application for posting to all of your social media accounts at once. 
 
-## Getting Started
+## Resources
+* [**Wiki**](https://github.com/bjoberg/social-pulse/wiki)
+* [**API Documentation**](https://github.com/bjoberg/social-pulse/wiki/API-Documentation-Overview)
 
-To get a working copy of the Social Pulse project, feel free to follow the instructions provided below.
+## Installation
 
-### Steps
+### Pre-installation
+Make sure you have the following programs installed on your computer before you follow the installation steps.
+* [Postman](https://www.getpostman.com)
+* [MongoDB](https://docs.mongodb.com/manual/installation/)
 
-Please refer to the Progress Report document on how to clone your own copy and start our project successfully.
+### Installation steps
+1. Clone or fork this repository by running the following on the command: `git clone https://github.com/bjoberg/social-pulse`
+2. Within the terminal, navigate to your local repository (/social-pulse) and install all external packages by running the command: `npm install`
+3. In a new terminal tab start your local mongo daemon by running: `mongod`
+4. Finally, in another new terminal tab, run the following (in /social-pulse directory) to start the local server: `npm start`
+
+### Post-Installation
+1. In a new terminal tab navigation into `/social-pulse/server` and run the command `node userSandbox.js` to fill your local mongoDB instance with users.
+2. Using Postman query the users with the following route: `localhost:8000/api/v1/users`. More details on the API can be found [here](https://github.com/bjoberg/social-pulse/wiki/API-Documentation-Overview).
 
 ## Technologies Used
 
