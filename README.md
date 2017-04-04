@@ -1,4 +1,4 @@
-# Social Pulse: CS 506 Software Engineering - Spring 2017
+# Social Pulse
 [![Build Status](https://travis-ci.org/bjoberg/social-pulse.svg?branch=testing)](https://travis-ci.org/bjoberg/social-pulse)
 
 A web application for posting to all of your social media accounts at once. 
@@ -28,20 +28,17 @@ Please refer to the Progress Report document on how to clone your own copy and s
 
 ## Contributors
 
-### Brett Oberg
+|[![Brett Oberg](https://avatars0.githubusercontent.com/u/8784586?v=3&s=130)](https://github.com/bjoberg)|[![Lucas Stefanski](https://avatars2.githubusercontent.com/u/15217450?v=3&s=130)](https://github.com/stefaluc)|
+|---|---|
+| Brett Oberg | Lucas Stefanski |
 
-### Lucas Stefanski
+|[![Casey Jordan](https://avatars0.githubusercontent.com/u/25598640?v=3&s=130)](https://github.com/cjordan100)|[![Ivan Pereda-Zorrilla](https://avatars0.githubusercontent.com/u/13071149?v=3&s=130)](https://github.com/ivanpereda95)|
+|---|---|
+| Casey Jordan | Ivan Pereda-Zorrilla |
 
-### Casey Jordan
-
-### Ivan Pereda-Zorrilla
-
-### Eli Wrenn
-
-### Oscar Juarez
-
-### Kenny Gao
-
+|[![Eli Wrenn](https://avatars3.githubusercontent.com/u/25535984?v=3&s=130)](https://github.com/ewrenn24)|[![Oscar Juarez](https://avatars1.githubusercontent.com/u/17089781?v=3&s=130)](https://github.com/oj726)|[![Kenny Gao](https://avatars3.githubusercontent.com/u/11130849?v=3&s=460)](https://github.com/kgao9)|
+|---|---|---|
+| Eli Wrenn | Oscar Juarez| Kenny Gao
 
 ## The MIT License (MIT)
 
