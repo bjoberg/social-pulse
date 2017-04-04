@@ -81,7 +81,6 @@ test('Test getUsers method', async t => {
   // 3. Test
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.true(res.body.users.length >= users.length);
-  // t.fail();
 });
 
 /**
@@ -133,6 +132,58 @@ test('Test getUserLastName method', async t => {
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
   t.deepEqual(lastNameValue, lastNameExpected, [`REAMDE: value == ${lastNameValue} || expected == ${lastNameExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserPassword'
+ */
+test('Test getUserPassword method', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/password`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const passwordValue = res.body.user.password;
+  const passwordExpected = users[0].password;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(passwordValue, passwordExpected, [`REAMDE: value == ${passwordValue} || expected == ${passwordExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserSignupDate'
+ */
+test('Test getUserSignupDate method', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/signup_date`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+
+  // Get the dates and format them for comparison
+  const dateValue = res.body.user.signup_date;
+  const dateExpected = new Date();
+  const userSignupDateValue = `${new Date(dateValue).getFullYear()}-${new Date(dateValue).getMonth()}-${new Date(dateValue).getDay()}-${new Date(dateValue).getSeconds()}`;
+  const userSignupDateExpected = `${dateExpected.getFullYear()}-${dateExpected.getMonth()}-${dateExpected.getDay()}-${dateExpected.getSeconds()}`;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(userSignupDateValue, userSignupDateExpected, [`REAMDE: value == ${userSignupDateValue} || expected == ${userSignupDateExpected}`]);
 });
 
 /**
