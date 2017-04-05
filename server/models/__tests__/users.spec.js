@@ -1,7 +1,7 @@
 // External modules
 import test from 'ava';
-import request from 'supertest';
 import mongoose from 'mongoose';
+import request from 'supertest';
 
 // Local modules
 import app from '../../server';
@@ -16,10 +16,8 @@ const users = [
 // MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
-/**
- * Connect to the mongoDb test database instance.
- */
-test.before.serial('Connect to the database', async () => {
+test.before.serial('Connect to the database && add the test users.', async () => {
+  // Connect to the mongoDb test database instance.
   await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
     if (err) {
       console.error('Connection failed', err);
@@ -27,34 +25,44 @@ test.before.serial('Connect to the database', async () => {
       console.log('Connected.');
     }
   });
-});
 
-/**
- * Add the new users to the test database.
- */
-test.beforeEach('Refresh the data', async () => {
+  // Add the new users to the test database.
   await User.create(users, err => {
     if (err) {
       console.error('Save failed.', err);
     } else {
-      console.log('Saved the users.');
+      console.log(`Saved ${users.length} new users.`);
     }
   });
 });
 
-/**
- * Remove user data from the test database.
- */
-test.afterEach.serial.always('Remove any modified data', async () => {
+test.after.always('Remove all of the user && disconnect from the database.', async () => {
+  // Remove all of the users.
   await User.remove(err => {
     if (err) {
       console.error('Could not remove the user.', err);
     } else {
-      console.log('Removed the users.');
+      console.log('Removed all of the users.');
     }
+  });
+  await mongooseInstance.disconnect(err => {
+    if (err) {
+      return console.error('Disconnection failed.', err);
+    }
+    return console.log('Disconnected.');
   });
 });
 
+async function getTestUserIdByIndex(userIndex) {
+  let userId = '';
+  await User.find().exec((err, user) => {
+    if (err) {
+      console.error('Error getting the userId.', err);
+    }
+    userId = user[userIndex]._id;
+  });
+  return userId;
+}
 test.serial('Should correctly give number of Users', async t => {
   t.plan(10);
 
@@ -106,22 +114,9 @@ test.serial('Should correctly give number of Users', async t => {
 });
 
 /**
- * Disconnect from the mongoDb test database instance.
- */
-test.after.always('Disconnect from the database', async () => {
-  await mongooseInstance.disconnect(err => {
-    if (err) {
-      return console.error('Disconnection failed.', err);
-    }
-    return console.log('Disconnected.');
-  });
-});
-
-/**
  * Test the GET method 'getUsers'
  */
-test.serial('Test getUsers method', async t => {
-  console.log("getUsers");
+test('Test getUsers method', async t => {
   // 1. Setup
   t.plan(2);
 
@@ -130,39 +125,23 @@ test.serial('Test getUsers method', async t => {
     .get('/api/v1/users')
     .set('Accept', 'application/json');
 
-  console.log(res.body.users);
-
   // 3. Test
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.true(res.body.users.length >= users.length);
-  // t.fail();
 });
 
 /**
  * Test the GET method 'getUser'
  */
-test.serial('Test getUser method', async t => {
-  console.log("getUser");
+test('Test getUser method', async t => {
   // 1. Setup
   t.plan(4);
-
-  User.find().exec((err, f) => {
-    console.log(f);
-  });
-
-  // Get the _id value of the first user in the database.
-  let res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  console.log(res.body.users);
-  const userId = res.body.users[0]._id;
+  const userId = await getTestUserIdByIndex(0);
 
   // 2. Request
-  res = await request(app)
+  const res = await request(app)
     .get(`/api/v1/user/${userId}`)
     .set('Accept', 'application/json');
-
-  console.log(res.body.users);
 
   // 3. Test
   const numberOfUsersValue = Object.keys(res.body).length;
@@ -181,18 +160,13 @@ test.serial('Test getUser method', async t => {
 /**
  * Test the GET method 'getUserLastName'
  */
-test.serial('Test getUserLastName method', async t => {
-  console.log("getUserLastNAme");
+test('Test getUserLastName method', async t => {
   // 1. Setup
   t.plan(3);
-  // Get the _id value of the first user in the database.
-  let res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  const userId = res.body.users[0]._id;
+  const userId = await getTestUserIdByIndex(0);
 
   // 2. Request
-  res = await request(app)
+  const res = await request(app)
     .get(`/api/v1/user/${userId}/last_name`)
     .set('Accept', 'application/json');
 
@@ -208,20 +182,67 @@ test.serial('Test getUserLastName method', async t => {
 });
 
 /**
- * Test the GET method 'getUserEmailIsVerified'
+ * Test the GET method 'getUserPassword'
  */
-test.serial('Test getUserEmailIsVerified method', async t => {
-  console.log("getUserEmailIsVerified");
+test('Test getUserPassword method', async t => {
   // 1. Setup
   t.plan(3);
-  // Get the _id value of the first user in the database.
-  let res = await request(app)
-    .get('/api/v1/users')
-    .set('Accept', 'application/json');
-  const userId = res.body.users[0]._id;
+  const userId = await getTestUserIdByIndex(0);
 
   // 2. Request
-  res = await request(app)
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/password`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const passwordValue = res.body.user.password;
+  const passwordExpected = users[0].password;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(passwordValue, passwordExpected, [`REAMDE: value == ${passwordValue} || expected == ${passwordExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserSignupDate'
+ */
+test('Test getUserSignupDate method', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/signup_date`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+
+  // Get the dates and format them for comparison
+  const dateValue = res.body.user.signup_date;
+  const dateExpected = new Date();
+  const userSignupDateValue = `${new Date(dateValue).getFullYear()}-${new Date(dateValue).getMonth()}-${new Date(dateValue).getDay()}-${new Date(dateValue).getMinutes()}`;
+  const userSignupDateExpected = `${dateExpected.getFullYear()}-${dateExpected.getMonth()}-${dateExpected.getDay()}-${dateExpected.getMinutes()}`;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(userSignupDateValue, userSignupDateExpected, [`REAMDE: value == ${userSignupDateValue} || expected == ${userSignupDateExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserEmailIsVerified'
+ */
+test('Test getUserEmailIsVerified method', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
     .get(`/api/v1/user/${userId}/email_is_verified`)
     .set('Accept', 'application/json');
 
@@ -236,3 +257,137 @@ test.serial('Test getUserEmailIsVerified method', async t => {
   t.deepEqual(emailIsVerifiedValue, emailIsVerifiedExpected, [`REAMDE: value == ${emailIsVerifiedValue} || expected == ${emailIsVerifiedExpected}`]);
 });
 
+/**
+ * Test the GET method 'getUserSocial'
+ */
+test('Test getUserSocial', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/social`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const socialValue = res.body.user.social_media;
+  const socialExpected = [];
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(socialValue, socialExpected, [`REAMDE: value == ${socialValue} || expected == ${socialExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserSecurity'
+ */
+test('Test getUserSecurity', async t => {
+  // 1. Setup
+  t.plan(6);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/security`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const numberOfSecurityKeysValue = Object.keys(res.body.user.security).length;
+  const numberOfSecurityKeysExpected = 3;
+  const securityVerificationCodeValue = res.body.user.security.verification_code;
+  const securityVerificationCodeExpected = null;
+  const securityBackupEmailValue = res.body.user.security.backup_email;
+  const securityBackupEmailExpected = null;
+  const securityTwoFactorAuthValue = res.body.user.security.two_factor_auth;
+  const securityTwoFactorAuthExpected = false;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(numberOfSecurityKeysValue, numberOfSecurityKeysExpected, [`REAMDE: value == ${numberOfSecurityKeysValue} || expected == ${numberOfSecurityKeysExpected}`]);
+  t.deepEqual(securityVerificationCodeValue, securityVerificationCodeExpected, [`REAMDE: value == ${securityVerificationCodeValue} || expected == ${securityVerificationCodeExpected}`]);
+  t.deepEqual(securityBackupEmailValue, securityBackupEmailExpected, [`REAMDE: value == ${securityBackupEmailValue} || expected == ${securityBackupEmailExpected}`]);
+  t.deepEqual(securityTwoFactorAuthValue, securityTwoFactorAuthExpected, [`REAMDE: value == ${securityTwoFactorAuthValue} || expected == ${securityTwoFactorAuthExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserUsername'
+ */
+test('Test putUserUsername', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedUsernameExpected = 'updatedUsername';
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/username`)
+    .send({ username: updatedUsernameExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedUsernameValueObject = await User.findOne({ _id: userId }, 'username').exec();
+  const updatedUsernameValue = updatedUsernameValueObject.username;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the username has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedUsernameValue, updatedUsernameExpected, [`REAMDE: value == ${updatedUsernameValue} || expected == ${updatedUsernameExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserPassword'
+ */
+test('Test putUserPassword', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedPasswordExpected = 'updatedPassword';
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/password`)
+    .send({ password: updatedPasswordExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedPasswordValueObject = await User.findOne({ _id: userId }, 'password').exec();
+  const updatedPasswordValue = updatedPasswordValueObject.password;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the password has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedPasswordValue, updatedPasswordExpected, [`REAMDE: value == ${updatedPasswordValue} || expected == ${updatedPasswordExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserLastUserInteraction'
+ */
+test('Test putUserLastUserInteraction', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedLastUserInteractionExpected = new Date();
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/last_user_interaction`)
+    .send({ last_user_interaction: updatedLastUserInteractionExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedLastUserInteractionValueObject = await User.findOne({ _id: userId }, 'last_user_interaction').exec();
+  const updatedLastUserInteractionValue = updatedLastUserInteractionValueObject.last_user_interaction;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the last_user_interaction has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedLastUserInteractionValue, updatedLastUserInteractionExpected, [`REAMDE: value == ${updatedLastUserInteractionValue} || expected == ${updatedLastUserInteractionExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
