@@ -3,6 +3,7 @@ import compression from 'compression';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
+import session from 'express-session';
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -12,6 +13,13 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 // Initialize the Express App
 const app = new Express();
+
+// User sessions for tracking logins
+app.use(session({
+  secret: 'we are social-pulse',
+  resave: true,
+  saveUninitialized: false,
+}));
 
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -32,6 +40,7 @@ import Helmet from 'react-helmet';
 import routes from '../client/routes';
 import { fetchComponentData } from './util/fetchData';
 import users from './routes/user.routes';
+import authentication from './routes/authentication.routes';
 import serverConfig from './config';
 
 // Set native promises as mongoose promise
@@ -51,6 +60,7 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/v1', users);
+app.use('/api/v1', authentication);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {

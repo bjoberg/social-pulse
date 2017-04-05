@@ -1,21 +1,5 @@
 import User from '../models/user';
 
-// ///////////////////////////////// Helpers ///////////////////////////////////
-/**
- * FOR TESTING PURPOSES.
- * Return the _id values of all the users in the database.
- */
-export function getUserIds(req, res) {
-  User.find('_id').exec((err, users) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ users });
-    }
-  });
-}
-
-
 // ///////////////////////////////// GET Requests ///////////////////////////////////
 
 /**
