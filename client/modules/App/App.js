@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 // Import Style
 import styles from './App.css';
@@ -9,8 +8,6 @@ import Helmet from 'react-helmet';
 // import DevTools from './components/DevTools';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-
-// Import Actions
 
 export class App extends Component {
   constructor(props) {
@@ -55,14 +52,6 @@ export class App extends Component {
 
 App.propTypes = {
   children: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
 };
 
-// Retrieve data from store as props
-function mapStateToProps(store) {
-  return {
-    intl: store.intl,
-  };
-}
-
-export default connect(mapStateToProps)(App);
+export default App;

@@ -13,4 +13,4 @@ const userData = (state = initUserData, action) => {
   }
 };
 
-export default userData
+export default userData;
