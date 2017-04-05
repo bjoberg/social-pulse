@@ -48,7 +48,7 @@ userSchema.statics.authenticate = function(username, password, callback) {
   User.findOne({ username: username })
     .exec(function (err, user) {
       if (err) {
-        console.error('Erro with username', err);
+        console.error('Error with username', err);
         return callback(err);
       } else if (!user) {
         console.log('Invalid username');
@@ -56,7 +56,7 @@ userSchema.statics.authenticate = function(username, password, callback) {
         error.status = 401;
         return callback(error);
       }
-      bcrypt.compare(password, user.password, function(error, result) {
+      bcrypt.compare(password, user.password, (error, result) => {
         if (result === true) {
           return callback(null, user);
         }
@@ -65,16 +65,20 @@ userSchema.statics.authenticate = function(username, password, callback) {
     });
 };
 
-// Has password before saving to database
+// Hash password before saving to database
 userSchema.pre('save', function (next) {
   const user = this;
-  bcrypt.hash(user.password, 10, (err, hash) => {
-    if (err) {
-      return next(err);
-    }
-    user.password = hash;
-    return next();
-  });
+  if (user.password !== undefined && user.password != null) {
+    bcrypt.hash(user.password, 10, (err, hash) => {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      return next();
+    });
+  } else {
+    next();
+  }
 });
 
 const User = mongoose.model('User', userSchema);

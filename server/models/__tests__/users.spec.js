@@ -2,15 +2,20 @@
 import test from 'ava';
 import mongoose from 'mongoose';
 import request from 'supertest';
+import bcrypt from 'bcrypt';
 
 // Local modules
 import app from '../../server';
 import User from '../user';
 
+const user1password = 'password123.1';
+const user2password = 'password123.2';
+
+// IMPORTANT NOTE: Use user 1 for all GET requests and user 2 for all PUT requests.
 // Test users
 const users = [
-  new User({ username: 'test.user', first_name: 'test', last_name: 'user', password: 'password123.1', email: 'test.user.1@gmail.com' }),
-  new User({ username: 'test.user2', first_name: 'test2', last_name: 'user2', password: 'password123.2', email: 'test.user.2@gmail.com' }),
+  new User({ username: 'test.user', first_name: 'test', last_name: 'user', password: user1password, email: 'test.user.1@gmail.com' }),
+  new User({ username: 'test.user2', first_name: 'test2', last_name: 'user2', password: user2password, email: 'test.user.2@gmail.com' }),
 ];
 
 // MongoDb instance.
@@ -77,7 +82,7 @@ test.serial('Should correctly give number of Users', async t => {
 
   t.is(res.status, 200);
   t.deepEqual(users.length, res.body.users.length);
-  console.log("Returned correct number of users");
+  console.log('Returned correct number of users');
 
   // Testing getUserFirstName
   res = await request(app)
@@ -111,7 +116,7 @@ test.serial('Should correctly give number of Users', async t => {
 
   t.is(res.status, 200);
   t.deepEqual(users[1].email, res.body.user.email);
-  console.log("Returned correct email for test.user2");
+  // console.log("Returned correct email for test.user2");
 });
 
 /**
@@ -199,11 +204,12 @@ test('Test getUserPassword method', async t => {
   const numberOfUserKeysValue = Object.keys(res.body.user).length;
   const numberOfUserKeysExpected = 2;
   const passwordValue = res.body.user.password;
-  const passwordExpected = users[0].password;
+  let validPassword = false;
+  validPassword = bcrypt.compareSync(user1password, passwordValue);
 
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
-  t.deepEqual(passwordValue, passwordExpected, [`REAMDE: value == ${passwordValue} || expected == ${passwordExpected}`]);
+  t.truthy(validPassword, ['README: Passwords are not equal']);
 });
 
 /**
@@ -226,12 +232,36 @@ test('Test getUserSignupDate method', async t => {
   // Get the dates and format them for comparison
   const dateValue = res.body.user.signup_date;
   const dateExpected = new Date();
-  const userSignupDateValue = `${new Date(dateValue).getFullYear()}-${new Date(dateValue).getMonth()}-${new Date(dateValue).getDay()}-${new Date(dateValue).getMinutes()}`;
-  const userSignupDateExpected = `${dateExpected.getFullYear()}-${dateExpected.getMonth()}-${dateExpected.getDay()}-${dateExpected.getMinutes()}`;
+  const userSignupDateValue = `${new Date(dateValue).getFullYear()}-${new Date(dateValue).getMonth()}-${new Date(dateValue).getDay()}`;
+  const userSignupDateExpected = `${dateExpected.getFullYear()}-${dateExpected.getMonth()}-${dateExpected.getDay()}`;
 
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
   t.deepEqual(userSignupDateValue, userSignupDateExpected, [`REAMDE: value == ${userSignupDateValue} || expected == ${userSignupDateExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserNotificationList'
+ */
+test('Test getUserNotificationList', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(0);
+
+  // 2. Request
+  const res = await request(app)
+    .get(`/api/v1/user/${userId}/notification_list`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const notificationListValue = res.body.user.notification_list;
+  const notifcationListExpected = [];
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(notificationListValue, notifcationListExpected, [`REAMDE: value == ${notificationListValue} || expected == ${notifcationListExpected}`]);
 });
 
 /**
@@ -342,6 +372,84 @@ test('Test putUserUsername', async t => {
 });
 
 /**
+ * Test the PUT method 'putUserFirstName'
+ */
+test('Test putUserFirstName', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedFirstNameExpected = 'updateFirstName';
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/first_name`)
+    .send({ first_name: updatedFirstNameExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedFirstNameValueObject = await User.findOne({ _id: userId }, 'first_name').exec();
+  const updatedFirstNameValue = updatedFirstNameValueObject.first_name;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the first_name has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedFirstNameValue, updatedFirstNameExpected, [`REAMDE: value == ${updatedFirstNameValue} || expected == ${updatedFirstNameExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserLastName'
+ */
+test('Test putUserLastName', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedLastNameExpected = 'updatedLastName';
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/last_name`)
+    .send({ last_name: updatedLastNameExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedLastNameValueObject = await User.findOne({ _id: userId }, 'last_name').exec();
+  const updatedLastNameValue = updatedLastNameValueObject.last_name;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the last_name has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedLastNameValue, updatedLastNameExpected, [`REAMDE: value == ${updatedLastNameValue} || expected == ${updatedLastNameExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserEmail'
+ */
+test('Test putUserEmail', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedEmailExpected = 'updatedEmail';
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/email`)
+    .send({ email: updatedEmailExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedEmailValueObject = await User.findOne({ _id: userId }, 'email').exec();
+  const updatedEmailValue = updatedEmailValueObject.email;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the email has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedEmailValue, updatedEmailExpected, [`REAMDE: value == ${updatedEmailValue} || expected == ${updatedEmailExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
  * Test the PUT method 'putUserPassword'
  */
 test('Test putUserPassword', async t => {
@@ -359,11 +467,13 @@ test('Test putUserPassword', async t => {
   // 3. Test
   const updatedPasswordValueObject = await User.findOne({ _id: userId }, 'password').exec();
   const updatedPasswordValue = updatedPasswordValueObject.password;
+  let validPassword = false;
+  validPassword = bcrypt.compareSync(updatedPasswordExpected, updatedPasswordValue);
   const responseValue = res.body.output;
   const responseExpected = 'Success! the password has been saved.';
 
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
-  t.deepEqual(updatedPasswordValue, updatedPasswordExpected, [`REAMDE: value == ${updatedPasswordValue} || expected == ${updatedPasswordExpected}`]);
+  t.truthy(validPassword, ['README: Passwords are not equal']);
   t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
 });
 
@@ -390,5 +500,31 @@ test('Test putUserLastUserInteraction', async t => {
 
   t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
   t.deepEqual(updatedLastUserInteractionValue, updatedLastUserInteractionExpected, [`REAMDE: value == ${updatedLastUserInteractionValue} || expected == ${updatedLastUserInteractionExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+/**
+ * Test the PUT method 'putUserEmailIsVerified'
+ */
+test('Test putUserEmailIsVerified', async t => {
+  // 1. Setup
+  t.plan(3);
+  const userId = await getTestUserIdByIndex(1);
+  const updatedEmailIsVerifiedExpected = true;
+
+  // 2. Request
+  const res = await request(app)
+    .put(`/api/v1/user/${userId}/email_is_verified`)
+    .send({ email_is_verified: updatedEmailIsVerifiedExpected })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const updatedEmailIsVerifiedValueObject = await User.findOne({ _id: userId }, 'email_is_verified').exec();
+  const updatedEmailIsVerifiedValue = updatedEmailIsVerifiedValueObject.email_is_verified;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! the email_is_verified has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(updatedEmailIsVerifiedValue, updatedEmailIsVerifiedExpected, [`REAMDE: value == ${updatedEmailIsVerifiedValue} || expected == ${updatedEmailIsVerifiedExpected}`]);
   t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
 });

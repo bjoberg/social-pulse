@@ -213,7 +213,9 @@ function putUserHelper(request, err, user, req, res) {
 
     user.save(() => {
       if (err) {
-        res.status(500).send(err);
+        const customError = new Error('Bad request');
+        customError.status = 500;
+        res.status(500).send(customError);
       } else {
         res.json({ output: `Success! the ${request} has been saved.` });
       }
