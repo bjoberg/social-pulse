@@ -64,8 +64,8 @@ async function getTestUserIdByIndex(userIndex) {
   return userId;
 }
 
-test.serial('Should correctly give number of Users', async t => {
-  t.plan(10);
+test.only.serial('Should correctly give number of Users', async t => {
+  t.plan(19);
 
   let res = await request(app)
     .get('/api/v1/users')
@@ -78,6 +78,23 @@ test.serial('Should correctly give number of Users', async t => {
   t.is(res.status, 200);
   t.deepEqual(users.length, res.body.users.length);
   console.log("Returned correct number of users");
+
+  // Testing getUserUsername
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/username')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  t.deepEqual(users[0].username, res.body.user.username);
+  console.log("Returned correct username for test.user1");
+
+  res = await request(app)
+  .get('/api/v1/user/' + id2 + '/username')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  t.deepEqual(users[1].username, res.body.user.username);
+  console.log("Returned correct username for test.user2");
 
   // Testing getUserFirstName
   res = await request(app)
@@ -112,6 +129,22 @@ test.serial('Should correctly give number of Users', async t => {
   t.is(res.status, 200);
   t.deepEqual(users[1].email, res.body.user.email);
   console.log("Returned correct email for test.user2");
+
+  // Testing getUserNotificationPreferences
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/notification_preferences')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  console.log("Testing users notificaton preferences defaults:");
+  t.deepEqual(true, res.body.user.notification_preferences.backup_email_reminder);
+  console.log("test.user1 backup_email_reminder returned succesfully");
+  t.deepEqual(true, res.body.user.notification_preferences.password_reminder);
+  console.log("test.user1 password_reminder returned succesfully");
+  t.deepEqual(true, res.body.user.notification_preferences.updates);
+  console.log("test.user1 updates returned succesfully");
+  t.deepEqual(true, res.body.user.notification_preferences.newsletter);
+  console.log("test.user1 newsletter returned succesfully");
 });
 
 /**
