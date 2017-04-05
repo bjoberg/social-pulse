@@ -16,7 +16,7 @@ const users = [
 // MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
-test.before.serial('Connect to the database && add the test users.', async () => {
+test.before('Connect to the database && add the test users.', async () => {
   // Connect to the mongoDb test database instance.
   await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
     if (err) {
@@ -45,8 +45,6 @@ test.after.always('Remove all of the user && disconnect from the database.', asy
       console.log('Removed all of the users.');
     }
   });
-
-  // Disconnect from the mongoDb test database intance.
   await mongooseInstance.disconnect(err => {
     if (err) {
       return console.error('Disconnection failed.', err);
@@ -65,6 +63,56 @@ async function getTestUserIdByIndex(userIndex) {
   });
   return userId;
 }
+
+test.serial('Should correctly give number of Users', async t => {
+  t.plan(10);
+
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
+
+  // Saving id's created for each test user
+  const id1 = res.body.users[0]._id;
+  const id2 = res.body.users[1]._id;
+
+  t.is(res.status, 200);
+  t.deepEqual(users.length, res.body.users.length);
+  console.log("Returned correct number of users");
+
+  // Testing getUserFirstName
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/first_name')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  t.deepEqual(users[0].first_name, res.body.user.first_name);
+  console.log("Returned correct last name for test.user1");
+
+  res = await request(app)
+  .get('/api/v1/user/' + id2 + '/first_name')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  t.deepEqual(users[1].first_name, res.body.user.first_name);
+  console.log("Returned correct last name for test.user2");
+
+  // Testing getUserEmail
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/email')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  t.deepEqual(users[0].email, res.body.user.email);
+  console.log("Returned correct email for test.user1");
+
+  res = await request(app)
+  .get('/api/v1/user/' + id2 + '/email')
+  .set('Accept', 'application/json');
+
+  t.is(res.status, 200);
+  t.deepEqual(users[1].email, res.body.user.email);
+  console.log("Returned correct email for test.user2");
+});
 
 /**
  * Test the GET method 'getUsers'
