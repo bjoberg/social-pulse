@@ -16,7 +16,7 @@ const users = [
 // MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
-test.before.serial('Connect to the database && add the test users.', async () => {
+test.before('Connect to the database && add the test users.', async () => {
   // Connect to the mongoDb test database instance.
   await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
     if (err) {
@@ -63,6 +63,7 @@ async function getTestUserIdByIndex(userIndex) {
   });
   return userId;
 }
+
 test.serial('Should correctly give number of Users', async t => {
   t.plan(10);
 

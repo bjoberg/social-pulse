@@ -1,7 +1,20 @@
-import axios from 'axios';
+import { browserHistory } from 'react-router'
+
+export const SET_USER_STATE = 'SET_USER_STATE'
+export const setUserState = (userData) => ({
+  type: SET_USER_STATE,
+  userData
+})
 
 export function loginRequest(userData) {
-  return dispatch => {
-    return axios.post('/api/v1/user', userData);
+  return (dispatch) => {
+      // TODO: api call to backend
+      // TODO: check that user exists first
+      const tempUserData = {
+        username: userData.username,
+        settings: {}
+      };
+      dispatch(setUserState(tempUserData))
+      browserHistory.push('/dashboard')
   }
 }
