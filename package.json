@@ -14,7 +14,8 @@
     "build:server": "cross-env NODE_ENV=production webpack --config webpack.config.server.js",
     "clean": "rimraf dist",
     "slate": "rimraf node_modules && npm install",
-    "lint": "eslint client server"
+    "lint": "eslint client server",
+    "heroku-postbuild": "npm start bs"
   },
   "pre-commit": [
     "lint",
@@ -31,6 +32,7 @@
   "author": "Brett Oberg (brett@obergmail.com), Casey Jordan (cjjordan234@gmail.com), Eli Wrenn (ewrenn@wisc.edu), Ivan Pereda-Zorrilla (ivanpereda95@gmail.com), Kenny Gao (kgao9@wisc.edu), Lucas Stefanski (lstefanski@wisc.edu), and Oscar Juarez (oscarjuarez66@gmail.com)",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.16.0",
     "babel-core": "^6.9.1",
     "body-parser": "^1.15.1",
     "compression": "^1.6.2",
@@ -49,6 +51,7 @@
     "react-intl": "^2.1.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.1",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "sanitize-html": "^1.11.4"
@@ -115,7 +118,8 @@
     "webpack-manifest-plugin": "^1.0.1"
   },
   "engines": {
-    "node": ">=4"
+    "node": "6.10.0",
+    "npm": "4.3.0"
   },
   "ava": {
     "files": [

@@ -1,12 +1,25 @@
-'use strict';
-
 import User from '../models/user';
 
-/********************************** GET Requests **********************************/
+// ///////////////////////////////// Helpers ///////////////////////////////////
+/**
+ * FOR TESTING PURPOSES.
+ * Return the _id values of all the users in the database.
+ */
+export function getUserIds(req, res) {
+  User.find('_id').exec((err, users) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ users });
+    }
+  });
+}
+
+
+// ///////////////////////////////// GET Requests ///////////////////////////////////
 
 /**
  * Return the User object based on the specific User object field that is being requested.
- * 
  * @param request (string) is the field within the User object being updated
  * @param err
  * @param req
@@ -193,11 +206,10 @@ export function getUserSecurity(req, res) {
   });
 }
 
-/********************************** PUT Requests **********************************/
+// ///////////////////////////////// PUT Requests ///////////////////////////////////
 
 /**
  * Update the User object based on the specific User object field that is being updated.
- * 
  * @param request (string) is the field within the User object being updated
  * @param err
  * @param req
@@ -207,19 +219,19 @@ export function getUserSecurity(req, res) {
 function putUserHelper(request, err, user, req, res) {
   if (err) {
     res.status(500).send(err);
-  } else if(!req.body[request]) {
-    let customError = new Error("Bad request");
+  } else if (!req.body[request]) {
+    const customError = new Error('Bad request');
     customError.status = 400;
 
     res.status(400).send(customError);
   } else {
-    user[request] = req.body[request]
+    user[request] = req.body[request];
 
-    user.save(function(err, saved) {
+    user.save(err, saved => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.json({ output: "Success! the " + request + " has been save with value " + saved});
+        res.json({ output: `Success! the ${request} has been save with value ${saved}` });
       }
     });
   }
@@ -309,7 +321,7 @@ export function putUserLastUserInteraction(req, res) {
   });
 }
 
-/********************************** POST Requests **********************************/
+// ///////////////////////////////// POST Requests ///////////////////////////////////
 
 /**
  * Create a new
@@ -331,7 +343,7 @@ export function postNewUser(req, res) {
   }
 }
 
-/********************************** DELETE Requests **********************************/
+// ///////////////////////////////// DELETE Requests ///////////////////////////////////
 
 /**
  * Delete a user
@@ -345,10 +357,13 @@ export function deleteUser(req, res) {
       res.status(500).send(err);
     }
 
-    user.remove((err, saved) => {
-      if(err) {res.status(500).send(err); }
-      res.json({ user: saved });
-      res.status(200).end();
+    user.remove(err, saved => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json({ user: saved });
+        res.status(200).end();
+      }
     });
   });
 }

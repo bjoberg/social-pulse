@@ -1,9 +1,10 @@
-import React from 'react';
-
+import React from 'react'
+import { placeHolderText1, placeHolderText2 } from '../placeHolderText';
 export function Terms() {
   return (
     <div>
-      Terms Page
+      <h1>Terms</h1>
+      <p>{placeHolderText1}</p>
     </div>
   );
 }

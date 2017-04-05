@@ -1,7 +1,19 @@
+sudo: required
+dist: trusty
 language: node_js
 node_js:
-  - '5'
-  - '4'
+  - '6.10'
+branches:
+  only:
+  - testing
+notifications:
+  email:
+    - cjjordan234@gmail.com
+    - ewrenn@wisc.edu
+    - ivanpereda95@gmail.com
+    - kgao9@wisc.edu
+    - lstefanski@wisc.edu
+    - oscarjuarez66@gmail.com
 before_install:
   - 'npm install -g npm@latest'
 services:
