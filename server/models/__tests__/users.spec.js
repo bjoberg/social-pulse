@@ -39,13 +39,34 @@ test.before('Connect to the database && add the test users.', async () => {
   });
 
   // Add the new users to the test database.
-  await User.create(users, err => {
+  await User.create(users[0], err => {
     if (err) {
       console.error('Save failed.', err);
     } else {
-      console.log(`Saved ${users.length} new users.`);
+      console.log('Saved user 1 new users.');
     }
   });
+  await User.create(users[1], err => {
+    if (err) {
+      console.error('Save failed.', err);
+    } else {
+      console.log('Saved user 2 new users.');
+    }
+  });
+  await User.create(users[2], err => {
+    if (err) {
+      console.error('Save failed.', err);
+    } else {
+      console.log('Saved user 3 new users.');
+    }
+  });
+  // await User.create(users, err => {
+  //   if (err) {
+  //     console.error('Save failed.', err);
+  //   } else {
+  //     console.log(`Saved ${users.length} new users.`);
+  //   }
+  // });
 });
 
 test.after.always('Remove all of the user && disconnect from the database.', async () => {
@@ -76,63 +97,63 @@ async function getTestUserIdByIndex(userIndex) {
   return userId;
 }
 
-// test.serial('Testing Oscars Gets', async t => {
-//   t.plan(13);
+test.serial('Testing Oscars Gets', async t => {
+  t.plan(13);
 
-//   let res = await request(app)
-//     .get('/api/v1/users')
-//     .set('Accept', 'application/json');
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
 
-//   // Saving id's created for each test user
-//   const id1 = res.body.users[0]._id;
+  // Saving id's created for each test user
+  const id1 = res.body.users[0]._id;
 
-//   t.is(res.status, 200);
-//   t.deepEqual(users.length, res.body.users.length);
-//   console.log('Returned correct number of users');
+  t.is(res.status, 200);
+  t.deepEqual(users.length, res.body.users.length);
+  console.log('Returned correct number of users');
 
-//   // Testing getUserUsername
-//   res = await request(app)
-//   .get('/api/v1/user/' + id1 + '/username')
-//   .set('Accept', 'application/json');
+  // Testing getUserUsername
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/username')
+  .set('Accept', 'application/json');
 
-//   t.is(res.status, 200);
-//   t.deepEqual(users[0].username, res.body.user.username);
-//   console.log("Returned correct username for test.user1");
+  t.is(res.status, 200);
+  t.deepEqual(users[0].username, res.body.user.username);
+  console.log("Returned correct username for test.user1");
 
-//   // Testing getUserFirstName
-//   res = await request(app)
-//   .get('/api/v1/user/' + id1 + '/first_name')
-//   .set('Accept', 'application/json');
+  // Testing getUserFirstName
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/first_name')
+  .set('Accept', 'application/json');
 
-//   t.is(res.status, 200);
-//   t.deepEqual(users[0].first_name, res.body.user.first_name);
-//   console.log("Returned correct last name for test.user1");
+  t.is(res.status, 200);
+  t.deepEqual(users[0].first_name, res.body.user.first_name);
+  console.log("Returned correct last name for test.user1");
 
-//   // Testing getUserEmail
-//   res = await request(app)
-//   .get('/api/v1/user/' + id1 + '/email')
-//   .set('Accept', 'application/json');
+  // Testing getUserEmail
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/email')
+  .set('Accept', 'application/json');
 
-//   t.is(res.status, 200);
-//   t.deepEqual(users[0].email, res.body.user.email);
-//   console.log("Returned correct email for test.user1");
+  t.is(res.status, 200);
+  t.deepEqual(users[0].email, res.body.user.email);
+  console.log("Returned correct email for test.user1");
 
-//   // Testing getUserNotificationPreferences
-//   res = await request(app)
-//   .get('/api/v1/user/' + id1 + '/notification_preferences')
-//   .set('Accept', 'application/json');
+  // Testing getUserNotificationPreferences
+  res = await request(app)
+  .get('/api/v1/user/' + id1 + '/notification_preferences')
+  .set('Accept', 'application/json');
 
-//   t.is(res.status, 200);
-//   console.log("Testing users notificaton preferences defaults:");
-//   t.deepEqual(true, res.body.user.notification_preferences.backup_email_reminder);
-//   console.log("test.user1 backup_email_reminder returned succesfully");
-//   t.deepEqual(true, res.body.user.notification_preferences.password_reminder);
-//   console.log("test.user1 password_reminder returned succesfully");
-//   t.deepEqual(true, res.body.user.notification_preferences.updates);
-//   console.log("test.user1 updates returned succesfully");
-//   t.deepEqual(true, res.body.user.notification_preferences.newsletter);
-//   //console.log("test.user1 newsletter returned succesfully");
-// });
+  t.is(res.status, 200);
+  console.log("Testing users notificaton preferences defaults:");
+  t.deepEqual(true, res.body.user.notification_preferences.backup_email_reminder);
+  console.log("test.user1 backup_email_reminder returned succesfully");
+  t.deepEqual(true, res.body.user.notification_preferences.password_reminder);
+  console.log("test.user1 password_reminder returned succesfully");
+  t.deepEqual(true, res.body.user.notification_preferences.updates);
+  console.log("test.user1 updates returned succesfully");
+  t.deepEqual(true, res.body.user.notification_preferences.newsletter);
+  //console.log("test.user1 newsletter returned succesfully");
+});
 
 /**
  * Test the GET method 'getUsers'

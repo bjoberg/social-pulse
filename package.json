@@ -132,7 +132,7 @@
       "client/**/*.js",
       "server/**/*.js"
     ],
-    "failFast": true,
+    "failFast": false,
     "babel": "inherit",
     "require": [
       "./server/util/setup-test-env.js"
