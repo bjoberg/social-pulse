@@ -11,11 +11,18 @@ import User from '../user';
 const user1password = 'password123.1';
 const user2password = 'password123.2';
 
-// IMPORTANT NOTE: Use user 1 for all GET requests and user 2 for all PUT requests.
-// Test users
+/**
+ * IMPORTANT!!
+ * user1 is used for all GET requests
+ * user2 is used for all PUT requests
+ * user3 is used for the 1 DELETE request
+ * NOTE:
+ * This is so when the tests are run asyncronously the data does not get confused.
+ */
 const users = [
   new User({ username: 'test.user', first_name: 'test', last_name: 'user', password: user1password, email: 'test.user.1@gmail.com' }),
   new User({ username: 'test.user2', first_name: 'test2', last_name: 'user2', password: user2password, email: 'test.user.2@gmail.com' }),
+  new User({ username: 'test.user3', first_name: 'test3', last_name: 'user3', password: user2password, email: 'test.user.3@gmail.com' }),
 ];
 
 // MongoDb instance.
@@ -536,3 +543,54 @@ test('Test putUserEmailIsVerified', async t => {
   t.deepEqual(updatedEmailIsVerifiedValue, updatedEmailIsVerifiedExpected, [`REAMDE: value == ${updatedEmailIsVerifiedValue} || expected == ${updatedEmailIsVerifiedExpected}`]);
   t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
 });
+
+/**
+ * Test POST 'postNewUser'
+ */
+test('Test postNewUser', async t => {
+  // 1. Setup
+  t.plan(5);
+  const firstNameExpected = 'test';
+  const lastNameExpected = 'user';
+  const emailExpected = 'test.user.added@gmail.com';
+
+  // 2. Request
+  const res = await request(app)
+    .post('/api/v1/user/')
+    .send({ user: { username: 'test.user.added', first_name: firstNameExpected, last_name: lastNameExpected, password: 'password123', email: emailExpected } })
+    .set('Content-Type', 'application/json');
+
+  // 3. Test
+  const user = await User.findOne({ username: 'test.user.added' }).exec();
+  const fistNameValue = user.first_name;
+  const lastNameValue = user.last_name;
+  const emailValue = user.email;
+  const responseValue = res.body.output;
+  const responseExpected = 'Success! a new user has been saved.';
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(fistNameValue, firstNameExpected, [`REAMDE: value == ${fistNameValue} || expected == ${firstNameExpected}`]);
+  t.deepEqual(lastNameValue, lastNameExpected, [`REAMDE: value == ${lastNameValue} || expected == ${lastNameExpected}`]);
+  t.deepEqual(emailValue, emailExpected, [`REAMDE: value == ${emailValue} || expected == ${emailExpected}`]);
+  t.deepEqual(responseValue, responseExpected, [`REAMDE: value == ${responseValue} || expected == ${responseExpected}`]);
+});
+
+// /**
+//  * Test DELETE 'deleteUser'
+//  */
+// test.only('Test deleteUser', async t => {
+//   // 1. Setup
+//   t.plan(2);
+//   const userId = await getTestUserIdByIndex(2);
+
+//   // 2. Request
+//   const deleteRes = await request(app).delete(`/api/v1/user/${userId}/`);
+
+//   // 3. Test
+//   const getRes = await request(app)
+//     .get('/api/v1/users')
+//     .set('Accept', 'application/json');
+
+//   t.is(deleteRes.status, 200, [`README: value == ${deleteRes.status} || expected == 200`]);
+//   t.deepEqual(getRes.length, users.length - 1, [`REAMDE: value == ${getRes.length} || expected == ${users.length}`]);
+// });

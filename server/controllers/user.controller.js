@@ -324,7 +324,7 @@ export function postNewUser(req, res) {
 
     newUser.save((err, saved) => {
       if (err) { res.status(500).send(err); }
-      res.json({ user: saved });
+      res.json({ output: 'Success! a new user has been saved.' });
       res.status(200).end();
     });
   }
