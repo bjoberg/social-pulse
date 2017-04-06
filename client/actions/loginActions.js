@@ -1,11 +1,11 @@
 import { browserHistory } from 'react-router'
 import axios from 'axios';
 
-export const SET_USER_STATE = 'SET_USER_STATE'
+export const SET_USER_STATE = 'SET_USER_STATE';
 export const setUserState = (userData) => ({
   type: SET_USER_STATE,
-  userData
-})
+  userData,
+});
 
 export function loginRequest(userData) {
   return (dispatch) => {
