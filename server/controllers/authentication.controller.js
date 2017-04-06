@@ -4,7 +4,6 @@ import User from '../models/user';
 
 export function login(req, res, next) {
   if (req.body.username && req.body.password) {
-    console.log('in if');
     User.authenticate(req.body.username, req.body.password, function (error, user) {
       if (error || !user) {
         const err = new Error('Invalid username or password');
@@ -12,7 +11,7 @@ export function login(req, res, next) {
         return next(err);
       } else {
         req.session.userId = user._id;
-        console.log("logged in.");
+        console.log('logged in.');
       }
     });
   } else {
