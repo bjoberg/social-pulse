@@ -5,7 +5,8 @@ class LoginForm extends Component {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      isLoading: false
     }
 
     //This line makes sure "this" does not refer to the event in onChange method
@@ -20,7 +21,21 @@ class LoginForm extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    this.props.loginRequest(this.state);
+    this.setState({isLoading: true});
+    const loginObject = { "username": this.state.username, "password": this.state.password };
+
+    this.props.loginRequest(loginObject).then(
+      () => {
+        console.log("success")
+        this.context.router.push("/dashboard");
+    },
+      ({ data }) => { 
+        this.setState({isLoading: false});
+        console.log("error");
+      });
+
+
+    //console.log(res.session.userId);
     //this.props.userSignupRequest(this.state);
   }
 
@@ -48,7 +63,7 @@ class LoginForm extends Component {
         </div>
        
         <div>
-          <button>
+          <button disabled={this.state.isLoading}>
             Login
           </button>
         </div>
@@ -59,6 +74,10 @@ class LoginForm extends Component {
 
 LoginForm.propTypes = {
   loginRequest: React.PropTypes.func.isRequired
+}
+
+LoginForm.contextTypes = {
+  router: React.PropTypes.object.isRequired
 }
 
 export default LoginForm;
