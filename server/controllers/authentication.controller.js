@@ -12,6 +12,7 @@ export function login(req, res, next) {
         return next(err);
       } else {
         req.session.userId = user._id;
+        res.json({ output: 'Hello.' });
         console.log("logged in.");
       }
     });
