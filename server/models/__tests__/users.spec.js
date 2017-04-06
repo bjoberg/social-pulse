@@ -152,7 +152,7 @@ test.serial('Testing Oscars Gets', async t => {
   t.deepEqual(true, res.body.user.notification_preferences.updates);
   console.log("test.user1 updates returned succesfully");
   t.deepEqual(true, res.body.user.notification_preferences.newsletter);
-  //console.log("test.user1 newsletter returned succesfully");
+  console.log("test.user1 newsletter returned succesfully");
 });
 
 /**
