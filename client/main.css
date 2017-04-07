@@ -5,10 +5,15 @@ Global CSS file
 * {
   margin: 0;
   padding: 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   line-height: normal;
+}
+
+body {
+  background: #FFF;
+  color: #555;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
 }
 
 a:link {
@@ -25,11 +30,5 @@ h1, h2 {
 
 p {
   line-height: 200%;
-}
-
-body {
-  background: #FFF;
-  color: #555;
-  font-size: 16px;
-  font-family: 'Roboto', sans-serif;
+  margin-bottom: 15px;
 }
