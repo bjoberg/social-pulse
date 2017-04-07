@@ -1,9 +1,13 @@
+// External imports
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+
+// Local imports
 import Notification from './notification';
+
 
 const Schema = mongoose.Schema;
 
-// NOTE: ommitted sessionId
 // TODO: Add 'unique: true' to email and username
 // TODO: Add 'trim: true' to username, first_name, last_name, email
 const userSchema = new Schema({
@@ -39,4 +43,43 @@ const userSchema = new Schema({
   },
 });
 
+// Authenticate input against database documents
+userSchema.statics.authenticate = function(username, password, callback) {
+  User.findOne({ username: username })
+    .exec(function (err, user) {
+      if (err) {
+        console.error('Error with username', err);
+        return callback(err);
+      } else if (!user) {
+        console.log('Invalid username');
+        const error = new Error('User not found.');
+        error.status = 401;
+        return callback(error);
+      }
+      bcrypt.compare(password, user.password, (error, result) => {
+        if (result === true) {
+          return callback(null, user);
+        }
+        return callback();
+      });
+    });
+};
+
+// Hash password before saving to database
+userSchema.pre('save', function (next) {
+  const user = this;
+  if (user.password !== undefined && user.password != null) {
+    bcrypt.hash(user.password, 10, (err, hash) => {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      return next();
+    });
+  } else {
+    next();
+  }
+});
+
+const User = mongoose.model('User', userSchema);
 export default mongoose.model('User', userSchema);
