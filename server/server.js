@@ -1,9 +1,9 @@
-import Express from 'express';
-import compression from 'compression';
-import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
-import path from 'path';
-import session from 'express-session';
+import Express from 'express';          // Server
+import compression from 'compression';  // Minification
+import mongoose from 'mongoose';        // Database
+import bodyParser from 'body-parser';   // Parses URL encoded text
+import path from 'path';                // Utilities for working with file and directory paths
+import session from 'express-session';  // Session monitoring (Cookies)
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -37,11 +37,11 @@ import { match, RouterContext } from 'react-router';
 import Helmet from 'react-helmet';
 
 // Import required modules
-import routes from '../client/routes';
+import routes from '../client/routes';                        // Frontend routes
 import { fetchComponentData } from './util/fetchData';
-import users from './routes/user.routes';
-import authentication from './routes/authentication.routes';
-import serverConfig from './config';
+import users from './routes/user.routes';                     // Backend routes (user)
+import authentication from './routes/authentication.routes';  // Backend routes (authentication)
+import serverConfig from './config';                          // Backend server configuration
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;

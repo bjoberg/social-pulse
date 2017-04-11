@@ -27,7 +27,7 @@ class LoginForm extends Component {
       username: '',
       password: '',
       isLoading: false,
-      userNameErrorText: '',
+      usernameErrorText: '',
       passwordErrorText: '',
     };
 
@@ -63,14 +63,17 @@ class LoginForm extends Component {
       this.setState({ isLoading: true });
       const loginObject = { username: username, password: password };
 
-      this.props.loginRequest(loginObject).then(
-        () => {
-          this.context.router.push('/dashboard');
-        },
-        ({ data }) => {
-          this.setState({ isLoading: false, username: '', password: '' });
-          console.error('error', data);
-        });
+      this.props.loginRequest(loginObject)
+        .then(
+          () => {
+            this.context.router.push('/dashboard');
+          },
+          ({ data }) => {
+            console.error('error', data);
+            
+            // Clear the text field
+            this.setState({ isLoading: false, username: '', password: '' });
+          });
     }
   }
 
@@ -114,12 +117,12 @@ class LoginForm extends Component {
 
           {/* Card Text */}
           <CardText className={styles.content}>
-            <form onSubmit={this.onSubmit}>
-              <TextField hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth={true} onChange={this.handleUsernameChange} />
-              <TextField hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth={true} onChange={this.handlePasswordChange} />
+            <form name="login" onSubmit={this.onSubmit}>
+              <TextField disabled={this.state.isLoading} value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth={true} onChange={this.handleUsernameChange} />
+              <TextField disabled={this.state.isLoading} value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth={true} onChange={this.handlePasswordChange} />
               <div className={styles.placeholder}></div>
               {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" fullWidth={true} /></div> : null}
-              {this.state.isLoading ? <div><CircularProgress className={styles.center} size={50} thickness={5} /></div> : null}
+              {this.state.isLoading ? <div><CircularProgress size={50} thickness={5} /></div> : null}
             </form>
           </CardText>
 
