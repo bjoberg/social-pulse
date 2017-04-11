@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 // Material-UI
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-import { Card, CardText, CardActions, CardTitle } from 'material-ui/Card';
+import { Card, CardText, CardTitle } from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
 // Style
@@ -32,7 +32,7 @@ class LoginForm extends Component {
     };
 
     // This line makes sure "this" does not refer to the event in the specific method
-    this.onTouchTap = this.onTouchTap.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
@@ -41,7 +41,7 @@ class LoginForm extends Component {
    * Authenticate the user based on their username and password.
    * @param {* event handlers} e
    */
-  onTouchTap(e) {
+  onSubmit(e) {
     // Setup
     e.preventDefault();
     const username = this.state.username;
@@ -101,27 +101,29 @@ class LoginForm extends Component {
    * Notes:
    * I think we should change this folder to 'authentication'.
    * Create a global css file for all authentication forms.
-   * Each for should essentially use the same style... for consistency.
+   * One parent file that displays the correct form dependent on the route provided
+   * Change the implementation back to a form.
    */
   render() {
     return (
       <div className={styles.loginContainer}>
         <Card>
+          {/* Card Title */}
           {this.state.isLoading ? <div><CardTitle className={styles.title} title="Logging into your account." /></div> : null}
           {!this.state.isLoading ? <div><CardTitle className={styles.title} title="Login to your account." /></div> : null}
+
+          {/* Card Text */}
           <CardText className={styles.content}>
-            {this.state.isLoading ? <div><CircularProgress className={styles.center} size={80} thickness={5} /></div> : null}
-            {!this.state.isLoading ?
-              <div>
-                <TextField hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth={true} onChange={this.handleUsernameChange} />
-                <TextField hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth={true} onChange={this.handlePasswordChange} />
-              </div>
-              : null
-            }
+            <form onSubmit={this.onSubmit}>
+              <TextField hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth={true} onChange={this.handleUsernameChange} />
+              <TextField hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth={true} onChange={this.handlePasswordChange} />
+              <div className={styles.placeholder}></div>
+              {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" fullWidth={true} /></div> : null}
+              {this.state.isLoading ? <div><CircularProgress className={styles.center} size={50} thickness={5} /></div> : null}
+            </form>
           </CardText>
-          <CardActions className={styles.content}>
-            {!this.state.isLoading ? <div><FlatButton backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" onTouchTap={this.onTouchTap} fullWidth={true} /></div> : null}
-          </CardActions>
+
+          {/* Card Footer */}
           <div className={styles.cardFooter}>
             <p>New to Social Pulse? <a href="#">Sign up.</a></p>
             <p><a href="#">Forgot password?</a></p>
