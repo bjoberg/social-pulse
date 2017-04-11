@@ -8,7 +8,6 @@ class Login extends React.Component {
     const { loginRequest } = this.props;
     return (
       <div>
-        <h1>Login</h1>
         <LoginForm loginRequest={loginRequest} />
      </div>
     );
