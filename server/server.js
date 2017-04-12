@@ -145,11 +145,11 @@ app.use((req, res, next) => {
 
 // Error handler
 function errorHandler(err, req, res, next) {
-  console.log('In the error handler');
+  console.log(err.message);
   res.status(err.status || 500);
   res.json({
     error: {
-      message: err.message,
+      [err.name]: err.message,
     },
   });
 }

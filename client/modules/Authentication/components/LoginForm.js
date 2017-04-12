@@ -28,19 +28,28 @@ class LoginForm extends Component {
       username: '',
       password: '',
       isLoading: false,
-      usernameErrorText: '',
-      passwordErrorText: '',
+      errors: {},
     };
+
+      // usernameErrorText: '',
+      // passwordErrorText: '',
 
     // This line makes sure "this" does not refer to the event in the specific method
     this.onSubmit = this.onSubmit.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  /**
+   * Updated the state of the object that sent the request.
+   * @param {* event that sent the request} e
+   */
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   /**
    * Authenticate the user based on their username and password.
-   * @param {* event handlers} e
+   * @param {* event that sent the reqest} e
    */
   onSubmit(e) {
     // Setup
@@ -52,52 +61,55 @@ class LoginForm extends Component {
     this.clearErrors();
 
     // Validate the entry
-    if (username === '' || password === '') {
-      if (username === '') {
-        this.setState({ usernameErrorText: 'Username is required.' });
-      }
+    const { errors, isValid } = this.validateInput(username, password);
 
-      if (password === '') {
-        this.setState({ passwordErrorText: 'Password is required.' });
-      }
-    } else {
+    // Make the request or display the errors
+    if (isValid) {
       this.setState({ isLoading: true });
       const loginObject = { username: username, password: password }; // eslint-disable-line object-shorthand
 
-      this.props.loginRequest(loginObject)
-        .then(
-          () => {
-            this.context.router.push('/dashboard');
-          },
-          ({ data }) => {
-            console.error('error', data);
-            // Clear the text field
-            this.setState({ isLoading: false, username: '', password: '' });
-          });
+      this.props.loginRequest(loginObject).then(
+        () => {
+          this.context.router.push('/dashboard');
+        },
+        (err) => {
+          this.setState({ isLoading: false, errors: err.response.data.error });
+        });
+    } else {
+      this.setState({ errors: errors });
     }
+  }
+
+  /**
+   * Validate the form's input
+   * @param {* username that the user inputted into the form} username
+   * @param {* password that the user inputted into the form} password
+   */
+  validateInput(username, password) {
+    const errors = {};
+    let isValid = true;
+
+    if (username === '') {
+      isValid = false;
+      errors.username = 'Username is required.';
+    }
+
+    if (password === '') {
+      isValid = false;
+      errors.password = 'Password is required.';
+    }
+
+    return {
+      errors,
+      isValid,
+    };
   }
 
   /**
    * Reset the state of the errors
    */
   clearErrors() {
-    this.setState({ usernameErrorText: '', passwordErrorText: '' });
-  }
-
-  /**
-   * Update the username state
-   * @param {* event that made the call} e
-   */
-  handleUsernameChange(e) {
-    this.setState({ username: e.target.value });
-  }
-
-  /**
-   * Update the password state
-   * @param {* event that made the call} e
-   */
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
+    this.setState({ errors: {} });
   }
 
   render() {
@@ -111,8 +123,9 @@ class LoginForm extends Component {
           {/* Card Text */}
           <CardText className={styles.content}>
             <form name="login" onSubmit={this.onSubmit}>
-              <TextField disabled={this.state.isLoading} value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth onChange={this.handleUsernameChange} />
-              <TextField disabled={this.state.isLoading} value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth onChange={this.handlePasswordChange} />
+              <TextField disabled={this.state.isLoading} name="username" type="text" value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.errors.username} fullWidth onChange={this.onChange} />
+              <TextField disabled={this.state.isLoading} name="password" type="password" value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.errors.password} fullWidth onChange={this.onChange} />
+              {this.state.errors.general ? <span className={styles.error}>Error.</span> : null}
               <div className={styles.placeholder}></div>
               {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" fullWidth /></div> : null}
               {this.state.isLoading ? <div><CircularProgress size={50} thickness={5} /></div> : null}

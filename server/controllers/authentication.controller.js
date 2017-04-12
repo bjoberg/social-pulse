@@ -7,32 +7,31 @@ export function login(req, res, next) {
     User.authenticate(req.body.username, req.body.password, (error, user) => {
       // Check for errors
       if (error || !user) {
-        if (error.name === 'User not found') {
-          console.log(error.name);
-          const err = new Error('User not found.');
+        if (error.name === 'username') {
+          const err = new Error('Invalid username.');
+          err.name = 'username';
           err.status = 401;
           return next(err);
-        } else if (error.name === 'Invalid password') {
-          console.log(error.name);
+        } else if (error.name === 'password') {
           const err = new Error('Invalid password.');
+          err.name = 'password';
           err.status = 401;
           return next(err);
         }
-        console.log(error.name);
         const err = new Error('Invalid username or password.');
+        err.name = 'general';
         err.status = 401;
         return next(err);
       }
 
       // Respond successfully
-      console.log('Success.');
       req.session.userId = user._id;
-      res.json({ output: 'Hello.' });
+      res.json({ output: 'Success.' });
       return next();
     });
   } else {
     const err = new Error('Username and password are required.');
-    err.message = 'Username and password are required';
+    err.name = 'general';
     err.status = 401;
     next(err);
   }
