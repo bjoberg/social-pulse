@@ -134,7 +134,6 @@ app.use((req, res, next) => {
           </Provider>
         );
         const finalState = store.getState();
-
         res
           .set('Content-Type', 'text/html')
           .status(200)
