@@ -13,36 +13,167 @@ const users = [
 
 const mongooseInstance = new mongoose.Mongoose;
 
-test.beforeEach('connect to the database', async t => {
-  User.remove({}, err => {
-    if (err) console.log('Model not removed.');
+test.before.serial('Connect to the database', async () => {
+  // Connect to the mongoDb test database instance.
+  await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test', err => {
+    if (err) {
+      console.error('Connection failed', err);
+    } else {
+      console.log('Connected.');
+    }
   });
-  await mongooseInstance.createConnection('mongodb://localhost:27017/social-pulse-test');
+
+  // Add the new users to the test database.
   await User.create(users, err => {
-    if (err) console.error('Save failed.', err);
-    else console.log('Saved the user.');
+    if (err) {
+      console.error('Save failed.', err);
+    } else {
+      console.log(`Saved ${users.length} new users.`);
+    }
   });
 });
 
-test.afterEach(t => {
-  User.remove({}, err => {
-    if (err) console.log('Model not removed.');
+test.beforeEach.serial('Refresh the data', async () => {
+  // await User.create(users, err => {
+  //   if (err) {
+  //     console.error('Save failed.', err);
+  //   } else {
+  //     console.log('Saved the users.');
+  //   }
+  // });
+});
+
+test.afterEach.serial.always('Remove any modified data', async () => {
+  // await User.remove(err => {
+  //   if (err) {
+  //     console.error('Could not remove the user.', err);
+  //   } else {
+  //     console.log('Removed the users.');
+  //   }
+  // });
+});
+
+test.after.always('Disconnect from the database', async () => {
+  // Remove all of the users.
+  await User.remove(err => {
+    if (err) {
+      console.error('Could not remove the user.', err);
+    } else {
+      console.log('Removed all of the users.');
+    }
   });
 
-  mongooseInstance.disconnect(err => {
-    if (err) console.log(err);
+  // Disconnect from the mongoDb test database intance.
+  await mongooseInstance.disconnect(err => {
+    if (err) {
+      return console.error('Disconnection failed.', err);
+    }
+    return console.log('Disconnected.');
   });
 });
 
-test.serial('Should correctly give number of Users', async t => {
-  console.log('test 1');
+/**
+ * Test the GET method 'getUsers'
+ */
+test('Test getUsers method', async t => {
+  // 1. Setup
   t.plan(2);
 
   const res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');
 
-  t.is(res.status, 200);
-  t.deepEqual(users.length, res.body.users.length);
+  // 3. Test
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.true(res.body.users.length >= users.length);
+  // t.fail();
+});
+
+/**
+ * Test the GET method 'getUser'
+ */
+test('Test getUser method', async t => {
+  // 1. Setup
+  t.plan(4);
+
+  // Get the _id value of the first user in the database.
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
+  const userId = res.body.users[0]._id;
+
+  // 2. Request
+  res = await request(app)
+    .get(`/api/v1/user/${userId}`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUsersValue = Object.keys(res.body).length;
+  const numberOfUsersExpected = 1;
+  const usernameValue = res.body.user.username;
+  const usernameExpected = users[0].username;
+  const emailValue = res.body.user.email;
+  const emailExpected = users[0].email;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUsersValue, numberOfUsersExpected, [`REAMDE: value == ${numberOfUsersValue} || expected == ${numberOfUsersExpected}`]);
+  t.deepEqual(usernameValue, usernameExpected, [`REAMDE: value == ${usernameValue} || expected == ${usernameExpected}`]);
+  t.deepEqual(emailValue, emailExpected, [`REAMDE: value == ${emailValue} || expected == ${emailExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserLastName'
+ */
+test('Test getUserLastName method', async t => {
+  // 1. Setup
+  t.plan(3);
+  // Get the _id value of the first user in the database.
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
+  const userId = res.body.users[0]._id;
+
+  // 2. Request
+  res = await request(app)
+    .get(`/api/v1/user/${userId}/last_name`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const lastNameValue = res.body.user.last_name;
+  const lastNameExpected = users[0].last_name;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(lastNameValue, lastNameExpected, [`REAMDE: value == ${lastNameValue} || expected == ${lastNameExpected}`]);
+});
+
+/**
+ * Test the GET method 'getUserEmailIsVerified'
+ */
+test('Test getUserEmailIsVerified method', async t => {
+  // 1. Setup
+  t.plan(3);
+  // Get the _id value of the first user in the database.
+  let res = await request(app)
+    .get('/api/v1/users')
+    .set('Accept', 'application/json');
+  const userId = res.body.users[0]._id;
+
+  // 2. Request
+  res = await request(app)
+    .get(`/api/v1/user/${userId}/email_is_verified`)
+    .set('Accept', 'application/json');
+
+  // 3. Test
+  const numberOfUserKeysValue = Object.keys(res.body.user).length;
+  const numberOfUserKeysExpected = 2;
+  const emailIsVerifiedValue = res.body.user.email_is_verified;
+  const emailIsVerifiedExpected = false;
+
+  t.is(res.status, 200, [`README: value == ${res.status} || expected == 200`]);
+  t.deepEqual(numberOfUserKeysValue, numberOfUserKeysExpected, [`REAMDE: value == ${numberOfUserKeysValue} || expected == ${numberOfUserKeysExpected}`]);
+  t.deepEqual(emailIsVerifiedValue, emailIsVerifiedExpected, [`REAMDE: value == ${emailIsVerifiedValue} || expected == ${emailIsVerifiedExpected}`]);
 });
 
