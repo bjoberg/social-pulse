@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 // Local imports
 import Notification from './notification';
 
-
 const Schema = mongoose.Schema;
 
 // TODO: Add 'unique: true' to email and username
@@ -44,23 +43,31 @@ const userSchema = new Schema({
 });
 
 // Authenticate input against database documents
-userSchema.statics.authenticate = function(username, password, callback) {
+userSchema.statics.authenticate = (username, password, callback) => {
   User.findOne({ username: username })
-    .exec(function (err, user) {
+    .exec((err, user) => {
+      // Check for a user based on username input
       if (err) {
-        console.error('Error with username', err);
-        return callback(err);
+        const generalError = new Error('General error.');
+        generalError.name = 'General error';
+        generalError.status = 401;
+        return callback(generalError);
       } else if (!user) {
-        console.log('Invalid username');
-        const error = new Error('User not found.');
-        error.status = 401;
-        return callback(error);
+        const usernameError = new Error('User not found.');
+        usernameError.name = 'User not found';
+        usernameError.status = 401;
+        return callback(usernameError);
       }
+
+      // Compare the password input with username object's password
       bcrypt.compare(password, user.password, (error, result) => {
         if (result === true) {
           return callback(null, user);
         }
-        return callback();
+        const passwordError = new Error('Invalid password.');
+        passwordError.name = 'Invalid password';
+        passwordError.status = 401;
+        return callback(passwordError);
       });
     });
 };
@@ -81,5 +88,7 @@ userSchema.pre('save', function (next) {
   }
 });
 
+// Create the mongoose model
 const User = mongoose.model('User', userSchema);
-export default mongoose.model('User', userSchema);
+export default User;
+// export default mongoose.model('User', userSchema);

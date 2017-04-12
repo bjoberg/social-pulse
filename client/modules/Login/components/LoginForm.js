@@ -1,83 +1,148 @@
+// React
 import React, { Component } from 'react';
 
+// Material-UI
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import { Card, CardText, CardTitle } from 'material-ui/Card';
+import CircularProgress from 'material-ui/CircularProgress';
+
+// Style
+import styles from './LoginForm.css';
+
+/**
+ * Component for validating a user's credentials
+ */
 class LoginForm extends Component {
+
+  /**
+   * Main object constructor
+   * @param {* properties sent down from the parent element} props
+   */
   constructor(props) {
     super(props);
+
+    // State values of the component
     this.state = {
       username: '',
       password: '',
-      isLoading: false
-    }
+      isLoading: false,
+      usernameErrorText: '',
+      passwordErrorText: '',
+    };
 
-    //This line makes sure "this" does not refer to the event in onChange method
-    this.onChange = this.onChange.bind(this);
-    //This line makes sure "this" does not refer to the event in onSubmit method
+    // This line makes sure "this" does not refer to the event in the specific method
     this.onSubmit = this.onSubmit.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value});
-  }
-
+  /**
+   * Authenticate the user based on their username and password.
+   * @param {* event handlers} e
+   */
   onSubmit(e) {
+    // Setup
     e.preventDefault();
-    this.setState({isLoading: true});
-    const loginObject = { "username": this.state.username, "password": this.state.password };
+    const username = this.state.username;
+    const password = this.state.password;
 
-    this.props.loginRequest(loginObject).then(
-      () => {
-        console.log("success")
-        this.context.router.push("/dashboard");
-    },
-      ({ data }) => { 
-        this.setState({isLoading: false});
-        console.log("error");
-      });
+    // Clear all the errors
+    this.clearErrors();
 
+    // Validate the entry
+    if (username === '' || password === '') {
+      if (username === '') {
+        this.setState({ usernameErrorText: 'Username is required.' });
+      }
 
-    //console.log(res.session.userId);
-    //this.props.userSignupRequest(this.state);
+      if (password === '') {
+        this.setState({ passwordErrorText: 'Password is required.' });
+      }
+    } else {
+      this.setState({ isLoading: true });
+      const loginObject = { username: username, password: password };
+
+      this.props.loginRequest(loginObject)
+        .then(
+          () => {
+            this.context.router.push('/dashboard');
+          },
+          ({ data }) => {
+            console.error('error', data);
+            
+            // Clear the text field
+            this.setState({ isLoading: false, username: '', password: '' });
+          });
+    }
   }
 
-    render() {
+  /**
+   * Reset the state of the errors
+   */
+  clearErrors() {
+    this.setState({ usernameErrorText: '', passwordErrorText: '' });
+  }
+
+  /**
+   * Update the username state
+   * @param {* event that made the call} e
+   */
+  handleUsernameChange(e) {
+    this.setState({ username: e.target.value });
+  }
+
+  /**
+   * Update the password state
+   * @param {* event that made the call} e
+   */
+  handlePasswordChange(e) {
+    this.setState({ password: e.target.value });
+  }
+
+  /**
+   * Notes:
+   * I think we should change this folder to 'authentication'.
+   * Create a global css file for all authentication forms.
+   * One parent file that displays the correct form dependent on the route provided
+   * Change the implementation back to a form.
+   */
+  render() {
     return (
-      <form onSubmit={this.onSubmit}>
-        <div>Join our community!</div>
-        <div>
-          <label>Username</label>
-          <input
-            value={this.state.username}
-            onChange={this.onChange}
-            type="text"
-            name="username"
-          />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            value={this.state.password}
-            onChange={this.onChange}
-            type="password"
-            name="password"
-          />
-        </div>
-       
-        <div>
-          <button disabled={this.state.isLoading}>
-            Login
-          </button>
-        </div>
-      </form>
+      <div className={styles.loginContainer}>
+        <Card>
+          {/* Card Title */}
+          {this.state.isLoading ? <div><CardTitle className={styles.title} title="Logging into your account." /></div> : null}
+          {!this.state.isLoading ? <div><CardTitle className={styles.title} title="Login to your account." /></div> : null}
+
+          {/* Card Text */}
+          <CardText className={styles.content}>
+            <form name="login" onSubmit={this.onSubmit}>
+              <TextField disabled={this.state.isLoading} value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth={true} onChange={this.handleUsernameChange} />
+              <TextField disabled={this.state.isLoading} value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth={true} onChange={this.handlePasswordChange} />
+              <div className={styles.placeholder}></div>
+              {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" fullWidth={true} /></div> : null}
+              {this.state.isLoading ? <div><CircularProgress size={50} thickness={5} /></div> : null}
+            </form>
+          </CardText>
+
+          {/* Card Footer */}
+          <div className={styles.cardFooter}>
+            <p>New to Social Pulse? <a href="#">Sign up.</a></p>
+            <p><a href="#">Forgot password?</a></p>
+          </div>
+        </Card>
+      </div>
     );
   }
 }
 
 LoginForm.propTypes = {
-  loginRequest: React.PropTypes.func.isRequired
-}
+  loginRequest: React.PropTypes.func.isRequired,
+};
 
 LoginForm.contextTypes = {
-  router: React.PropTypes.object.isRequired
-}
+  router: React.PropTypes.object.isRequired,
+};
 
 export default LoginForm;
