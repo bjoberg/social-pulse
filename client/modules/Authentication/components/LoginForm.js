@@ -1,5 +1,6 @@
 // React
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
@@ -8,7 +9,7 @@ import { Card, CardText, CardTitle } from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
 
 // Style
-import styles from './LoginForm.css';
+import styles from './Authentication.css';
 
 /**
  * Component for validating a user's credentials
@@ -61,7 +62,7 @@ class LoginForm extends Component {
       }
     } else {
       this.setState({ isLoading: true });
-      const loginObject = { username: username, password: password };
+      const loginObject = { username: username, password: password }; // eslint-disable-line object-shorthand
 
       this.props.loginRequest(loginObject)
         .then(
@@ -70,7 +71,6 @@ class LoginForm extends Component {
           },
           ({ data }) => {
             console.error('error', data);
-            
             // Clear the text field
             this.setState({ isLoading: false, username: '', password: '' });
           });
@@ -100,13 +100,6 @@ class LoginForm extends Component {
     this.setState({ password: e.target.value });
   }
 
-  /**
-   * Notes:
-   * I think we should change this folder to 'authentication'.
-   * Create a global css file for all authentication forms.
-   * One parent file that displays the correct form dependent on the route provided
-   * Change the implementation back to a form.
-   */
   render() {
     return (
       <div className={styles.loginContainer}>
@@ -118,17 +111,17 @@ class LoginForm extends Component {
           {/* Card Text */}
           <CardText className={styles.content}>
             <form name="login" onSubmit={this.onSubmit}>
-              <TextField disabled={this.state.isLoading} value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth={true} onChange={this.handleUsernameChange} />
-              <TextField disabled={this.state.isLoading} value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth={true} onChange={this.handlePasswordChange} />
+              <TextField disabled={this.state.isLoading} value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.usernameErrorText} fullWidth onChange={this.handleUsernameChange} />
+              <TextField disabled={this.state.isLoading} value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.passwordErrorText} type="password" fullWidth onChange={this.handlePasswordChange} />
               <div className={styles.placeholder}></div>
-              {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" fullWidth={true} /></div> : null}
+              {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Login" fullWidth /></div> : null}
               {this.state.isLoading ? <div><CircularProgress size={50} thickness={5} /></div> : null}
             </form>
           </CardText>
 
           {/* Card Footer */}
           <div className={styles.cardFooter}>
-            <p>New to Social Pulse? <a href="#">Sign up.</a></p>
+            <p>New to Social Pulse? <Link to="/signup">Sign up.</Link></p>
             <p><a href="#">Forgot password?</a></p>
           </div>
         </Card>
