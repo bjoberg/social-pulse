@@ -3,6 +3,12 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
 
+const checkAuth = (nextState, replaceState) => {
+  // wtf do these params do???????
+  console.log(nextState)
+  console.log(replaceState)
+};
+
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
   require.ensure = function requireModule(deps, callback) {
@@ -28,6 +34,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./modules/Login/ForgotPassword');
   require('./modules/Signup/Signup');
   require('./modules/Signup/ConfirmEmail');
+  require('./modules/Dashboard/Dashboard');
 }
 
 // react-router setup with code-splitting
@@ -97,37 +104,47 @@ export default (
         });
       }}
     />
-    <Route
-      path="/login"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Login/Login').default);
-        });
-      }}
-    />
-    <Route
-      path="/forgot-password"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Login/ForgotPassword').default);
-        });
-      }}
-    />
-    <Route
-      path="/signup"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Signup/Signup').default);
-        });
-      }}
-    />
-    <Route
-      path="/confirm-email"
-      getComponent={(nextState, cb) => {
-        require.ensure([], require => {
-          cb(null, require('./modules/Signup/ConfirmEmail').default);
-        });
-      }}
-    />
+    <Route onEnter={checkAuth}>
+      <Route
+        path="/login"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Login/Login').default);
+          });
+        }}
+      />
+      <Route
+        path="/forgot-password"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Login/ForgotPassword').default);
+          });
+        }}
+      />
+      <Route
+        path="/signup"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Signup/Signup').default);
+          });
+        }}
+      />
+      <Route
+        path="/confirm-email"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Signup/ConfirmEmail').default);
+          });
+        }}
+      />
+      <Route
+        path="/dashboard"
+        getComponent={(nextState, cb) => {
+          require.ensure([], require => {
+            cb(null, require('./modules/Dashboard/Dashboard').default);
+          });
+        }}
+      />
+    </Route>
   </Route>
 );

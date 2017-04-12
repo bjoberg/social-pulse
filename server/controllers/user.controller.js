@@ -1,21 +1,5 @@
 import User from '../models/user';
 
-// ///////////////////////////////// Helpers ///////////////////////////////////
-/**
- * FOR TESTING PURPOSES.
- * Return the _id values of all the users in the database.
- */
-export function getUserIds(req, res) {
-  User.find('_id').exec((err, users) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ users });
-    }
-  });
-}
-
-
 // ///////////////////////////////// GET Requests ///////////////////////////////////
 
 /**
@@ -227,11 +211,13 @@ function putUserHelper(request, err, user, req, res) {
   } else {
     user[request] = req.body[request];
 
-    user.save(err, saved => {
+    user.save(() => {
       if (err) {
-        res.status(500).send(err);
+        const customError = new Error('Bad request');
+        customError.status = 500;
+        res.status(500).send(customError);
       } else {
-        res.json({ output: `Success! the ${request} has been save with value ${saved}` });
+        res.json({ output: `Success! the ${request} has been saved.` });
       }
     });
   }
@@ -330,6 +316,7 @@ export function putUserLastUserInteraction(req, res) {
  * @returns void
  */
 export function postNewUser(req, res) {
+  // TODO: Add more checking to make sure all data is valid.
   if (!req.body.user.username || !req.body.user.first_name || !req.body.user.last_name || !req.body.user.password || !req.body.user.email) {
     res.status(403).end();
   } else {
@@ -337,7 +324,7 @@ export function postNewUser(req, res) {
 
     newUser.save((err, saved) => {
       if (err) { res.status(500).send(err); }
-      res.json({ user: saved });
+      res.json({ output: 'Success! a new user has been saved.' });
       res.status(200).end();
     });
   }
@@ -357,12 +344,6 @@ export function deleteUser(req, res) {
       res.status(500).send(err);
     }
 
-<<<<<<< HEAD
-    user.remove((err, saved) => {
-      if (err) { res.status(500).send(err); }
-      res.json({ user: saved });
-      res.status(200).end();
-=======
     user.remove(err, saved => {
       if (err) {
         res.status(500).send(err);
@@ -370,7 +351,6 @@ export function deleteUser(req, res) {
         res.json({ user: saved });
         res.status(200).end();
       }
->>>>>>> 97d17a8d59c9b9f363dc67aacc8e6ee562b58123
     });
   });
 }
