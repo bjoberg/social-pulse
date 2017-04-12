@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router';
 import axios from 'axios';
 
 export const SET_USER_STATE = 'SET_USER_STATE';
