@@ -1,7 +1,7 @@
 @import '../../../../theme/colors.css';
 
 footer {
-  position: relative;
+  position: fixed;
   bottom: 0;
   color: #e5cdd4;
   background-color: var(--blue);

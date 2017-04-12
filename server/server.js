@@ -61,6 +61,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/v1', users);
 app.use('/api/v1', authentication);
+app.use(errorHandler);  // eslint-disable-line no-use-before-define
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
@@ -142,6 +143,17 @@ app.use((req, res, next) => {
       .catch((error) => next(error));
   });
 });
+
+// Error handler
+function errorHandler(err, req, res, next) {
+  console.log('In the error handler');
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message,
+    },
+  });
+}
 
 // start app
 app.listen(serverConfig.port, (error) => {
