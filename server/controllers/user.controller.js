@@ -1,21 +1,5 @@
 import User from '../models/user';
 
-// ///////////////////////////////// Helpers ///////////////////////////////////
-/**
- * FOR TESTING PURPOSES.
- * Return the _id values of all the users in the database.
- */
-export function getUserIds(req, res) {
-  User.find('_id').exec((err, users) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ users });
-    }
-  });
-}
-
-
 // ///////////////////////////////// GET Requests ///////////////////////////////////
 
 /**
@@ -229,7 +213,9 @@ function putUserHelper(request, err, user, req, res) {
 
     user.save(() => {
       if (err) {
-        res.status(500).send(err);
+        const customError = new Error('Bad request');
+        customError.status = 500;
+        res.status(500).send(customError);
       } else {
         res.json({ output: `Success! the ${request} has been saved.` });
       }
@@ -338,7 +324,7 @@ export function postNewUser(req, res) {
 
     newUser.save((err, saved) => {
       if (err) { res.status(500).send(err); }
-      res.json({ user: saved });
+      res.json({ output: 'Success! a new user has been saved.' });
       res.status(200).end();
     });
   }

@@ -1,5 +1,6 @@
 # Social Pulse
 [![Build Status](https://travis-ci.org/bjoberg/social-pulse.svg?branch=testing)](https://travis-ci.org/bjoberg/social-pulse)
+[![Coverage Status](https://coveralls.io/repos/github/bjoberg/social-pulse/badge.svg?branch=master)](https://coveralls.io/github/bjoberg/social-pulse?branch=master)
 
 A web application for posting to all of your social media accounts at once. 
 

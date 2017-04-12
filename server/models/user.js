@@ -1,9 +1,12 @@
+// External imports
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+
+// Local imports
 import Notification from './notification';
 
 const Schema = mongoose.Schema;
 
-// NOTE: ommitted sessionId
 // TODO: Add 'unique: true' to email and username
 // TODO: Add 'trim: true' to username, first_name, last_name, email
 const userSchema = new Schema({
@@ -39,4 +42,53 @@ const userSchema = new Schema({
   },
 });
 
-export default mongoose.model('User', userSchema);
+// Authenticate input against database documents
+userSchema.statics.authenticate = (username, password, callback) => {
+  User.findOne({ username: username })
+    .exec((err, user) => {
+      // Check for a user based on username input
+      if (err) {
+        const generalError = new Error('General error.');
+        generalError.name = 'General error';
+        generalError.status = 401;
+        return callback(generalError);
+      } else if (!user) {
+        const usernameError = new Error('User not found.');
+        usernameError.name = 'User not found';
+        usernameError.status = 401;
+        return callback(usernameError);
+      }
+
+      // Compare the password input with username object's password
+      bcrypt.compare(password, user.password, (error, result) => {
+        if (result === true) {
+          return callback(null, user);
+        }
+        const passwordError = new Error('Invalid password.');
+        passwordError.name = 'Invalid password';
+        passwordError.status = 401;
+        return callback(passwordError);
+      });
+    });
+};
+
+// Hash password before saving to database
+userSchema.pre('save', function (next) {
+  const user = this;
+  if (user.password !== undefined && user.password != null) {
+    bcrypt.hash(user.password, 10, (err, hash) => {
+      if (err) {
+        return next(err);
+      }
+      user.password = hash;
+      return next();
+    });
+  } else {
+    next();
+  }
+});
+
+// Create the mongoose model
+const User = mongoose.model('User', userSchema);
+export default User;
+// export default mongoose.model('User', userSchema);

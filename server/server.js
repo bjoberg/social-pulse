@@ -1,8 +1,9 @@
-import Express from 'express';
-import compression from 'compression';
-import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
-import path from 'path';
+import Express from 'express';          // Server
+import compression from 'compression';  // Minification
+import mongoose from 'mongoose';        // Database
+import bodyParser from 'body-parser';   // Parses URL encoded text
+import path from 'path';                // Utilities for working with file and directory paths
+import session from 'express-session';  // Session monitoring (Cookies)
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -12,6 +13,13 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 // Initialize the Express App
 const app = new Express();
+
+// User sessions for tracking logins
+app.use(session({
+  secret: 'we are social-pulse',
+  resave: true,
+  saveUninitialized: false,
+}));
 
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -29,10 +37,11 @@ import { match, RouterContext } from 'react-router';
 import Helmet from 'react-helmet';
 
 // Import required modules
-import routes from '../client/routes';
+import routes from '../client/routes';                        // Frontend routes
 import { fetchComponentData } from './util/fetchData';
-import users from './routes/user.routes';
-import serverConfig from './config';
+import users from './routes/user.routes';                     // Backend routes (user)
+import authentication from './routes/authentication.routes';  // Backend routes (authentication)
+import serverConfig from './config';                          // Backend server configuration
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise;
@@ -51,6 +60,8 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/v1', users);
+app.use('/api/v1', authentication);
+app.use(errorHandler);  // eslint-disable-line no-use-before-define
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
@@ -123,7 +134,6 @@ app.use((req, res, next) => {
           </Provider>
         );
         const finalState = store.getState();
-
         res
           .set('Content-Type', 'text/html')
           .status(200)
@@ -132,6 +142,17 @@ app.use((req, res, next) => {
       .catch((error) => next(error));
   });
 });
+
+// Error handler
+function errorHandler(err, req, res, next) {
+  console.log('In the error handler');
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message,
+    },
+  });
+}
 
 // start app
 app.listen(serverConfig.port, (error) => {
