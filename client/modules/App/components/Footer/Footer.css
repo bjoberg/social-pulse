@@ -1,7 +1,7 @@
 @import '../../../../theme/colors.css';
 
 footer {
-  color: #e5cdd4;
+  color: white;
   background-color: var(--blue);
   width: 100%;
   height: 100px;
@@ -16,12 +16,12 @@ footer {
   width: 100%;
   max-width: 980px;
   margin: 0 auto;
+  padding: 5px;
 }
 
-#subcontainer {
+.subcontainer {
   display: flex;
   align-items: stretch;
-  justify-content: space-between;
   flex-direction: column;
   height: 100%;
 }
@@ -29,11 +29,26 @@ footer {
 #logo {
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 50%;
+  font-size: 1em;
+  font-weight: 300;
+} #logo a {
+  color: white;
+}
+
+#navbar {
+  display: flex;
+  height: 50%;
+}
+
+@media (max-width : 980px) {
+  #navbar {
+    display: none;
+  }
 }
 
 #links {
-  height: 50px;
+  height: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -44,31 +59,33 @@ footer {
   justify-content: center;
   padding-right: 25px;
   padding-left: 25px;
+  text-decoration: none;
+  color: white;
   height: 100%;
   cursor: pointer;
   transition: 0.5s;
 } .link:hover {
   background-color: rgba(0, 0, 0, .1);
-  color: #FFF;
-} .link {
-  text-decoration: none;
-  color: #e5cdd4;
 }
 
 #socials {
   display: flex;
-  align-items: center;
-  height: 50px;
+  justify-content: center;
+  height: 50%;
 }
 
 .social {
   display: flex;
   align-items: center;
-  padding: 5px;
+  margin-left: 25px;
+  margin-right: 25px;
+  cursor: pointer;
 }
 
 #copyright {
   display: flex;
   align-items: center;
-  height: 50px;
+  justify-content: center;
+  height: 50%;
+  font-size: 0.75em;
 }
