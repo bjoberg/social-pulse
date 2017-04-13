@@ -2,6 +2,15 @@ import User from '../models/user';
 
 // ///////////////////////////////// POST Requests ///////////////////////////////////
 
+export function checkAuth(req, res, next) {
+  if (!req.session.userId) {
+    res.json({ status: 'Error.', isValid: false });
+    return next();
+  }
+  res.json({ status: 'Success.', isValid: true });
+  return next();
+}
+
 export function login(req, res, next) {
   if (req.body.username && req.body.password) {
     User.authenticate(req.body.username, req.body.password, (error, user) => {

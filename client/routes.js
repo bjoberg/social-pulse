@@ -2,11 +2,22 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
+import axios from 'axios';
 
-const checkAuth = (nextState, replaceState) => {
-  // wtf do these params do???????
-  console.log(nextState)
-  console.log(replaceState)
+/**
+ * Check to make sure the user is logged in.
+ * @param {* state for new route} nextState
+ * @param {* updated state of the route} replaceState
+ */
+const checkAuth = async (nextState, replace) => {
+  console.log("checkAuth");
+  console.log(replace);
+  const isAuthenticated = await axios.get('/api/v1/check_auth');
+  if (!isAuthenticated.data.isValid) {
+    console.log('in false.');
+    replace('/login');
+  }
+  console.log(isAuthenticated.data.isValid);
 };
 
 // require.ensure polyfill for node
@@ -31,6 +42,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('./components/Security/Security');
   require('./components/Status/Status');
   require('./modules/Dashboard/Dashboard');
+  require('./modules/Dashboard/Account/Account');
   require('./modules/Authentication/Authentication');
 }
 
@@ -122,6 +134,15 @@ export default (
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
           cb(null, require('./modules/Authentication/Authentication').default);
+        });
+      }}
+    />
+    <Route
+      path="/account/profile"
+      onEnter={checkAuth}
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Dashboard/Account/Account').default);
         });
       }}
     />

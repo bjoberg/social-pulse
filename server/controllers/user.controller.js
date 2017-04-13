@@ -35,7 +35,6 @@ export function getUsers(req, res) {
 }
 
 export function getProfile(req, res, next) {
-  console.log(req.session.userId);
   // Check to make sure user is logged in
   if (!req.session.userId) {
     const error = new Error('You are not authorized to view this page');
