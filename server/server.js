@@ -16,10 +16,18 @@ const app = new Express();
 
 // User sessions for tracking logins
 app.use(session({
-  secret: 'we are social-pulse',
+  secret: 'social-pulse',
   resave: true,
   saveUninitialized: false,
 }));
+
+// Make user ID available to the client
+app.use((req, res, next) => {
+  // If the user is logged in, res.locals.currentUser will equal the user's userId.
+  // If the user is not logged in, res.locals.currentUser will equal undefined.
+  res.locals.currentUser = req.session.userId;
+  next();
+});
 
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {

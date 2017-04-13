@@ -34,6 +34,27 @@ export function getUsers(req, res) {
   });
 }
 
+export function getProfile(req, res, next) {
+  console.log(req.session.userId);
+  // Check to make sure user is logged in
+  if (!req.session.userId) {
+    const error = new Error('You are not authorized to view this page');
+    error.name = 'unauthorized';
+    error.status = 403;
+    return next(error);
+  }
+
+  // User is logged in
+  User.findById(req.session.userId)
+    .exec((error, user) => {
+      if (error) {
+        return next(error);
+      }
+      res.json({ user });
+      // return next();
+    });
+}
+
 /**
  * Get a specific user based on userId
  * @param req

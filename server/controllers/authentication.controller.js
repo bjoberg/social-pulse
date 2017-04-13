@@ -26,7 +26,7 @@ export function login(req, res, next) {
 
       // Respond successfully
       req.session.userId = user._id;
-      res.json({ output: 'Success.' });
+      res.json({ status: 'Success.', userId: user._id });
       return next();
     });
   } else {
