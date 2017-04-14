@@ -363,6 +363,7 @@ export function postNewUser(req, res, next) {
       }
       newUser.save((err, saved) => {
         if (err) { res.status(500).send(err); }
+        req.session.userId = saved._id;
         res.json({ output: 'Success! a new user has been saved.' });
         res.status(200).end();
       });
