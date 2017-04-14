@@ -1,4 +1,4 @@
-import { SET_USER_STATE } from '../actions/loginActions';
+import { SET_USER_STATE } from '../actions/authenticationActions';
 
 const initUserData = {
   username: '',
