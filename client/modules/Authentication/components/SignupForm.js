@@ -61,7 +61,15 @@ class SignupForm extends Component {
 
     if (isValid) {
       this.setState({ isLoading: true });
-      const signupObject = { firstName: firstName, lastName: lastName, username: username, email: email, password: password, confirmPassword: confirmPassword };
+      const signupObject = {
+        user: {
+          username: this.state.username,
+          first_name: this.state.firstName,
+          last_name: this.state.lastName,
+          password: this.state.password,
+          email: this.state.email,
+        },
+      };
 
       this.props.userSignupRequest(signupObject).then(
         () => {
@@ -78,6 +86,7 @@ class SignupForm extends Component {
   validateInput(firstName, lastName, username, email, password, confirmPassword) {
     const errors = {};
     let isValid = true;
+    const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (firstName === '') {
       isValid = false;
@@ -89,9 +98,19 @@ class SignupForm extends Component {
       errors.lastName = 'Last name is required.';
     }
 
+    if (password !== confirmPassword) {
+      isValid = false;
+      errors.confirmPassword = 'Passwords do not match.';
+    }
+
     if (email === '') {
       isValid = false;
       errors.email = 'Email is required.';
+    }
+
+    if (!emailReg.test(email)) {
+      isValid = false;
+      errors.email = 'Invalid email.';
     }
 
     if (username === '') {
@@ -134,8 +153,9 @@ class SignupForm extends Component {
               <TextField disabled={this.state.isLoading} name="lastName" type="text" value={this.state.lastName} hintText="Last Name" floatingLabelText="Last Name" errorText={this.state.errors.lastName} fullWidth onChange={this.onChange} />
               <TextField disabled={this.state.isLoading} name="username" type="text" value={this.state.username} hintText="Username" floatingLabelText="Username" errorText={this.state.errors.username} fullWidth onChange={this.onChange} />
               <TextField disabled={this.state.isLoading} name="email" type="text" value={this.state.email} hintText="Email" floatingLabelText="Email" errorText={this.state.errors.email} fullWidth onChange={this.onChange} />
-              <TextField disabled={this.state.isLoading} name="password" type="text" value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.errors.password} fullWidth onChange={this.onChange} />
-              <TextField disabled={this.state.isLoading} name="confirmPassword" type="text" value={this.state.confirmPassword} hintText="Confirm Password" floatingLabelText="Confirm Password" errorText={this.state.errors.confirmPassword} fullWidth onChange={this.onChange} />
+              <TextField disabled={this.state.isLoading} name="password" type="password" value={this.state.password} hintText="Password" floatingLabelText="Password" errorText={this.state.errors.password} fullWidth onChange={this.onChange} />
+              <TextField disabled={this.state.isLoading} name="confirmPassword" type="password" value={this.state.confirmPassword} hintText="Confirm Password" floatingLabelText="Confirm Password" errorText={this.state.errors.confirmPassword} fullWidth onChange={this.onChange} />
+              {this.state.errors.general ? <span className={styles.error}>Error.</span> : null}
               <div className={styles.placeholder}></div>
               {!this.state.isLoading ? <div><FlatButton type="submit" backgroundColor="#03a9f4" hoverColor="#81d4fa" style={{ color: '#ffffff' }} rippleColor="#ffffff" label="Signup" fullWidth /></div> : null}
               {this.state.isLoading ? <div><CircularProgress size={50} thickness={5} /></div> : null}
@@ -155,6 +175,10 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
+};
+
+SignupForm.contextTypes = {
+  router: React.PropTypes.object.isRequired,
 };
 
 export default SignupForm;

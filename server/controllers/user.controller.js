@@ -315,19 +315,39 @@ export function putUserLastUserInteraction(req, res) {
  * @param res
  * @returns void
  */
-export function postNewUser(req, res) {
-  // TODO: Add more checking to make sure all data is valid.
-  if (!req.body.user.username || !req.body.user.first_name || !req.body.user.last_name || !req.body.user.password || !req.body.user.email) {
-    res.status(403).end();
-  } else {
-    const newUser = new User(req.body.user);
+export function postNewUser(req, res, next) {
+  // Check to make sure the user does not already exist
+  User.findOne({ username: req.body.user.username }).exec((err, user) => {
+    if (user) {
+      const customError = new Error('Username has already been taken.');
+      customError.name = 'username';
+      customError.status = 409;
+      return next(customError);
+    }
+    if (!req.body.user.username || !req.body.user.first_name || !req.body.user.last_name || !req.body.user.password || !req.body.user.email) {
+      const customErr = new Error('Invalid username or password.');
+      customErr.name = 'general';
+      customErr.status = 403;
+      return next(customErr);
+    } else {
+      // Reg expression for valid email address
+      const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const newUser = new User(req.body.user);
 
-    newUser.save((err, saved) => {
-      if (err) { res.status(500).send(err); }
-      res.json({ output: 'Success! a new user has been saved.' });
-      res.status(200).end();
-    });
-  }
+      // Check that the email is of valid format
+      if (!emailReg.test(req.body.user.email)) {
+        const customError = new Error('Invalid email.');
+        customError.name = 'email';
+        customError.status = 406;
+        return next(customError);
+      }
+      newUser.save((err, saved) => {
+        if (err) { res.status(500).send(err); }
+        res.json({ output: 'Success! a new user has been saved.' });
+        res.status(200).end();
+      });
+    }
+  });
 }
 
 // ///////////////////////////////// DELETE Requests ///////////////////////////////////
