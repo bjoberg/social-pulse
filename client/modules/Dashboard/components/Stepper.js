@@ -46,9 +46,9 @@ class VerticalStepper extends React.Component {
       <div style={{ margin: '12px 0' }}>
         <RaisedButton
           label={stepIndex === 2 ? 'Finish' : 'Next'}
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
+          disableTouchRipple
+          disableFocusRipple
+          primary
           onTouchTap={this.handleNext}
           style={{ marginRight: 12 }}
         />
@@ -56,8 +56,8 @@ class VerticalStepper extends React.Component {
           <FlatButton
             label="Back"
             disabled={stepIndex === 0}
-            disableTouchRipple={true}
-            disableFocusRipple={true}
+            disableTouchRipple
+            disableFocusRipple
             onTouchTap={this.handlePrev}
           />
         )}
@@ -76,8 +76,8 @@ class VerticalStepper extends React.Component {
             <StepContent>
               <p>
                 <Checkbox label="500px" />
-                <Checkbox label="Facebook" disabled={true} />
-                <Checkbox label="Flickr" disabled={true} />
+                <Checkbox label="Facebook" disabled />
+                <Checkbox label="Flickr" disabled />
               </p>
               {this.renderStepActions(0)}
             </StepContent>
@@ -87,8 +87,8 @@ class VerticalStepper extends React.Component {
             <StepContent>
               <p>
                 <Checkbox label="Image" />
-                <Checkbox label="Image Album" disabled={true} />
-                <Checkbox label="Text post" disabled={true} />
+                <Checkbox label="Image Album" disabled />
+                <Checkbox label="Text post" disabled />
               </p>
               {this.renderStepActions(1)}
             </StepContent>

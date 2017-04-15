@@ -1,6 +1,9 @@
 // React
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+
+import { fetchUserProfile } from '../../../actions/user';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
@@ -66,17 +69,19 @@ class LoginForm extends Component {
     // Make the request or display the errors
     if (isValid) {
       this.setState({ isLoading: true });
-      const loginObject = { username: username, password: password }; // eslint-disable-line object-shorthand
+      const loginObject = { username, password };
 
       this.props.loginRequest(loginObject).then(
+        // login request succeeded, load Redux store with user profile and redirect to /dashboard
         () => {
+          this.props.dispatch(fetchUserProfile());
           this.context.router.push('/dashboard');
         },
         (err) => {
           this.setState({ isLoading: false, errors: err.response.data.error });
         });
     } else {
-      this.setState({ errors: errors });
+      this.setState({ errors });
     }
   }
 
@@ -145,10 +150,11 @@ class LoginForm extends Component {
 
 LoginForm.propTypes = {
   loginRequest: React.PropTypes.func.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
 };
 
 LoginForm.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-export default LoginForm;
+export default connect()(LoginForm);

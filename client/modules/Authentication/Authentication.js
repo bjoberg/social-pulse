@@ -71,5 +71,3 @@ LoginForm.propTypes = {
 };
 
 export default connect(null, { userSignupRequest, loginRequest })(Authentication);
-
-

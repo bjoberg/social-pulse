@@ -1,12 +1,8 @@
-import { SET_USER_STATE } from '../actions/authenticationActions';
+import { SET_USER_DATA } from '../actions/user';
 
-const initUserData = {
-  username: '',
-  settings: {},
-};
-const userData = (state = initUserData, action) => {
+const userData = (state = {}, action) => {
   switch (action.type) {
-    case SET_USER_STATE:
+    case SET_USER_DATA:
       return action.userData;
     default:
       return state;
