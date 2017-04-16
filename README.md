@@ -25,6 +25,10 @@ Make sure you have the following programs installed on your computer before you 
 1. In a new terminal tab navigation into `/social-pulse/server` and run the command `node userSandbox.js` to fill your local mongoDB instance with users.
 2. Using Postman query the users with the following route: `localhost:8000/api/v1/users`. More details on the API can be found [here](https://github.com/bjoberg/social-pulse/wiki/API-Documentation-Overview).
 
+### Testing
+1. To run our testing suite, after you go through the installation steps, run the command `npm test`. This will run each of our unit tests and show the current code covereage.
+2. Alternatively, click the "Build: passing" badge above to see our the Travis CI output of our tests.
+
 ## Technologies Used
 
 * [NPM](https://www.npmjs.com)
