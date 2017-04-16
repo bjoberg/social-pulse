@@ -18,6 +18,22 @@ function getUserHelper(err, user, req, res) {
   }
 }
 
+//// GetOauth
+export function getOauth(req, res){
+  User.findOne({ _id: req.params.userId }).exec((err, user) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      // oauth logic
+
+      
+    }
+  });
+}
+
+////////////////////
+
+
 /**
  * Get all users
  * @param req
