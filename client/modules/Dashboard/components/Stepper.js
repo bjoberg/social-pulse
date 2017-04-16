@@ -8,6 +8,7 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
+import FileReaderInput from 'react-file-reader-input';
 
 /**
  *  * Vertical steppers are designed for narrow screen sizes. They are ideal for mobile.
@@ -39,13 +40,17 @@ class VerticalStepper extends React.Component {
     }
   };
 
+  handleChange = (e, results) => {
+    console.log(results);
+  }
+
   renderStepActions(step) {
     const { stepIndex } = this.state;
 
     return (
       <div style={{ margin: '12px 0' }}>
         <RaisedButton
-          label={stepIndex === 2 ? 'Finish' : 'Next'}
+          label={stepIndex === 2 ? 'Send Pulse' : 'Next'}
           disableTouchRipple
           disableFocusRipple
           primary
@@ -74,32 +79,30 @@ class VerticalStepper extends React.Component {
           <Step>
             <StepLabel>Select social media</StepLabel>
             <StepContent>
-              <p>
-                <Checkbox label="500px" />
-                <Checkbox label="Facebook" disabled />
-                <Checkbox label="Flickr" disabled />
-              </p>
+              <Checkbox label="500px" />
+              <Checkbox label="Facebook" disabled />
+              <Checkbox label="Flickr" disabled />
               {this.renderStepActions(0)}
             </StepContent>
           </Step>
           <Step>
             <StepLabel>Select post type</StepLabel>
             <StepContent>
-              <p>
-                <Checkbox label="Image" />
-                <Checkbox label="Image Album" disabled />
-                <Checkbox label="Text post" disabled />
-              </p>
+              <Checkbox label="Image" />
+              <Checkbox label="Image Album" disabled />
+              <Checkbox label="Text post" disabled />
               {this.renderStepActions(1)}
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>Configre your post</StepLabel>
+            <StepLabel>Configure your post</StepLabel>
             <StepContent>
-              <p>
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.
-              </p>
+              <form>
+                <label htmlFor="my-file-input">Upload a File:</label>
+                <FileReaderInput as="binary" id="my-file-input" onChange={this.handleChange}>
+                  <button>Select a file!</button>
+                </FileReaderInput>
+              </form>
               {this.renderStepActions(2)}
             </StepContent>
           </Step>

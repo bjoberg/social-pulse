@@ -23,6 +23,27 @@ app.use(session({
 
 // Make user ID available to the client
 app.use((req, res, next) => {
+  /* var OAuth = require('oauth').OAuth;
+
+  var oauth = new OAuth(
+    'https://api.twitter.com/oauth/request_token',
+    'https://api.twitter.com/oauth/access_token',
+    '8Nc8m6kAZ11Sxy0sugpmEAHZn',
+    '5pyTV0oaNoTgUZ2LVfyMU4iIuoEVKAbodhQRbY9hv93mKL07rQ',
+    '1.0A',
+    'http://localhost:8000/about',
+    'HMAC-SHA1'
+  );
+  oauth.getOAuthRequestToken(function(err, oauth_token, oauth_token_secret, results) {
+    console.log('=====REQUEST TOKENS=====');
+    console.log(err);
+    console.log(oauth_token);
+    console.log(oauth_token_secret);
+    console.log(results);
+  });
+
+  console.log('======OAUTH========');
+  console.log(oauth); */
   // If the user is logged in, res.locals.currentUser will equal the user's userId.
   // If the user is not logged in, res.locals.currentUser will equal undefined.
   res.locals.currentUser = req.session.userId;
