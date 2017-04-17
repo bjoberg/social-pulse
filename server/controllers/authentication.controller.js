@@ -46,10 +46,13 @@ export function login(req, res, next) {
   }
 }
 
-export function signUp(req, res, next) {
-  console.log('sign_up');
-}
-
 export function logout(req, res, next) {
-  console.log('logout');
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        return next(err);
+      }
+      return res.redirect('/login');
+    });
+  }
 }

@@ -2,17 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import VerticalStepper from './components/Stepper';
+import axios from 'axios';
 
 class DashboardApp extends Component {
+  constructor(props) {
+    super(props);
+    this.testFunction();
+  }
+
+  testFunction() {
+    axios.put('/api/v1/fbOauthCreate');
+  }
+
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <div>
         {this.props.userData.username}
         <Link to="/account/profile">/account/profile</Link>
         <VerticalStepper />
       </div>
-    )
+    );
   }
 }
 

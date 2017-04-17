@@ -1,9 +1,10 @@
-import Express from 'express';          // Server
-import compression from 'compression';  // Minification
-import mongoose from 'mongoose';        // Database
-import bodyParser from 'body-parser';   // Parses URL encoded text
-import path from 'path';                // Utilities for working with file and directory paths
-import session from 'express-session';  // Session monitoring (Cookies)
+import Express from 'express';                          // Server
+import compression from 'compression';                  // Minification
+import mongoose from 'mongoose';                        // Database
+import bodyParser from 'body-parser';                   // Parses URL encoded text
+import path from 'path';                                // Utilities for working with file and directory paths
+import session from 'express-session';                  // Session monitoring (Cookies)
+const MongoStore = require('connect-mongo')(session);   // For storing session id's in Mongo
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -13,21 +14,6 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 // Initialize the Express App
 const app = new Express();
-
-// User sessions for tracking logins
-app.use(session({
-  secret: 'social-pulse',
-  resave: true,
-  saveUninitialized: false,
-}));
-
-// Make user ID available to the client
-app.use((req, res, next) => {
-  // If the user is logged in, res.locals.currentUser will equal the user's userId.
-  // If the user is not logged in, res.locals.currentUser will equal undefined.
-  res.locals.currentUser = req.session.userId;
-  next();
-});
 
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -49,6 +35,7 @@ import routes from '../client/routes';                        // Frontend routes
 import { fetchComponentData } from './util/fetchData';
 import users from './routes/user.routes';                     // Backend routes (user)
 import authentication from './routes/authentication.routes';  // Backend routes (authentication)
+import fbOauth from './routes/fbOauth.routes';                // Backend facebook auth routes
 import serverConfig from './config';                          // Backend server configuration
 
 // Set native promises as mongoose promise
@@ -62,6 +49,18 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   }
 });
 
+const db = mongoose.connection;
+
+// User sessions for tracking logins
+app.use(session({
+  secret: 'social-pulse',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db,
+  }),
+}));
+
 // Apply body Parser and server public assets and routes
 app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
@@ -69,6 +68,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/v1', users);
 app.use('/api/v1', authentication);
+app.use('/api/v1', fbOauth);
 app.use(errorHandler);  // eslint-disable-line no-use-before-define
 
 // Render Initial HTML
