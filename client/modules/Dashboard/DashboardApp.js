@@ -10,7 +10,6 @@ class DashboardApp extends Component {
   }
 
   render() {
-    const { socialMedia } = this.props;
     return (
       <div>
         <Link to="/account/profile">/account/profile</Link>

@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 // Material-ui
@@ -14,10 +15,38 @@ import styles from './Header.css';
 // however, it also causes some React warnings to be raised on render.
 // Should probably be fixed at some point
 class Header extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      currPage: this.props.parentProps.location.pathname,
+    };
+  }
+
   getChildContext() {
     return { muiTheme: getMuiTheme() };
   }
 
+  /**
+   * new props that are received from a state change but not a fully new class
+   * @param {* new props received from state change} newProps
+   */
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      currPage: newProps.parentProps.location.pathname,
+    });
+  }
+
+  checkCurrPage() {
+    switch (this.state.currPage) {
+      case '/dashboard':
+        return 'dashboard';
+      case '/account/profile':
+        return 'dashboard';
+      default:
+        return 'normal';
+    }
+  }
   render() {
     return (
       <header>
@@ -32,13 +61,21 @@ class Header extends Component {
                 <span style={{ marginLeft: 7 }}>SOCIAL PULSE</span>
               </Link>
             </div>
-            <div id={styles.links}>
+            {this.checkCurrPage() === 'normal' ? <div id={styles.links}>
               {/* TODO: replace navbar links with Material-ui buttons for that sweet sweet ripple effect */}
               <Link to="/about"><div className={styles.link}>About</div></Link>
               <Link to="/docs"><div className={styles.link}>Docs</div></Link>
               <Link to="/contact"><div className={styles.link}>Contact</div></Link>
               <Link to="/team"><div className={styles.link}>Team</div></Link>
             </div>
+            : null}
+            {this.checkCurrPage() === 'dashboard' ? <div id={styles.links}>
+              {/* TODO: replace navbar links with Material-ui buttons for that sweet sweet ripple effect */}
+              <Link to="/dashboard"><div className={styles.link}>Home</div></Link>
+              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
+              <Link to="/account/profile"><div className={styles.link}>Account</div></Link>
+            </div>
+            : null}
           </div>
           {/* Window less than 980px, render collapsible navigation */}
           <div id={styles.collapsible}>
@@ -51,17 +88,31 @@ class Header extends Component {
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
               targetOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
-              <Link to="/"><MenuItem primaryText="Home" /></Link>
-              <Link to="/about"><MenuItem primaryText="About" /></Link>
-              <Link to="/docs"><MenuItem primaryText="Docs" /></Link>
-              <Link to="/contact"><MenuItem primaryText="Contact" /></Link>
-              <Link to="/team"><MenuItem primaryText="Team" /></Link>
+              {this.checkCurrPage() === 'normal' ? <div>
+                <Link to="/"><MenuItem primaryText="Home" /></Link>
+                <Link to="/about"><MenuItem primaryText="About" /></Link>
+                <Link to="/docs"><MenuItem primaryText="Docs" /></Link>
+                <Link to="/contact"><MenuItem primaryText="Contact" /></Link>
+                <Link to="/team"><MenuItem primaryText="Team" /></Link>
+              </div>
+              : null}
+              {this.checkCurrPage() === 'dashboard' ? <div>
+                <Link to="/dashboard"><MenuItem primaryText="Home" /></Link>
+                <Link to="/docs"><MenuItem primaryText="Docs" /></Link>
+                <Link to="/account/profile"><MenuItem primaryText="Account" /></Link>
+              </div>
+              : null}
             </IconMenu>
           </div>
-          <div id={styles.account}>
+          {this.checkCurrPage() === 'normal' ? <div id={styles.account}>
             <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
             <Link to="/login"><div className={styles.link}>Login</div></Link>
           </div>
+          : null}
+          {this.checkCurrPage() === 'dashboard' ? <div id={styles.account}>
+            <Link to="/login"><div className={styles.link}>Logout</div></Link>
+          </div>
+          : null}
         </div>
       </header>
     );
@@ -73,3 +124,28 @@ Header.childContextTypes = {
 };
 
 export default Header;
+
+ /*{this.checkCurrPage() === 'normal' ? <div id="normal-header">
+            <div id={styles.links}>
+              <Link to="/about"><div className={styles.link}>About</div></Link>
+              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
+              <Link to="/contact"><div className={styles.link}>Contact</div></Link>
+              <Link to="/team"><div className={styles.link}>Team</div></Link>
+            </div>
+            <div id={styles.account}>
+              <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
+              <Link to="/login"><div className={styles.link}>Login</div></Link>
+            </div>
+          </div>
+          : null}
+          {this.checkCurrPage() === 'dashboard' ? <div id="dashboard-header">
+            <div id={styles.links}>
+              <Link to="/dashboard"><div className={styles.link}>Home</div></Link>
+              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
+              <Link to="/account/profile"><div className={styles.link}>Account</div></Link>
+            </div>
+            <div id={styles.account}>
+              <Link to="/logout"><div className={styles.link}>Logout</div></Link>
+            </div>
+          </div>
+        : null}*/
