@@ -1,0 +1,79 @@
+/*@import './../../../theme/colors.css';*/
+
+
+.name {
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
+}
+.cardHeader {
+  font-size: 200px;
+}
+
+.button {
+  margin: 12;
+}
+
+.cardFooter {
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+.placeholder {
+  height: 40px;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 340px) {
+  .teamContainer {
+    margin-top: 0%;
+    margin-right: 10%;
+    margin-bottom: 0%;
+    margin-left: 10%;
+  }
+  .avatar {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .content {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 768px) {
+  .teamContainer {
+    margin-top: 0%;
+    margin-right: 0%;
+    margin-bottom: 0%;
+    margin-left: 0%;
+  }
+  .avatar {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .content {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1000px) {
+  .teamContainer {
+    margin-top: 0%;
+    margin-right: 0%;
+    margin-bottom: 0%;
+    margin-left: 0%;
+
+  }
+  .avatar {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .content {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
