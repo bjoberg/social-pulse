@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
   Step,
   Stepper,
@@ -8,6 +9,7 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
+import TextField from 'material-ui/TextField';
 
 /**
  *  * Vertical steppers are designed for narrow screen sizes. They are ideal for mobile.
@@ -23,6 +25,22 @@ class VerticalStepper extends React.Component {
     finished: false,
     stepIndex: 0,
   };
+
+///////// Post Fb Status///////////////
+  postStatus = () => {
+
+    axios.get('/api/v1/fbOauth').then(response => {
+      console.log('returned Oauth');
+      console.log(response.token);
+    });
+
+    const { stepIndex } = this.state;
+    this.setState({
+      stepIndex: stepIndex + 1,
+      finished: stepIndex >= 2,
+    });
+  };
+////////////////////////////
 
   handleNext = () => {
     const { stepIndex } = this.state;
@@ -53,7 +71,7 @@ class VerticalStepper extends React.Component {
           disableTouchRipple
           disableFocusRipple
           primary
-          onTouchTap={this.handleNext}
+          onTouchTap={this.postStatus}
           style={{ marginRight: 12 }}
         />
         {step > 0 && (
@@ -78,8 +96,8 @@ class VerticalStepper extends React.Component {
           <Step>
             <StepLabel>Select social media</StepLabel>
             <StepContent>
-              <Checkbox label="500px" />
-              <Checkbox label="Facebook" disabled />
+              <Checkbox label="Facebook" />
+              <Checkbox label="500px" disabled />
               <Checkbox label="Flickr" disabled />
               {this.renderStepActions(0)}
             </StepContent>
@@ -87,15 +105,16 @@ class VerticalStepper extends React.Component {
           <Step>
             <StepLabel>Select post type</StepLabel>
             <StepContent>
-              <Checkbox label="Image" />
+              <Checkbox label="Text post" />
+              <Checkbox label="Image" disabled />
               <Checkbox label="Image Album" disabled />
-              <Checkbox label="Text post" disabled />
               {this.renderStepActions(1)}
             </StepContent>
           </Step>
           <Step>
             <StepLabel>Configure your post</StepLabel>
             <StepContent>
+              <TextField hintText="Update your status." />
               {this.renderStepActions(2)}
             </StepContent>
           </Step>

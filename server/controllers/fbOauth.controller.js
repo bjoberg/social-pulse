@@ -3,10 +3,6 @@
 import User from '../models/user';
 import axios from 'axios';
 
-const appId = '1391085770956859';
-const appSecret = '8073aeed7909ed09963071bf4e080ad2';
-const appShortLivedToken = '';
-
 function validateSession(req, next) {
   if (!req.session.userId) {
     const err = new Error('Invalid session id');
@@ -26,8 +22,7 @@ export function getOauth(req, res, next) {
         return next(err);
       }
 
-      // Return long term user oAuth auth_token
-      // TODO: res.json({ user });
+      res.json({ token: user.social_media.auth_token });
       next();
     });
   }
@@ -42,43 +37,41 @@ export function putOauth(req, res, next) {
       }
 
       // Make fb api request 
-      console.log('about to make request');
-      console.log(req.body);
+      const appId = '289287891496885';
+      const appSecret = '7e0e12c1935200d4884c9a353d9d4f6f';
+      const appShortLivedToken = req.body.token;
 
-      axios.get(`https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&amp;client_id=${appId}&amp;client_secret=${appSecret}&amp;fb_exchange_token=${appShortLivedToken}`).then(response => {
-        console.log('In the request callback');
-        console.log(response);
-        // user.social_media.push({
-        //   social_title: 'Facebook',
-        //   date_added: new Date,
-        //   date_modified: new Date,
-        //   auth_token: data.oAuth,
-        // }
-        // );
+      axios.get(`https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${appShortLivedToken}`).then(response => {
+        let isNotUpdated = true;
+
+        for (let i = 0; i < user.social_media.length; i++) {
+          if (user.social_media[i].social_title === 'Facebook') {
+            user.social_media[i].auth_token = response.data.access_token;
+            isNotUpdated = false;
+          }
+        }
+
+        if (isNotUpdated) {
+          user.social_media.push({
+            social_title: 'Facebook',
+            date_added: new Date,
+            date_modified: new Date,
+            auth_token: response.data.access_token,
+          });
+        }
+
+        user.save(() => {
+          if (err) {
+            const customError = new Error('Bad request');
+            customError.status = 500;
+            res.status(500).send(customError);
+          } else {
+            res.json({ output: 'Success! Token updated' });
+          }
+        });
       }).catch(error => {
         console.log(error);
       });
-
-      // console.log('about to push');
-      // user.social_media.push({
-      //   social_title: 'Facebook',
-      //   date_added: new Date,
-      //   date_modified: new Date,
-      //   auth_token: '',
-      // }
-      // );
-
-      // console.log('updated social_media == ' + user);
-
-      // user.save(() => {
-      //   if (err) {
-      //     const customError = new Error('Bad request');
-      //     customError.status = 500;
-      //     res.status(500).send(customError);
-      //   } else {
-      //     res.json({ output: `Success! the ${request} has been saved.` });
-      //   }
-      // });
     });
   }
 }
