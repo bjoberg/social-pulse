@@ -1,12 +1,43 @@
 /* eslint-disable global-require */
+/* eslint-disable no-console */
+
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
+import axios from 'axios';
 
-const checkAuth = (nextState, replaceState) => {
-  // wtf do these params do???????
-  console.log(nextState)
-  console.log(replaceState)
+/**
+ * Check to make sure the user is logged in.
+ * @param {* state for new route} nextState
+ * @param {* updated state of the route} replaceState
+ */
+const checkAuth = async (nextState, replace, callback) => {
+  await axios.get('/api/v1/check_auth')
+    .then(response => {
+      switch (nextState.location.pathname) {
+        case '/login':
+          if (response.data.isValid) {
+            replace('/dashboard');
+          }
+          callback();
+          break;
+        case '/signup':
+          if (response.data.isValid) {
+            replace('/dashboard');
+          }
+          callback();
+          break;
+        default:
+          if (!response.data.isValid) {
+            replace('/login');
+          }
+          callback();
+          break;
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 // require.ensure polyfill for node
@@ -30,11 +61,9 @@ if (process.env.NODE_ENV !== 'production') {
   require('./components/Privacy/Privacy');
   require('./components/Security/Security');
   require('./components/Status/Status');
-  require('./modules/Login/Login');
-  require('./modules/Login/ForgotPassword');
-  require('./modules/Signup/Signup');
-  require('./modules/Signup/ConfirmEmail');
   require('./modules/Dashboard/Dashboard');
+  require('./modules/Dashboard/Account/Account');
+  require('./modules/Authentication/Authentication');
 }
 
 // react-router setup with code-splitting
@@ -104,47 +133,41 @@ export default (
         });
       }}
     />
-    <Route onEnter={checkAuth}>
-      <Route
-        path="/login"
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, require('./modules/Login/Login').default);
-          });
-        }}
-      />
-      <Route
-        path="/forgot-password"
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, require('./modules/Login/ForgotPassword').default);
-          });
-        }}
-      />
-      <Route
-        path="/signup"
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, require('./modules/Signup/Signup').default);
-          });
-        }}
-      />
-      <Route
-        path="/confirm-email"
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, require('./modules/Signup/ConfirmEmail').default);
-          });
-        }}
-      />
-      <Route
-        path="/dashboard"
-        getComponent={(nextState, cb) => {
-          require.ensure([], require => {
-            cb(null, require('./modules/Dashboard/Dashboard').default);
-          });
-        }}
-      />
-    </Route>
+    <Route
+      path="/login"
+      onEnter={checkAuth}
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Authentication/Authentication').default);
+        });
+      }}
+    />
+    <Route
+      path="/signup"
+      onEnter={checkAuth}
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Authentication/Authentication').default);
+        });
+      }}
+    />
+    <Route
+      path="/dashboard"
+      onEnter={checkAuth}
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Dashboard/Dashboard').default);
+        });
+      }}
+    />
+    <Route
+      path="/account/profile"
+      onEnter={checkAuth}
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Dashboard/Account/Account').default);
+        });
+      }}
+    />
   </Route>
 );
