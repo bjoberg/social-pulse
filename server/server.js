@@ -15,6 +15,13 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 // Initialize the Express App
 const app = new Express();
 
+// User sessions for tracking logins
+app.use(session({
+  secret: 'social-pulse',
+  resave: true,
+  saveUninitialized: false,
+}));
+
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(config);
@@ -35,6 +42,7 @@ import routes from '../client/routes';                        // Frontend routes
 import { fetchComponentData } from './util/fetchData';
 import users from './routes/user.routes';                     // Backend routes (user)
 import authentication from './routes/authentication.routes';  // Backend routes (authentication)
+import fbOauth from './routes/fbOauth.routes';                // Backend facebook auth routes
 import serverConfig from './config';                          // Backend server configuration
 
 // Set native promises as mongoose promise
@@ -67,6 +75,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/v1', users);
 app.use('/api/v1', authentication);
+app.use('/api/v1', fbOauth);
 app.use(errorHandler);  // eslint-disable-line no-use-before-define
 
 // Render Initial HTML

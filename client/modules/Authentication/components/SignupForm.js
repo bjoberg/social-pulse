@@ -1,6 +1,9 @@
 // React
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+
+import { fetchUserProfile } from '../../../actions/user';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
@@ -72,14 +75,16 @@ class SignupForm extends Component {
       };
 
       this.props.userSignupRequest(signupObject).then(
+        // signup request succeeded, load Redux store with user profile and redirect to /dashboard
         () => {
+          this.props.dispatch(fetchUserProfile());
           this.context.router.push('/dashboard');
         },
         (err) => {
           this.setState({ isLoading: false, errors: err.response.data.error });
         });
     } else {
-      this.setState({ errors: errors });
+      this.setState({ errors });
     }
   }
 
@@ -143,8 +148,8 @@ class SignupForm extends Component {
       <div className={styles.loginContainer}>
         <Card>
           {/* Card Title */}
-          {this.state.isLoading ? <div><CardTitle className={styles.title} title="Creating your account." /></div> : null} 
-          {!this.state.isLoading ? <div><CardTitle className={styles.title} title="Create your account." /></div> : null} 
+          {this.state.isLoading ? <div><CardTitle className={styles.title} title="Creating your account." /></div> : null}
+          {!this.state.isLoading ? <div><CardTitle className={styles.title} title="Create your account." /></div> : null}
 
           {/* Card Text */}
           <CardText className={styles.content}>
@@ -175,10 +180,11 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
 };
 
 SignupForm.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-export default SignupForm;
+export default connect()(SignupForm);
