@@ -49,12 +49,12 @@ userSchema.statics.authenticate = (username, password, callback) => {
       // Check for a user based on username input
       if (err) {
         const generalError = new Error('General error.');
-        generalError.name = 'General error';
+        generalError.name = 'general';
         generalError.status = 401;
         return callback(generalError);
       } else if (!user) {
         const usernameError = new Error('User not found.');
-        usernameError.name = 'User not found';
+        usernameError.name = 'username';
         usernameError.status = 401;
         return callback(usernameError);
       }
@@ -65,7 +65,7 @@ userSchema.statics.authenticate = (username, password, callback) => {
           return callback(null, user);
         }
         const passwordError = new Error('Invalid password.');
-        passwordError.name = 'Invalid password';
+        passwordError.name = 'password';
         passwordError.status = 401;
         return callback(passwordError);
       });

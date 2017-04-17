@@ -39,7 +39,7 @@ export class App extends Component {
               },
             ]}
           />
-          <Header />
+          <Header parentProps={this.props} />
           <div className={styles.container}>
             {this.props.children}
           </div>

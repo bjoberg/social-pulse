@@ -16,6 +16,10 @@
   height: 40px;
 }
 
+.error {
+  color: red;
+}
+
 /* Small Devices, Tablets */
 @media only screen and (min-width : 340px) {
   .loginContainer {
