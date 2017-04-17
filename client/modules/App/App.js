@@ -26,7 +26,7 @@ export class App extends Component {
         <div>
           <Helmet
             title="Social Pulse"
-            titleTemplate="%s - Blog App"
+            titleTemplate="%s - Photo App"
             meta={[
               { charset: 'utf-8' },
               {
