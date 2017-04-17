@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import { fetchUserProfile } from '../../../actions/user';
+import { fetchUserProfile, setUserIsLoggedIn } from '../../../actions/user';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText, CardTitle } from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Style
 import styles from './Authentication.css';
@@ -75,6 +76,7 @@ class LoginForm extends Component {
         // login request succeeded, load Redux store with user profile and redirect to /dashboard
         () => {
           this.props.dispatch(fetchUserProfile());
+          this.props.dispatch(setUserIsLoggedIn(true));
           this.context.router.push('/dashboard');
         },
         (err) => {

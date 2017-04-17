@@ -1,19 +1,9 @@
-import axios from 'axios';
-import { LOGIN, LOGOUT } from '../actions/user';
-
-const checkLogin = async () => {
-  let isLoggedIn;
-  await axios.get('/api/v1/check_auth')
-    .then(response => { isLoggedIn = response.data.isValid; });
-  return isLoggedIn;
-};
+import { SET_USER_IS_LOGGED_IN, SET_USER_DATA, CLEAR_USER_DATA } from '../actions/user';
 
 export const userIsLoggedIn = (state = false, action) => {
   switch (action.type) {
-    case LOGIN:
-      return true;
-    case LOGOUT:
-      return false;
+    case SET_USER_IS_LOGGED_IN:
+      return action.userIsLoggedIn;
     default:
       return state;
   }
@@ -21,9 +11,9 @@ export const userIsLoggedIn = (state = false, action) => {
 
 export const userData = (state = {}, action) => {
   switch (action.type) {
-    case LOGIN:
+    case SET_USER_DATA:
       return action.userData;
-    case LOGOUT:
+    case CLEAR_USER_DATA:
       return {};
     default:
       return state;

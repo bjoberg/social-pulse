@@ -4,40 +4,35 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
-import axios from 'axios';
+import store from './store';
 
 /**
  * Check to make sure the user is logged in.
  * @param {* state for new route} nextState
  * @param {* updated state of the route} replaceState
  */
-const checkAuth = async (nextState, replace, callback) => {
-  await axios.get('/api/v1/check_auth')
-    .then(response => {
-      switch (nextState.location.pathname) {
-        case '/login':
-          if (response.data.isValid) {
-            replace('/dashboard');
-          }
-          callback();
-          break;
-        case '/signup':
-          if (response.data.isValid) {
-            replace('/dashboard');
-          }
-          callback();
-          break;
-        default:
-          if (!response.data.isValid) {
-            replace('/login');
-          }
-          callback();
-          break;
+const checkAuth = (nextState, replace, callback) => {
+  const { userIsLoggedIn } = store.getState();
+  switch (nextState.location.pathname) {
+    case '/login':
+      if (userIsLoggedIn) {
+        replace('/dashboard');
       }
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      callback();
+      break;
+    case '/signup':
+      if (userIsLoggedIn) {
+        replace('/dashboard');
+      }
+      callback();
+      break;
+    default:
+      if (!userIsLoggedIn) {
+        replace('/login');
+      }
+      callback();
+      break;
+  }
 };
 
 // require.ensure polyfill for node

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import { fetchUserProfile } from '../../../actions/user';
+import { fetchUserProfile, setUserIsLoggedIn } from '../../../actions/user';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
@@ -78,6 +78,7 @@ class SignupForm extends Component {
         // signup request succeeded, load Redux store with user profile and redirect to /dashboard
         () => {
           this.props.dispatch(fetchUserProfile());
+          this.props.dispatch(setUserIsLoggedIn(true));
           this.context.router.push('/dashboard');
         },
         (err) => {

@@ -1,9 +1,29 @@
 import axios from 'axios';
 
-export const LOGIN = 'LOGIN';
+export const SET_USER_IS_LOGGED_IN = 'SET_USER_IS_LOGGED_IN';
+export const setUserIsLoggedIn = (userIsLoggedIn) => ({
+  type: SET_USER_IS_LOGGED_IN,
+  userIsLoggedIn,
+});
+
+export const checkLogin = () => {
+  return async (dispatch) => {
+    let isLoggedIn;
+    await axios.get('/api/v1/check_auth')
+      .then(response => { isLoggedIn = response.data.isValid; });
+    dispatch(setUserIsLoggedIn(isLoggedIn));
+  };
+};
+
+export const SET_USER_DATA = 'SET_USER_DATA';
 const setUserData = (userData) => ({
-  type: LOGIN,
+  type: SET_USER_DATA,
   userData,
+});
+
+export const CLEAR_USER_DATA = 'CLEAR_USER_DATA';
+export const clearUserData = () => ({
+  type: CLEAR_USER_DATA,
 });
 
 // GET user profile from API and set userData state
