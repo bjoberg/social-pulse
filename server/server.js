@@ -153,13 +153,13 @@ app.use((req, res, next) => {
 
 // Error handler
 function errorHandler(err, req, res, next) {
-  console.log(err.message);
   res.status(err.status || 500);
   res.json({
     error: {
       [err.name]: err.message,
     },
   });
+  next();
 }
 
 // start app
