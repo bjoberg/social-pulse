@@ -8,7 +8,6 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
-import FileReaderInput from 'react-file-reader-input';
 
 /**
  *  * Vertical steppers are designed for narrow screen sizes. They are ideal for mobile.
@@ -97,12 +96,6 @@ class VerticalStepper extends React.Component {
           <Step>
             <StepLabel>Configure your post</StepLabel>
             <StepContent>
-              <form>
-                <label htmlFor="my-file-input">Upload a File:</label>
-                <FileReaderInput as="binary" id="my-file-input" onChange={this.handleChange}>
-                  <button>Select a file!</button>
-                </FileReaderInput>
-              </form>
               {this.renderStepActions(2)}
             </StepContent>
           </Step>

@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
 
-// class obtained from: http://stackoverflow.com/questions/27717555/implement-facebook-api-login-with-reactjs
+// component implements Facebook Login for the Web with the JavaScript SDK:
+// https://developers.facebook.com/docs/facebook-login/web
 export class FacebookLogin extends Component {
+  constructor(props) {
+    super(props);
+
+    this.testApi = this.testApi.bind(this);
+    this.statusChangeCallback = this.statusChangeCallback.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.checkLoginState = this.checkLoginState.bind(this);
+  }
   componentDidMount() {
+    /* eslint-disable */
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '<YOUR_APP_ID>',
-        cookie     : true,  // enable cookies to allow the server to access the session
-        xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.1' // use version 2.1
+        appId      : '1391085770956859',
+        cookie     : true,   // enable cookies to allow the server to access the session
+        xfbml      : true,   // parse social plugins on this page
+        version    : 'v2.1', // use version 2.1
       });
+    /* eslint-enable */
 
       // Now that we've initialized the JavaScript SDK, we call
       // FB.getLoginStatus().  This function gets the state of the
@@ -22,12 +33,13 @@ export class FacebookLogin extends Component {
       //    your app or not.
       //
       // These three cases are handled in the callback function.
-      FB.getLoginStatus(function(response) {
+      FB.getLoginStatus(function(response) { // eslint-disable-line
         this.statusChangeCallback(response);
       }.bind(this));
     }.bind(this);
 
     // Load the SDK asynchronously
+    /* eslint-disable */
     (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
@@ -35,13 +47,14 @@ export class FacebookLogin extends Component {
       js.src = "//connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+    /* eslint-enable */
   }
 
   // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
   testApi() {
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
+    FB.api('/me', function(response) { // eslint-disable-line
       console.log('Successful login for: ' + response.name);
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
@@ -58,7 +71,9 @@ export class FacebookLogin extends Component {
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      this.testAPI();
+      console.log('ACCESS TOKEN: ');
+      console.log(response.authResponse.accessToken);
+      this.testApi();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -75,13 +90,13 @@ export class FacebookLogin extends Component {
   // Button.  See the onlogin handler attached to it in the sample
   // code below.
   checkLoginState() {
-    FB.getLoginStatus(function(response) {
+    FB.getLoginStatus(function(response) { // eslint-disable-line
       this.statusChangeCallback(response);
     }.bind(this));
   }
 
   handleClick() {
-    FB.login(this.checkLoginState());
+    FB.login(this.checkLoginState()); // eslint-disable-line
   }
 
   render() {
