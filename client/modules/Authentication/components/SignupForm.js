@@ -10,13 +10,13 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText, CardTitle } from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Style
 import styles from './Authentication.css';
 
 
 class SignupForm extends Component {
-
   /**
    * Main object constructor
    * @param {* properties sent down from the parent element} props
@@ -40,6 +40,10 @@ class SignupForm extends Component {
     this.onChange = this.onChange.bind(this);
     // This line makes sure "this" does not refer to the event in onSubmit method
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  getChildContext() {
+    return { muiTheme: getMuiTheme() };
   }
 
   onChange(e) {
@@ -186,6 +190,10 @@ SignupForm.propTypes = {
 
 SignupForm.contextTypes = {
   router: React.PropTypes.object.isRequired,
+};
+
+SignupForm.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
 };
 
 export default connect()(SignupForm);

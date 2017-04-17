@@ -19,7 +19,6 @@ import styles from './Authentication.css';
  * Component for validating a user's credentials
  */
 class LoginForm extends Component {
-
   /**
    * Main object constructor
    * @param {* properties sent down from the parent element} props
@@ -41,6 +40,10 @@ class LoginForm extends Component {
     // This line makes sure "this" does not refer to the event in the specific method
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  getChildContext() {
+    return { muiTheme: getMuiTheme() };
   }
 
   /**
@@ -157,6 +160,10 @@ LoginForm.propTypes = {
 
 LoginForm.contextTypes = {
   router: React.PropTypes.object.isRequired,
+};
+
+LoginForm.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
 };
 
 export default connect()(LoginForm);
