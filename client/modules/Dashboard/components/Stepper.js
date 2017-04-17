@@ -39,16 +39,20 @@ class VerticalStepper extends React.Component {
     }
   };
 
+  handleChange = (e, results) => {
+    console.log(results);
+  }
+
   renderStepActions(step) {
     const { stepIndex } = this.state;
 
     return (
       <div style={{ margin: '12px 0' }}>
         <RaisedButton
-          label={stepIndex === 2 ? 'Finish' : 'Next'}
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
+          label={stepIndex === 2 ? 'Send Pulse' : 'Next'}
+          disableTouchRipple
+          disableFocusRipple
+          primary
           onTouchTap={this.handleNext}
           style={{ marginRight: 12 }}
         />
@@ -56,8 +60,8 @@ class VerticalStepper extends React.Component {
           <FlatButton
             label="Back"
             disabled={stepIndex === 0}
-            disableTouchRipple={true}
-            disableFocusRipple={true}
+            disableTouchRipple
+            disableFocusRipple
             onTouchTap={this.handlePrev}
           />
         )}
@@ -74,32 +78,24 @@ class VerticalStepper extends React.Component {
           <Step>
             <StepLabel>Select social media</StepLabel>
             <StepContent>
-              <p>
-                <Checkbox label="500px" />
-                <Checkbox label="Facebook" disabled={true} />
-                <Checkbox label="Flickr" disabled={true} />
-              </p>
+              <Checkbox label="500px" />
+              <Checkbox label="Facebook" disabled />
+              <Checkbox label="Flickr" disabled />
               {this.renderStepActions(0)}
             </StepContent>
           </Step>
           <Step>
             <StepLabel>Select post type</StepLabel>
             <StepContent>
-              <p>
-                <Checkbox label="Image" />
-                <Checkbox label="Image Album" disabled={true} />
-                <Checkbox label="Text post" disabled={true} />
-              </p>
+              <Checkbox label="Image" />
+              <Checkbox label="Image Album" disabled />
+              <Checkbox label="Text post" disabled />
               {this.renderStepActions(1)}
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>Configre your post</StepLabel>
+            <StepLabel>Configure your post</StepLabel>
             <StepContent>
-              <p>
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.
-              </p>
               {this.renderStepActions(2)}
             </StepContent>
           </Step>

@@ -15,6 +15,13 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 // Initialize the Express App
 const app = new Express();
 
+// User sessions for tracking logins
+app.use(session({
+  secret: 'social-pulse',
+  resave: true,
+  saveUninitialized: false,
+}));
+
 // Run Webpack dev server in development mode
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(config);
