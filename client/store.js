@@ -30,3 +30,7 @@ export function configureStore(initialState = {}) {
 
   return store;
 }
+
+// initialize and export store so state can be accessed by non-React functions/classes
+const store = configureStore({});
+export default store;

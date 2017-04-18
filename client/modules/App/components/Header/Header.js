@@ -1,11 +1,13 @@
-
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 // Material-ui
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+import Logout from './Logout';
 
 // Import Style
 import styles from './Header.css';
@@ -48,6 +50,7 @@ class Header extends Component {
     }
   }
   render() {
+    const { userIsLoggedIn } = this.props;
     return (
       <header>
         <div id={styles.container}>
@@ -82,7 +85,7 @@ class Header extends Component {
             <IconMenu
               iconButtonElement={
                 <IconButton>
-                  <i className={'material-icons ' + styles.menuicon}>menu</i>
+                  <i className={`material-icons ${styles.menuicon}`}>menu</i>
                 </IconButton>
               }
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
@@ -104,14 +107,22 @@ class Header extends Component {
               : null}
             </IconMenu>
           </div>
-          {this.checkCurrPage() === 'normal' ? <div id={styles.account}>
-            <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
-            <Link to="/login"><div className={styles.link}>Login</div></Link>
-          </div>
-          : null}
-          {this.checkCurrPage() === 'dashboard' ? <div id={styles.account}>
-            <Link to="/login"><div className={styles.link}>Logout</div></Link>
-          </div>
+          {(this.checkCurrPage() === 'normal') && !userIsLoggedIn ?
+            <div id={styles.account}>
+              <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
+              <Link to="/login"><div className={styles.link}>Login</div></Link>
+            </div>
+            : null}
+          {(this.checkCurrPage() === 'normal') && userIsLoggedIn ?
+            <div id={styles.account}>
+              <Link to="/dashboard"><div className={styles.link}>Dashboard</div></Link>
+              <Logout />
+            </div>
+            : null}
+          {this.checkCurrPage() === 'dashboard' ?
+            <div id={styles.account}>
+              <Logout />
+            </div>
           : null}
         </div>
       </header>
@@ -123,29 +134,66 @@ Header.childContextTypes = {
   muiTheme: React.PropTypes.object.isRequired,
 };
 
-export default Header;
+export default connect((state) => ({ userIsLoggedIn: state.userIsLoggedIn }))(Header);
+// Toolbar update
 
- /*{this.checkCurrPage() === 'normal' ? <div id="normal-header">
-            <div id={styles.links}>
-              <Link to="/about"><div className={styles.link}>About</div></Link>
-              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
-              <Link to="/contact"><div className={styles.link}>Contact</div></Link>
-              <Link to="/team"><div className={styles.link}>Team</div></Link>
-            </div>
-            <div id={styles.account}>
-              <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
-              <Link to="/login"><div className={styles.link}>Login</div></Link>
-            </div>
-          </div>
-          : null}
-          {this.checkCurrPage() === 'dashboard' ? <div id="dashboard-header">
-            <div id={styles.links}>
-              <Link to="/dashboard"><div className={styles.link}>Home</div></Link>
-              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
-              <Link to="/account/profile"><div className={styles.link}>Account</div></Link>
-            </div>
-            <div id={styles.account}>
-              <Link to="/logout"><div className={styles.link}>Logout</div></Link>
-            </div>
-          </div>
-        : null}*/
+// const materialStyles = {
+//   toolbar: {
+//     position: 'fixed',
+//     left: 0,
+//     top: 0,
+//     width: '100%',
+//     boxShadow: '0 2px 5px rgba(0,0,0,.26)',
+//     backgroundColor: '#03a9f4',
+//   },
+// };
+
+// <Toolbar style={materialStyles.toolbar} >
+//   <ToolbarGroup>
+//     <div id={styles.collapsible}>
+//       <IconButton onTouchTap={this.handleNavDrawerToggle} >
+//         <i className={'material-icons'}>menu</i>
+//       </IconButton>
+//     </div>
+//     <div className={styles.title}>
+//       <i className="material-icons">blur_on</i>
+//       <ToolbarTitle text="Social Pulse" />
+//     </div>
+//     <div id={styles.navbar} className={styles.toolbar_linkgroup_left}>
+//       <Link to="/" className={styles.toolbar_link_left}>Home</Link>
+//       <Link to="/about" className={styles.toolbar_link_left}>About</Link>
+//       <Link to="/docs" className={styles.toolbar_link_left}>Documentation<i className={'material-icons '}>keyboard_arrow_down</i></Link>
+//       <Link to="/team" className={styles.toolbar_link_left}>Team</Link>
+//       <Link to="/contact" className={styles.toolbar_link_left}>Contact</Link>
+//     </div>
+//   </ToolbarGroup>
+//   <ToolbarGroup>
+//     <div className={styles.toolbar_linkgroup_right}>
+//       <Link to="/login" className={styles.toolbar_link_right}>Login</Link>
+//       <Link to="/signup" className={styles.toolbar_link_right}>Sign up</Link>
+//     </div>
+//   </ToolbarGroup>
+// </Toolbar>
+// <Drawer docked={false} width={250} open={this.state.open} onRequestChange={(open) => this.setState({ open })}>
+//   <div className={styles.drawer_header}>
+//     <Link to="/" onTouchTap={this.handleNavDrawerClose}>
+//       <i className="material-icons">blur_on</i>
+//       <br />
+//       <span>Social Pulse</span>
+//     </Link>
+//   </div>
+//   {this.checkCurrPage() === 'normal' ? <Menu>
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/" />} primaryText="Home" leftIcon={<FontIcon className="material-icons">home</FontIcon>} />
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/about" />} primaryText="About" leftIcon={<FontIcon className="material-icons">library_books</FontIcon>} />
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/docs" />} primaryText="Documentation" leftIcon={<FontIcon className="material-icons">info</FontIcon>} />
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/contact" />} primaryText="Contact" leftIcon={<FontIcon className="material-icons">phone</FontIcon>} />
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/team" />} primaryText="Team" leftIcon={<FontIcon className="material-icons">people</FontIcon>} />
+//   </Menu>
+//   : null}
+//   {this.checkCurrPage() === 'dashboard' ? <Menu>
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/dashboard" />} primaryText="Dashboard" leftIcon={<FontIcon className="material-icons">home</FontIcon>} />
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/docs" />} primaryText="Documentation" leftIcon={<FontIcon className="material-icons">library_books</FontIcon>} />
+//     <MenuItem onTouchTap={this.handleNavDrawerClose} containerElement={<Link to="/docs" />} primaryText="Account" leftIcon={<FontIcon className="material-icons">info</FontIcon>} />
+//   </Menu>
+//   : null}
+// </Drawer>

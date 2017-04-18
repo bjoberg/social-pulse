@@ -1,12 +1,16 @@
 // React
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+
+import { fetchUserProfile, setUserIsLoggedIn } from '../../../actions/user';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText, CardTitle } from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Style
 import styles from './Authentication.css';
@@ -15,7 +19,6 @@ import styles from './Authentication.css';
  * Component for validating a user's credentials
  */
 class LoginForm extends Component {
-
   /**
    * Main object constructor
    * @param {* properties sent down from the parent element} props
@@ -37,6 +40,10 @@ class LoginForm extends Component {
     // This line makes sure "this" does not refer to the event in the specific method
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+  }
+
+  getChildContext() {
+    return { muiTheme: getMuiTheme() };
   }
 
   /**
@@ -66,17 +73,20 @@ class LoginForm extends Component {
     // Make the request or display the errors
     if (isValid) {
       this.setState({ isLoading: true });
-      const loginObject = { username: username, password: password }; // eslint-disable-line object-shorthand
+      const loginObject = { username, password };
 
       this.props.loginRequest(loginObject).then(
+        // login request succeeded, load Redux store with user profile and redirect to /dashboard
         () => {
+          this.props.dispatch(fetchUserProfile());
+          this.props.dispatch(setUserIsLoggedIn(true));
           this.context.router.push('/dashboard');
         },
         (err) => {
           this.setState({ isLoading: false, errors: err.response.data.error });
         });
     } else {
-      this.setState({ errors: errors });
+      this.setState({ errors });
     }
   }
 
@@ -145,10 +155,15 @@ class LoginForm extends Component {
 
 LoginForm.propTypes = {
   loginRequest: React.PropTypes.func.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
 };
 
 LoginForm.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-export default LoginForm;
+LoginForm.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
+};
+
+export default connect()(LoginForm);
