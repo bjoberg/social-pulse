@@ -14,8 +14,8 @@ class DashboardApp extends Component {
       <div>
         <h1>Let's post something.</h1>
         <h3>Please follow the steps below to configure your post.</h3>
+        <FacebookLogin />
         <VerticalStepper />
-        {<FacebookLogin />}
       </div>
     );
   }

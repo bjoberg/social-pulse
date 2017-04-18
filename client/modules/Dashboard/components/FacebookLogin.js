@@ -59,15 +59,6 @@ export class FacebookLogin extends Component {
     axios.put('/api/v1/fbOauthCreate', { token: this.state.token });
   }
 
-  // testApi() {
-  //   console.log('Welcome!  Fetching your information.... ');
-  //   FB.api('/me', function(response) { // eslint-disable-line
-  //     console.log('Successful login for: ' + response.name);
-  //     document.getElementById('status').innerHTML =
-  //       'Thanks for logging in, ' + response.name + '!';
-  //   });
-  // }
-
   // This is called with the results from from FB.getLoginStatus().
   statusChangeCallback(response) {
     // The response object is returned with a status field that lets the
@@ -76,7 +67,6 @@ export class FacebookLogin extends Component {
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      console.log(response.authResponse.accessToken);
       this.setState({ token: response.authResponse.accessToken });
       this.getLongTermToken();
     } else if (response.status === 'not_authorized') {
@@ -107,7 +97,8 @@ export class FacebookLogin extends Component {
   render() {
     return (
       <div>
-        <a href="#" onClick={this.handleClick}>Login</a>
+        <br />
+        <a href="#" onClick={this.handleClick}>Login to Facebook</a>
       </div>
     );
   }

@@ -21,20 +21,17 @@ class VerticalStepper extends React.Component {
       this.setState({ isLoading: true });
       let authToken = '';
       axios.get('/api/v1/fbOauth').then(response => {
-        console.log('received fbOauth');
         authToken = response.data.token;
-        console.log(`About to make this request = https://graph.facebook.com/{user-id}/feed?message=${'This is a test'}&access_token=${authToken}`);
         axios.post(`https://graph.facebook.com/me/feed?message=${this.state.status}&access_token=${authToken}`).then(fbResponse => {
           console.log(fbResponse);
         });
-        console.log('done');
       });
 
-       const { stepIndex } = this.state;
-       this.setState({
-         stepIndex: stepIndex + 1,
-         stepperFinished: stepIndex >= 2,
-       });
+      const { stepIndex } = this.state;
+      this.setState({
+        stepIndex: stepIndex + 1,
+        stepperFinished: stepIndex >= 2,
+      });
     } else {
       console.log('no input entered');
     }
@@ -56,7 +53,6 @@ class VerticalStepper extends React.Component {
   };
 
   handleStatusChange = (e) => {
-    console.log(e);
     this.setState({ status: e.target.value });
   }
 
@@ -89,7 +85,7 @@ class VerticalStepper extends React.Component {
     const { stepperFinished, stepIndex } = this.state;
 
     return (
-      <div style={{ maxWidth: 400, maxHeight: 400, margin: 'auto' }}>
+      <div style={{ maxWidth: 400, maxHeight: 400 }}>
         <Stepper activeStep={stepIndex} orientation="vertical">
           <Step>
             <StepLabel>What social media accounts do you want to post to?</StepLabel>
