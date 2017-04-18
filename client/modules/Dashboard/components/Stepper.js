@@ -22,7 +22,7 @@ class VerticalStepper extends React.Component {
       console.log('received fbOauth');
       authToken = response.data.token;
       console.log(`About to make this request = https://graph.facebook.com/{user-id}/feed?message=${'This is a test'}&access_token=${authToken}`);
-      axios.post(`https://graph.facebook.com/100016582831501/feed?message=${'This is a test'}&access_token=${authToken}`).then(fbResponse => {
+      axios.post(`https://graph.facebook.com/me/feed?message=${'This is a test'}&access_token=${authToken}`).then(fbResponse => {
         console.log(fbResponse);
       });
       console.log('done');
