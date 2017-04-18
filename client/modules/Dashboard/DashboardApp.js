@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import VerticalStepper from './components/Stepper';
+import FacebookLogin from './components/FacebookLogin';
 
 class DashboardApp extends Component {
   constructor(props) {
@@ -8,19 +10,23 @@ class DashboardApp extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div>
-        {this.props.userData.username}
-        <Link to="/account/profile">/account/profile</Link>
+        <h1>Let's post something.</h1>
+        <h3>Please follow the steps below to configure your post.</h3>
+        <FacebookLogin />
+        <VerticalStepper />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  const { userData } = state;
-  return { userData };
+DashboardApp.propTypes = {
+  socialMedia: PropTypes.array.isRequired,
 };
+
+const mapStateToProps = (state) => ({
+  socialMedia: state.userData.social_media,
+});
 
 export default connect(mapStateToProps)(DashboardApp);
