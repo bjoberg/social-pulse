@@ -154,7 +154,7 @@ export class Team extends Component {
             </div>
             <div>
               <CardText className={styles.bio}>
-                {brettOberg}
+                {kennyGao}
               </CardText>
             </div>
           </Card>
