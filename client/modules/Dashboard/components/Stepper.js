@@ -12,27 +12,32 @@ class VerticalStepper extends React.Component {
     isLoading: false,
     stepperFinished: false,
     stepIndex: 0,
+    status: '',
   };
 
 // /////// Post Fb Status///////////////
   postStatus = () => {
-    this.setState({ isLoading: true });
-    let authToken = '';
-    axios.get('/api/v1/fbOauth').then(response => {
-      console.log('received fbOauth');
-      authToken = response.data.token;
-      console.log(`About to make this request = https://graph.facebook.com/{user-id}/feed?message=${'This is a test'}&access_token=${authToken}`);
-      axios.post(`https://graph.facebook.com/me/feed?message=${'This is a test'}&access_token=${authToken}`).then(fbResponse => {
-        console.log(fbResponse);
+    if (this.state.status.length) {
+      this.setState({ isLoading: true });
+      let authToken = '';
+      axios.get('/api/v1/fbOauth').then(response => {
+        console.log('received fbOauth');
+        authToken = response.data.token;
+        console.log(`About to make this request = https://graph.facebook.com/{user-id}/feed?message=${'This is a test'}&access_token=${authToken}`);
+        axios.post(`https://graph.facebook.com/me/feed?message=${this.state.status}&access_token=${authToken}`).then(fbResponse => {
+          console.log(fbResponse);
+        });
+        console.log('done');
       });
-      console.log('done');
-    });
 
-    // const { stepIndex } = this.state;
-    // this.setState({
-    //   stepIndex: stepIndex + 1,
-    //   stepperFinished: stepIndex >= 2,
-    // });
+       const { stepIndex } = this.state;
+       this.setState({
+         stepIndex: stepIndex + 1,
+         stepperFinished: stepIndex >= 2,
+       });
+    } else {
+      console.log('no input entered');
+    }
   };
 
   handleNext = () => {
@@ -49,6 +54,11 @@ class VerticalStepper extends React.Component {
       this.setState({ stepIndex: stepIndex - 1 });
     }
   };
+
+  handleStatusChange = (e) => {
+    console.log(e);
+    this.setState({ status: e.target.value });
+  }
 
   renderStepActions(step) {
     const { stepIndex } = this.state;
@@ -102,7 +112,7 @@ class VerticalStepper extends React.Component {
           <Step>
             <StepLabel>Configure your post's details</StepLabel>
             <StepContent>
-              <TextField hintText="Update your status." />
+              <TextField name="status" hintText="Update your status." onChange={this.handleStatusChange} />
               {this.renderStepActions(2)}
             </StepContent>
           </Step>

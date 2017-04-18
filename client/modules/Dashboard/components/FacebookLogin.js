@@ -19,8 +19,9 @@ export class FacebookLogin extends Component {
   componentDidMount() {
     /* eslint-disable */
     window.fbAsyncInit = function() {
+      const appId = (process.env.NODE_ENV === 'production') ? '242627689545301' : '289287891496885';
       FB.init({
-        appId      : '289287891496885',
+        appId,
         cookie     : true,   // enable cookies to allow the server to access the session
         xfbml      : true,   // parse social plugins on this page
         version    : 'v2.8', // use version 2.1
