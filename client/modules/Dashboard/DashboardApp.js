@@ -14,9 +14,9 @@ class DashboardApp extends Component {
     const { socialMedia } = this.props;
     return (
       <div>
-        <Link to="/account/profile">/account/profile</Link>
-        {/* Display stepper if user has linked social media */}
-        {<VerticalStepper />}
+        <h1>Let's post something.</h1>
+        <h3>Please follow the steps below to configure your post.</h3>
+        <VerticalStepper />
         {<FacebookLogin />}
       </div>
     );

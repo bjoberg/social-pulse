@@ -22,7 +22,14 @@ export function getOauth(req, res, next) {
         return next(err);
       }
 
-      res.json({ token: user.social_media.auth_token });
+      // Look for the Facebook auth_token
+      for (let i = 0; i < user.social_media.length; i++) {
+        if (user.social_media[i].social_title === 'Facebook') {
+          res.json({ token: user.social_media[i].auth_token });
+        }
+      }
+
+      // Continue on to the next pice of middleware
       next();
     });
   }

@@ -54,11 +54,7 @@ export class FacebookLogin extends Component {
     }(document, 'script', 'facebook-jssdk'));
     /* eslint-enable */
   }
-
-  // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
   getLongTermToken() {
-    console.log('about to create long term token');
     axios.put('/api/v1/fbOauthCreate', { token: this.state.token });
   }
 
@@ -73,15 +69,12 @@ export class FacebookLogin extends Component {
 
   // This is called with the results from from FB.getLoginStatus().
   statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      console.log('ACCESS TOKEN: ');
       console.log(response.authResponse.accessToken);
       this.setState({ token: response.authResponse.accessToken });
       this.getLongTermToken();
@@ -107,7 +100,7 @@ export class FacebookLogin extends Component {
   }
 
   handleClick() {
-    FB.login(this.checkLoginState()); // eslint-disable-line
+    FB.login(this.checkLoginState(), { scope: 'publish_actions', return_scopes: true });  // eslint-disable-line
   }
 
   render() {

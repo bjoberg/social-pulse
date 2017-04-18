@@ -1,52 +1,45 @@
 import React from 'react';
 import axios from 'axios';
-import {
-  Step,
-  Stepper,
-  StepLabel,
-  StepContent,
-} from 'material-ui/Stepper';
+import { Step, Stepper, StepLabel, StepContent } from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 
-/**
- *  * Vertical steppers are designed for narrow screen sizes. They are ideal for mobile.
- *   *
- *    * To use the vertical stepper with the contained content as seen in spec examples,
- *     * you must use the `<StepContent>` component inside the `<Step>`.
- *      *
- *       * <small>(The vertical stepper can also be used without `<StepContent>` to display a basic stepper.)</small>
- *        */
 class VerticalStepper extends React.Component {
 
   state = {
-    finished: false,
+    isLoading: false,
+    stepperFinished: false,
     stepIndex: 0,
   };
 
-///////// Post Fb Status///////////////
+// /////// Post Fb Status///////////////
   postStatus = () => {
-
+    this.setState({ isLoading: true });
+    let authToken = '';
     axios.get('/api/v1/fbOauth').then(response => {
-      console.log('returned Oauth');
-      console.log(response.token);
+      console.log('received fbOauth');
+      authToken = response.data.token;
+      console.log(`About to make this request = https://graph.facebook.com/{user-id}/feed?message=${'This is a test'}&access_token=${authToken}`);
+      axios.post(`https://graph.facebook.com/100016582831501/feed?message=${'This is a test'}&access_token=${authToken}`).then(fbResponse => {
+        console.log(fbResponse);
+      });
+      console.log('done');
     });
 
-    const { stepIndex } = this.state;
-    this.setState({
-      stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
-    });
+    // const { stepIndex } = this.state;
+    // this.setState({
+    //   stepIndex: stepIndex + 1,
+    //   stepperFinished: stepIndex >= 2,
+    // });
   };
-////////////////////////////
 
   handleNext = () => {
     const { stepIndex } = this.state;
     this.setState({
       stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
+      stepperFinished: stepIndex >= 2,
     });
   };
 
@@ -57,21 +50,16 @@ class VerticalStepper extends React.Component {
     }
   };
 
-  handleChange = (e, results) => {
-    console.log(results);
-  }
-
   renderStepActions(step) {
     const { stepIndex } = this.state;
-
     return (
       <div style={{ margin: '12px 0' }}>
-        <RaisedButton
+        <FlatButton
           label={stepIndex === 2 ? 'Send Pulse' : 'Next'}
           disableTouchRipple
           disableFocusRipple
           primary
-          onTouchTap={this.postStatus}
+          onTouchTap={stepIndex === 2 ? this.postStatus : this.handleNext}
           style={{ marginRight: 12 }}
         />
         {step > 0 && (
@@ -88,13 +76,13 @@ class VerticalStepper extends React.Component {
   }
 
   render() {
-    const { finished, stepIndex } = this.state;
+    const { stepperFinished, stepIndex } = this.state;
 
     return (
-      <div style={{ maxWidth: 380, maxHeight: 400, margin: 'auto' }}>
+      <div style={{ maxWidth: 400, maxHeight: 400, margin: 'auto' }}>
         <Stepper activeStep={stepIndex} orientation="vertical">
           <Step>
-            <StepLabel>Select social media</StepLabel>
+            <StepLabel>What social media accounts do you want to post to?</StepLabel>
             <StepContent>
               <Checkbox label="Facebook" />
               <Checkbox label="500px" disabled />
@@ -103,7 +91,7 @@ class VerticalStepper extends React.Component {
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>Select post type</StepLabel>
+            <StepLabel>What kind of post do you want to make?</StepLabel>
             <StepContent>
               <Checkbox label="Text post" />
               <Checkbox label="Image" disabled />
@@ -112,24 +100,18 @@ class VerticalStepper extends React.Component {
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>Configure your post</StepLabel>
+            <StepLabel>Configure your post's details</StepLabel>
             <StepContent>
               <TextField hintText="Update your status." />
               {this.renderStepActions(2)}
             </StepContent>
           </Step>
         </Stepper>
-        {finished && (
+        {stepperFinished && (
           <p style={{ margin: '20px 0', textAlign: 'center' }}>
-            <a
-              href="#"
-              onClick={(event) => {
-                event.preventDefault();
-                this.setState({ stepIndex: 0, finished: false });
-              }}
-            >
-              Click here
-            </a> to reset the example.
+            <a href="#" onClick={(event) => { event.preventDefault(); this.setState({ stepIndex: 0, stepperFinished: false }); }}>
+               Click here
+            </a> to make another post.
           </p>
         )}
       </div>
