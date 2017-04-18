@@ -1,19 +1,22 @@
 // React
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+
+import { fetchUserProfile, setUserIsLoggedIn } from '../../../actions/user';
 
 // Material-UI
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText, CardTitle } from 'material-ui/Card';
 import CircularProgress from 'material-ui/CircularProgress';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Style
 import styles from './Authentication.css';
 
 
 class SignupForm extends Component {
-
   /**
    * Main object constructor
    * @param {* properties sent down from the parent element} props
@@ -37,6 +40,10 @@ class SignupForm extends Component {
     this.onChange = this.onChange.bind(this);
     // This line makes sure "this" does not refer to the event in onSubmit method
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  getChildContext() {
+    return { muiTheme: getMuiTheme() };
   }
 
   onChange(e) {
@@ -72,14 +79,17 @@ class SignupForm extends Component {
       };
 
       this.props.userSignupRequest(signupObject).then(
+        // signup request succeeded, load Redux store with user profile and redirect to /dashboard
         () => {
+          this.props.dispatch(fetchUserProfile());
+          this.props.dispatch(setUserIsLoggedIn(true));
           this.context.router.push('/dashboard');
         },
         (err) => {
           this.setState({ isLoading: false, errors: err.response.data.error });
         });
     } else {
-      this.setState({ errors: errors });
+      this.setState({ errors });
     }
   }
 
@@ -143,8 +153,8 @@ class SignupForm extends Component {
       <div className={styles.loginContainer}>
         <Card>
           {/* Card Title */}
-          {this.state.isLoading ? <div><CardTitle className={styles.title} title="Creating your account." /></div> : null} 
-          {!this.state.isLoading ? <div><CardTitle className={styles.title} title="Create your account." /></div> : null} 
+          {this.state.isLoading ? <div><CardTitle className={styles.title} title="Creating your account." /></div> : null}
+          {!this.state.isLoading ? <div><CardTitle className={styles.title} title="Create your account." /></div> : null}
 
           {/* Card Text */}
           <CardText className={styles.content}>
@@ -175,10 +185,15 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
+  dispatch: React.PropTypes.func.isRequired,
 };
 
 SignupForm.contextTypes = {
   router: React.PropTypes.object.isRequired,
 };
 
-export default SignupForm;
+SignupForm.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
+};
+
+export default connect()(SignupForm);
