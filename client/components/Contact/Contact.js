@@ -13,6 +13,7 @@ export class Contact extends Component {
   getChildContext() {
     return { muiTheme: getMuiTheme() };
   }
+
   render() {
     return (
       <div>
