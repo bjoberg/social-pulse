@@ -1,24 +1,29 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 // component implements Facebook Login for the Web with the JavaScript SDK:
 // https://developers.facebook.com/docs/facebook-login/web
 export class FacebookLogin extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      token: '',
+    };
 
-    this.testApi = this.testApi.bind(this);
+    this.getLongTermToken = this.getLongTermToken.bind(this);
     this.statusChangeCallback = this.statusChangeCallback.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.checkLoginState = this.checkLoginState.bind(this);
   }
+
   componentDidMount() {
     /* eslint-disable */
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '1391085770956859',
+        appId      : '289287891496885',
         cookie     : true,   // enable cookies to allow the server to access the session
         xfbml      : true,   // parse social plugins on this page
-        version    : 'v2.1', // use version 2.1
+        version    : 'v2.8', // use version 2.1
       });
     /* eslint-enable */
 
@@ -49,31 +54,30 @@ export class FacebookLogin extends Component {
     }(document, 'script', 'facebook-jssdk'));
     /* eslint-enable */
   }
-
-  // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
-  testApi() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) { // eslint-disable-line
-      console.log('Successful login for: ' + response.name);
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
-    });
+  getLongTermToken() {
+    axios.put('/api/v1/fbOauthCreate', { token: this.state.token });
   }
+
+  // testApi() {
+  //   console.log('Welcome!  Fetching your information.... ');
+  //   FB.api('/me', function(response) { // eslint-disable-line
+  //     console.log('Successful login for: ' + response.name);
+  //     document.getElementById('status').innerHTML =
+  //       'Thanks for logging in, ' + response.name + '!';
+  //   });
+  // }
 
   // This is called with the results from from FB.getLoginStatus().
   statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
-      console.log('ACCESS TOKEN: ');
       console.log(response.authResponse.accessToken);
-      this.testApi();
+      this.setState({ token: response.authResponse.accessToken });
+      this.getLongTermToken();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -96,7 +100,7 @@ export class FacebookLogin extends Component {
   }
 
   handleClick() {
-    FB.login(this.checkLoginState()); // eslint-disable-line
+    FB.login(this.checkLoginState(), { scope: 'publish_actions', return_scopes: true });  // eslint-disable-line
   }
 
   render() {
