@@ -1,4 +1,3 @@
-// External modules
 import test from 'ava';
 import mongoose from 'mongoose';
 import request from 'supertest';
@@ -25,7 +24,6 @@ const users = [
   new User({ username: 'test.user3', first_name: 'test3', last_name: 'user3', password: user2password, email: 'test.user.3@gmail.com' }),
 ];
 
-// MongoDb instance.
 const mongooseInstance = new mongoose.Mongoose;
 
 test.before('Connect to the database && add the test users.', async () => {
@@ -162,7 +160,6 @@ test('Test getUsers method', async t => {
   // 1. Setup
   t.plan(2);
 
-  // 2. Request
   const res = await request(app)
     .get('/api/v1/users')
     .set('Accept', 'application/json');

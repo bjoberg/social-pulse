@@ -1,21 +1,19 @@
-@import './../../../theme/colors.css';
+
 
 .title {
   padding-top: 20px !important;
   padding-bottom: 0px !important;
-  text-align: center;
-}
-
-.cardFooter {
-  text-align: center;
-  padding-top: 30px;
-  padding-bottom: 20px;
+  text-align: left;
 }
 
 .placeholder {
   height: 40px;
 }
 
+.normtext {
+  text-align: left;
+  font-size: 180%;
+}
 /* Small Devices, Tablets */
 @media only screen and (min-width : 340px) {
   .loginContainer {

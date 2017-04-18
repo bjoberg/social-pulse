@@ -2,46 +2,68 @@ import User from '../models/user';
 
 // ///////////////////////////////// POST Requests ///////////////////////////////////
 
+export function checkAuth(req, res, next) {
+  if (!req.session.userId) {
+    // Response
+    res.json({ status: 'Error.', isValid: false });
+
+    // New error
+    const err = new Error('Invalid session id.');
+    err.name = 'session';
+    err.status = 401;
+
+    // Send the error to the error handler
+    return next(err);
+  }
+  // Response
+  res.json({ status: 'Success.', isValid: true });
+
+  // Go to the next piece of middleware
+  return next();
+}
+
 export function login(req, res, next) {
   if (req.body.username && req.body.password) {
     User.authenticate(req.body.username, req.body.password, (error, user) => {
       // Check for errors
       if (error || !user) {
-        if (error.name === 'User not found') {
-          console.log(error.name);
-          const err = new Error('User not found.');
+        if (error.name === 'username') {
+          const err = new Error('Invalid username.');
+          err.name = 'username';
           err.status = 401;
           return next(err);
-        } else if (error.name === 'Invalid password') {
-          console.log(error.name);
+        } else if (error.name === 'password') {
           const err = new Error('Invalid password.');
+          err.name = 'password';
           err.status = 401;
           return next(err);
         }
-        console.log(error.name);
         const err = new Error('Invalid username or password.');
+        err.name = 'general';
         err.status = 401;
         return next(err);
       }
 
       // Respond successfully
-      console.log('Success.');
       req.session.userId = user._id;
-      res.json({ output: 'Hello.' });
+      res.json({ status: 'Success.', userId: user._id });
       return next();
     });
   } else {
     const err = new Error('Username and password are required.');
-    err.message = 'Username and password are required';
+    err.name = 'general';
     err.status = 401;
     next(err);
   }
 }
 
-export function signUp(req, res, next) {
-  console.log('sign_up');
-}
-
 export function logout(req, res, next) {
-  console.log('logout');
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        return next(err);
+      }
+      return res.redirect('/login');
+    });
+  }
 }

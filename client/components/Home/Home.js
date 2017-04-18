@@ -1,13 +1,41 @@
 import React from 'react';
-import { placeHolderText1, placeHolderText2 } from '../placeHolderText';
-export function Home() {
-  return (
-    <div>
-      <h1>Pulse</h1>
-      <p>{placeHolderText1}</p>
-      <p>{placeHolderText2}</p>
-    </div>
-  );
+import bg from './background.jpg';
+import styles from './Home.css';
+import FlatButton from 'material-ui/FlatButton';
+import { Link } from 'react-router';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+const background = {
+  width: '100%',
+  height: 475,
+  backgroundImage: 'url(' + bg + ')',
+  backgroundRepeat: 'no-repeat',
+  // backgroundPosition: 'center',
+};
+
+export class Home extends React.Component {
+  getChildContext() {
+    return { muiTheme: getMuiTheme() };
+  }
+
+  render() {
+    return (
+      <div style={background}>
+        <div className={styles.blocktext}>
+          <i className="material-icons" style={{ marginLeft: 7, fontSize: 70, color: 'white'}}>blur_on</i>
+          <span style={{ marginLeft: 20, fontSize: 70, color: 'white' }}>SOCIAL PULSE</span>
+          <div className={styles.blocktext}>
+            <p style={{ marginLeft: 200, color: 'white', fontSize: 20 }}>Share your life, easier</p>
+            <Link to="/signup"><FlatButton type="submit" backgroundColor="#ffffff" hoverColor="#81d4fa" style={{ marginLeft: 235, color: '#1E88E5' }} rippleColor="#ffffff" label="Get Started" /></Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
+
+Home.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
+};
 
 export default Home;

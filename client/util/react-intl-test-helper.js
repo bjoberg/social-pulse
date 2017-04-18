@@ -33,3 +33,4 @@ export const mountWithIntl = node => {
     childContextTypes: { intl: intlShape },
   });
 };
+

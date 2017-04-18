@@ -3,11 +3,11 @@
  */
 import { combineReducers } from 'redux';
 
- 
 // Import Reducers
-import userData from './reducers/user';
+import { userData, userIsLoggedIn } from './reducers/user';
 
 // Combine all reducers into one root reducer
 export default combineReducers({
+  userIsLoggedIn,
   userData,
 });

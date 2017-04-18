@@ -1,53 +1,172 @@
-import React from 'react';
+import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import Paper from 'material-ui/Paper';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
-import { placeHolderText1, placeHolderText2 } from '../placeHolderText';
+import FontIcon from 'material-ui/FontIcon';
+import { brettOberg, lucasStefanski, ivanPereda, kennyGao, oscarJuarez, eliWrenn, caseyJordan } from './biographies';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-export function Team() {
-  return (
-    <div>
-    <h1>Team</h1>
-    <h2>Brett Oberg</h2>
-    <td>
-    <Avatar
-        src="https://avatars0.githubusercontent.com/u/8784586?v=3&s=130"
-        size="200" 
-    />
-    </td>
-    <p>{placeHolderText1}</p>
-    <hr />
-    <h2>Lucas Stefanski</h2>
- 	<td>
-    <Avatar
-        src="https://avatars2.githubusercontent.com/u/15217450?v=3&s=130"
-        size="200" 
-    />
-    </td>
-    <p>{placeHolderText1}</p>
-    <hr />
-    <h2>Casey Jordan</h2>
-    <td>
-    <Avatar
-        src="https://avatars0.githubusercontent.com/u/25598640?v=3&s=130"
-        size="200" 
-    />
-    </td>
-    <p>{placeHolderText1}</p>
-    <hr />
-    <h2>Ivan Pereda-Zorrilla</h2>
-    <p>{placeHolderText1}</p>
-    <hr />
-    <h2>Eli Wrenn</h2>
-    <p>{placeHolderText1}</p>
-    <hr />
-    <h2>Oscar Juarez</h2>
-    <p>{placeHolderText1}</p>
-    <hr />
-    <h2>Kenny Gao</h2>
-    <p>{placeHolderText1}</p>
-    </div>
-  );
+// Importing styles for Team Page
+import styles from './Team.css';
+
+export class Team extends Component {
+  getChildContext() {
+    return { muiTheme: getMuiTheme() };
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>The Team</h1>
+        <h2>Meet the Social Pulse Developers.</h2>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Brett Oberg" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars0.githubusercontent.com/u/8784586?v=3&s=460'
+                size= '200'
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {brettOberg}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Lucas Stefanski" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars2.githubusercontent.com/u/15217450?v=3&s=460'
+                size='200'
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {lucasStefanski}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Ivan Pereda-Zorrilla" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars0.githubusercontent.com/u/13071149?v=3&s=460'
+                size='200'
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {ivanPereda}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Casey Jordan" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars0.githubusercontent.com/u/25598640?v=3&s=460'
+                size='200'
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {caseyJordan}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Oscar Juarez" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars1.githubusercontent.com/u/17089781?v=3&s=460'
+                size='200'
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {oscarJuarez}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Eli Wrenn" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars3.githubusercontent.com/u/25535984?v=3&s=460'
+                size="200"
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {eliWrenn}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+        <div className={styles.teamContainer}>
+          <Card className={styles.card}>
+            <div>
+              <CardTitle 
+                className={styles.name} 
+                title="Kenny Gao" 
+              />
+              <Avatar
+                className={styles.avatar}
+                src='https://avatars3.githubusercontent.com/u/11130849?v=3&s=460'
+                size='200'
+              />
+            </div>
+            <div>
+              <CardText className={styles.bio}>
+                {kennyGao}
+              </CardText>
+            </div>
+          </Card>
+        </div>
+
+      </div>
+    );
+  }
 }
+
+Team.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
+};
 
 export default Team;

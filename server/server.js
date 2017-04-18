@@ -1,9 +1,10 @@
-import Express from 'express';          // Server
-import compression from 'compression';  // Minification
-import mongoose from 'mongoose';        // Database
-import bodyParser from 'body-parser';   // Parses URL encoded text
-import path from 'path';                // Utilities for working with file and directory paths
-import session from 'express-session';  // Session monitoring (Cookies)
+import Express from 'express';                          // Server
+import compression from 'compression';                  // Minification
+import mongoose from 'mongoose';                        // Database
+import bodyParser from 'body-parser';                   // Parses URL encoded text
+import path from 'path';                                // Utilities for working with file and directory paths
+import session from 'express-session';                  // Session monitoring (Cookies)
+const MongoStore = require('connect-mongo')(session);   // For storing session id's in Mongo
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -16,7 +17,7 @@ const app = new Express();
 
 // User sessions for tracking logins
 app.use(session({
-  secret: 'we are social-pulse',
+  secret: 'social-pulse',
   resave: true,
   saveUninitialized: false,
 }));
@@ -41,6 +42,7 @@ import routes from '../client/routes';                        // Frontend routes
 import { fetchComponentData } from './util/fetchData';
 import users from './routes/user.routes';                     // Backend routes (user)
 import authentication from './routes/authentication.routes';  // Backend routes (authentication)
+import fbOauth from './routes/fbOauth.routes';                // Backend facebook auth routes
 import serverConfig from './config';                          // Backend server configuration
 
 // Set native promises as mongoose promise
@@ -54,6 +56,18 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   }
 });
 
+const db = mongoose.connection;
+
+// User sessions for tracking logins
+app.use(session({
+  secret: 'social-pulse',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db,
+  }),
+}));
+
 // Apply body Parser and server public assets and routes
 app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
@@ -61,6 +75,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api/v1', users);
 app.use('/api/v1', authentication);
+app.use('/api/v1', fbOauth);
 app.use(errorHandler);  // eslint-disable-line no-use-before-define
 
 // Render Initial HTML
@@ -84,6 +99,8 @@ const renderFullPage = (html, initialState) => {
         ${process.env.NODE_ENV === 'production' ? `<link rel='stylesheet' href='${assetsManifest['/app.css']}' />` : ''}
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'/>
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              rel="stylesheet">
         <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
       </head>
       <body>
@@ -145,13 +162,13 @@ app.use((req, res, next) => {
 
 // Error handler
 function errorHandler(err, req, res, next) {
-  console.log('In the error handler');
   res.status(err.status || 500);
   res.json({
     error: {
-      message: err.message,
+      [err.name]: err.message,
     },
   });
+  next();
 }
 
 // start app
