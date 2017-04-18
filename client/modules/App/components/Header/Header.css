@@ -42,9 +42,9 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 25px;
   font-weight: 300;
-  margin-right: 10px;
+  margin-right: 15px;
 } #logo a {
   color: white;
 }

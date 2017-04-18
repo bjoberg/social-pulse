@@ -1,10 +1,5 @@
 /*@import './../../../theme/colors.css';*/
 
-
-.name {
-  padding-top: 10px !important;
-  padding-bottom: 0px !important;
-}
 .cardHeader {
   font-size: 200px;
 }
@@ -13,29 +8,31 @@
   margin: 12;
 }
 
-.cardFooter {
-  text-align: center;
-  padding-top: 30px;
-  padding-bottom: 20px;
-}
-
-.placeholder {
-  height: 40px;
-}
-
 /* Small Devices, Tablets */
 @media only screen and (min-width : 340px) {
   .teamContainer {
     margin-top: 0%;
     margin-right: 10%;
-    margin-bottom: 0%;
+    margin-bottom: 5%;
     margin-left: 10%;
+  }
+  .card {
+    width: auto;
+    height: auto;
+    margin-top: 2%;
+    margin-right: 5%;
+    margin-bottom: 2%;
+    margin-left: 5%;
   }
   .avatar {
     margin-left: 10%;
     margin-right: 10%;
   }
-  .content {
+  .name {
+    padding-top: 10px !important;
+    padding-bottom: 0px !important;
+  }
+  .bio {
     margin-left: 5%;
     margin-right: 5%;
   }
@@ -44,16 +41,33 @@
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 768px) {
   .teamContainer {
-    margin-top: 0%;
-    margin-right: 0%;
-    margin-bottom: 0%;
-    margin-left: 0%;
+    display: inline-block;
+    /*margin-top: 0%;*/
+    margin-right: 5%;
+    /*margin-bottom: 0%;*/
+    margin-left: 5%;
+  }
+  .card {
+    width: auto;
+    height: auto;
+    margin-top: 2%;
+    margin-right: 5%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+  }
+  .name {
+    display: inline-flex;
+    margin-left: 10%;
+    padding-top: 10%;
+    /*margin-left: 60%;
+    margin-right: 60%;*/
   }
   .avatar {
-    margin-left: 10%;
-    margin-right: 10%;
+    display: inline-flex;
+    margin-left: 60%;
+    margin-right: 60%;
   }
-  .content {
+  .bio {
     margin-left: 10%;
     margin-right: 10%;
   }
@@ -62,17 +76,33 @@
 /* Large Devices, Wide Screens */
 @media only screen and (min-width : 1000px) {
   .teamContainer {
-    margin-top: 0%;
-    margin-right: 0%;
+    display: inline-block;
+    margin-right: 5%;
+    margin-left: 5%;
     margin-bottom: 0%;
-    margin-left: 0%;
-
+    margin-top: 0%;
+  }
+  .card {
+    width: auto;
+    height: auto;
+    margin-top: 2%;
+    margin-right: 5%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+  }
+  .name {
+    display: inline-flex;
+    margin-left: 10%;
+    padding-top: 10%;
+    /*margin-left: 60%;
+    margin-right: 60%;*/
   }
   .avatar {
-    margin-left: 10%;
-    margin-right: 10%;
+    display: inline-flex;
+    margin-left: 60%;
+    margin-right: 60%;
   }
-  .content {
+  .bio {
     margin-left: 10%;
     margin-right: 10%;
   }

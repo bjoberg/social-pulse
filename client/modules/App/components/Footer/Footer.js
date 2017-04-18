@@ -38,7 +38,7 @@ export function Footer() {
             <span className={styles.social}><i className="material-icons">computer</i></span>
           </div>
           <span id={styles.copyright}>
-            &copy; Pulse 2017 - All rights reserved
+            &copy; Social Pulse 2017 - All rights reserved
           </span>
         </div>
       </div>
