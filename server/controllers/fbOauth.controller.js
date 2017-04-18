@@ -43,9 +43,9 @@ export function putOauth(req, res, next) {
         return next(err);
       }
 
-      // Make fb api request 
-      const appId = '289287891496885';
-      const appSecret = '7e0e12c1935200d4884c9a353d9d4f6f';
+      // Make fb api request
+      const appId = (process.env.NODE_ENV === 'production') ? '242627689545301' : '289287891496885';
+      const appSecret = (process.env.NODE_ENV === 'production') ? '32574e9314aa8383a925ea1e93995f63' : '7e0e12c1935200d4884c9a353d9d4f6f';
       const appShortLivedToken = req.body.token;
 
       axios.get(`https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${appShortLivedToken}`).then(response => {
