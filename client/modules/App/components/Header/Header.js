@@ -1,11 +1,13 @@
-
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 // Material-ui
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+import Logout from './Logout';
 
 // Import Style
 import styles from './Header.css';
@@ -48,6 +50,7 @@ class Header extends Component {
     }
   }
   render() {
+    const { userIsLoggedIn } = this.props;
     return (
       <header>
         <div id={styles.container}>
@@ -82,7 +85,7 @@ class Header extends Component {
             <IconMenu
               iconButtonElement={
                 <IconButton>
-                  <i className={'material-icons ' + styles.menuicon}>menu</i>
+                  <i className={`material-icons ${styles.menuicon}`}>menu</i>
                 </IconButton>
               }
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
@@ -104,14 +107,22 @@ class Header extends Component {
               : null}
             </IconMenu>
           </div>
-          {this.checkCurrPage() === 'normal' ? <div id={styles.account}>
-            <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
-            <Link to="/login"><div className={styles.link}>Login</div></Link>
-          </div>
-          : null}
-          {this.checkCurrPage() === 'dashboard' ? <div id={styles.account}>
-            <Link to="/login"><div className={styles.link}>Logout</div></Link>
-          </div>
+          {(this.checkCurrPage() === 'normal') && !userIsLoggedIn ?
+            <div id={styles.account}>
+              <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
+              <Link to="/login"><div className={styles.link}>Login</div></Link>
+            </div>
+            : null}
+          {(this.checkCurrPage() === 'normal') && userIsLoggedIn ?
+            <div id={styles.account}>
+              <Link to="/dashboard"><div className={styles.link}>Dashboard</div></Link>
+              <Logout />
+            </div>
+            : null}
+          {this.checkCurrPage() === 'dashboard' ?
+            <div id={styles.account}>
+              <Logout />
+            </div>
           : null}
         </div>
       </header>
@@ -123,29 +134,4 @@ Header.childContextTypes = {
   muiTheme: React.PropTypes.object.isRequired,
 };
 
-export default Header;
-
- /*{this.checkCurrPage() === 'normal' ? <div id="normal-header">
-            <div id={styles.links}>
-              <Link to="/about"><div className={styles.link}>About</div></Link>
-              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
-              <Link to="/contact"><div className={styles.link}>Contact</div></Link>
-              <Link to="/team"><div className={styles.link}>Team</div></Link>
-            </div>
-            <div id={styles.account}>
-              <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
-              <Link to="/login"><div className={styles.link}>Login</div></Link>
-            </div>
-          </div>
-          : null}
-          {this.checkCurrPage() === 'dashboard' ? <div id="dashboard-header">
-            <div id={styles.links}>
-              <Link to="/dashboard"><div className={styles.link}>Home</div></Link>
-              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
-              <Link to="/account/profile"><div className={styles.link}>Account</div></Link>
-            </div>
-            <div id={styles.account}>
-              <Link to="/logout"><div className={styles.link}>Logout</div></Link>
-            </div>
-          </div>
-        : null}*/
+export default connect((state) => ({ userIsLoggedIn: state.userIsLoggedIn }))(Header);
