@@ -5,9 +5,7 @@ import DashboardApp from './DashboardApp';
 export function Dashboard() {
   return (
     <div>
-      <h1>Dashboard</h1>
       <DashboardApp />
-      {/* <DashboardProfile /> */}
     </div>
   );
 }

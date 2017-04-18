@@ -4,10 +4,21 @@ import User from '../models/user';
 
 export function checkAuth(req, res, next) {
   if (!req.session.userId) {
+    // Response
     res.json({ status: 'Error.', isValid: false });
-    return next();
+
+    // New error
+    const err = new Error('Invalid session id.');
+    err.name = 'session';
+    err.status = 401;
+
+    // Send the error to the error handler
+    return next(err);
   }
+  // Response
   res.json({ status: 'Success.', isValid: true });
+
+  // Go to the next piece of middleware
   return next();
 }
 
