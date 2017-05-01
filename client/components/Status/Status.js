@@ -1,11 +1,13 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 
+// Styles
 import styles from './Status.css';
+import mainStyles from '../../main.css';
 
 export function Status() {
   return (
-    <div>
+    <div className={mainStyles.container}>
     	<h1>System Status</h1>
         <hr />
     	<h2>Check the status of Social Pulse.</h2>

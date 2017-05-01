@@ -52,80 +52,79 @@ class Header extends Component {
   render() {
     const { userIsLoggedIn } = this.props;
     return (
-      <header>
-        <div id={styles.container}>
-          {/* Window great than 980px, render normal navigation */}
-          <div id={styles.navbar}>
-            <div id={styles.logo}>
-              <Link to="/">
-                <i className="material-icons">blur_on</i>
-              </Link>
-              <Link to="/">
-                <span style={{ marginLeft: 7 }}>SOCIAL PULSE</span>
-              </Link>
-            </div>
-            {this.checkCurrPage() === 'normal' ? <div id={styles.links}>
-              {/* TODO: replace navbar links with Material-ui buttons for that sweet sweet ripple effect */}
-              <Link to="/about"><div className={styles.link}>About</div></Link>
-              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
-              <Link to="/contact"><div className={styles.link}>Contact</div></Link>
-              <Link to="/team"><div className={styles.link}>Team</div></Link>
-            </div>
-            : null}
-            {this.checkCurrPage() === 'dashboard' ? <div id={styles.links}>
-              {/* TODO: replace navbar links with Material-ui buttons for that sweet sweet ripple effect */}
-              <Link to="/dashboard"><div className={styles.link}>Home</div></Link>
-              <Link to="/docs"><div className={styles.link}>Docs</div></Link>
-              <Link to="/account/profile"><div className={styles.link}>Account</div></Link>
-            </div>
-            : null}
-          </div>
-          {/* Window less than 980px, render collapsible navigation */}
-          <div id={styles.collapsible}>
-            <IconMenu
-              iconButtonElement={
-                <IconButton>
-                  <i className={`material-icons ${styles.menuicon}`}>menu</i>
-                </IconButton>
-              }
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            >
-              {this.checkCurrPage() === 'normal' ? <div>
-                <Link to="/"><MenuItem primaryText="Home" /></Link>
-                <Link to="/about"><MenuItem primaryText="About" /></Link>
-                <Link to="/docs"><MenuItem primaryText="Docs" /></Link>
-                <Link to="/contact"><MenuItem primaryText="Contact" /></Link>
-                <Link to="/team"><MenuItem primaryText="Team" /></Link>
+      <div>
+        <header>
+          <div id={styles.container}>
+            {/* Window great than 980px, render normal navigation */}
+            <div id={styles.navbar}>
+              <div id={styles.logo}>
+                <Link to="/">
+                  <i className="material-icons">blur_on</i>
+                </Link>
+                <Link to="/">
+                  <span style={{ marginLeft: 7 }}>SOCIAL PULSE</span>
+                </Link>
+              </div>
+              {this.checkCurrPage() === 'normal' ? <div id={styles.links}>
+                {/* TODO: replace navbar links with Material-ui buttons for that sweet sweet ripple effect */}
+                <Link to="/about"><div className={styles.link}>About</div></Link>
+                <Link to="/contact"><div className={styles.link}>Contact</div></Link>
+                <Link to="/team"><div className={styles.link}>Team</div></Link>
               </div>
               : null}
-              {this.checkCurrPage() === 'dashboard' ? <div>
-                <Link to="/dashboard"><MenuItem primaryText="Home" /></Link>
-                <Link to="/docs"><MenuItem primaryText="Docs" /></Link>
-                <Link to="/account/profile"><MenuItem primaryText="Account" /></Link>
+              {this.checkCurrPage() === 'dashboard' ? <div id={styles.links}>
+                {/* TODO: replace navbar links with Material-ui buttons for that sweet sweet ripple effect */}
+                <Link to="/dashboard"><div className={styles.link}>Home</div></Link>
+                <Link to="/account/profile"><div className={styles.link}>Account</div></Link>
               </div>
               : null}
-            </IconMenu>
+            </div>
+            {/* Window less than 980px, render collapsible navigation */}
+            <div id={styles.collapsible}>
+              <IconMenu
+                iconButtonElement={
+                  <IconButton>
+                    <i className={`material-icons ${styles.menuicon}`}>menu</i>
+                  </IconButton>
+                }
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+              >
+                {this.checkCurrPage() === 'normal' ? <div>
+                  <Link to="/"><MenuItem primaryText="Home" /></Link>
+                  <Link to="/about"><MenuItem primaryText="About" /></Link>
+                  <Link to="/contact"><MenuItem primaryText="Contact" /></Link>
+                  <Link to="/team"><MenuItem primaryText="Team" /></Link>
+                </div>
+                : null}
+                {this.checkCurrPage() === 'dashboard' ? <div>
+                  <Link to="/dashboard"><MenuItem primaryText="Home" /></Link>
+                  <Link to="/account/profile"><MenuItem primaryText="Account" /></Link>
+                </div>
+                : null}
+              </IconMenu>
+            </div>
+            {(this.checkCurrPage() === 'normal') && !userIsLoggedIn ?
+              <div id={styles.account}>
+                <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
+                <Link to="/login"><div className={styles.link}>Login</div></Link>
+              </div>
+              : null}
+            {(this.checkCurrPage() === 'normal') && userIsLoggedIn ?
+              <div id={styles.account}>
+                <Link to="/dashboard"><div className={styles.link}>Dashboard</div></Link>
+                <Logout />
+              </div>
+              : null}
+            {this.checkCurrPage() === 'dashboard' ?
+              <div id={styles.account}>
+                <Logout />
+              </div>
+            : null}
           </div>
-          {(this.checkCurrPage() === 'normal') && !userIsLoggedIn ?
-            <div id={styles.account}>
-              <Link to="/signup"><div className={styles.link}>Sign up</div></Link>
-              <Link to="/login"><div className={styles.link}>Login</div></Link>
-            </div>
-            : null}
-          {(this.checkCurrPage() === 'normal') && userIsLoggedIn ?
-            <div id={styles.account}>
-              <Link to="/dashboard"><div className={styles.link}>Dashboard</div></Link>
-              <Logout />
-            </div>
-            : null}
-          {this.checkCurrPage() === 'dashboard' ?
-            <div id={styles.account}>
-              <Logout />
-            </div>
-          : null}
-        </div>
-      </header>
+        </header>
+        <div className={styles.placeholder} />
+      </div>
     );
   }
 }

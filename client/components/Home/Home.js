@@ -1,17 +1,13 @@
+// React
 import React from 'react';
-import bg from './background.jpg';
-import styles from './Home.css';
+
+// Material
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-const background = {
-  width: '100%',
-  height: 475,
-  backgroundImage: 'url(' + bg + ')',
-  backgroundRepeat: 'no-repeat',
-  // backgroundPosition: 'center',
-};
+// Styles
+import styles from '../../main.css';
 
 export class Home extends React.Component {
   getChildContext() {
@@ -20,14 +16,12 @@ export class Home extends React.Component {
 
   render() {
     return (
-      <div style={background}>
-        <div className={styles.blocktext}>
-          <i className="material-icons" style={{ marginLeft: 7, fontSize: 70, color: 'white'}}>blur_on</i>
-          <span style={{ marginLeft: 20, fontSize: 70, color: 'white' }}>SOCIAL PULSE</span>
-          <div className={styles.blocktext}>
-            <p style={{ marginLeft: 200, color: 'white', fontSize: 20 }}>Share your life, easier</p>
-            <Link to="/signup"><FlatButton type="submit" backgroundColor="#ffffff" hoverColor="#81d4fa" style={{ marginLeft: 235, color: '#1E88E5' }} rippleColor="#ffffff" label="Get Started" /></Link>
-          </div>
+      <div>
+        <div className={`${styles.strip} ${styles.background_mountain} ${styles.text_center} ${styles.text_white}`}>
+          <h1 className={`${styles.title} ${styles.text_white}`}>Social Pulse</h1>
+          <p>Share your life, easier</p>
+          <br />
+          <Link to="/signup"><FlatButton backgroundColor="#ffffff" hoverColor="#ffffff" rippleColor="#ffffff" label="Get Started" /></Link>
         </div>
       </div>
     );

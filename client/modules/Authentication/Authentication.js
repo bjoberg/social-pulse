@@ -7,6 +7,9 @@ import SignupForm from './components/SignupForm';
 import LoginForm from './components/LoginForm';
 import { userSignupRequest, loginRequest } from '../../actions/authenticationActions';
 
+// Styles
+import styles from '../../main.css';
+
 class Authentication extends React.Component {
 
   /**
@@ -39,7 +42,7 @@ class Authentication extends React.Component {
     const { userSignupRequest } = this.props;
     const { loginRequest } = this.props;
     return (
-      <div>
+      <div className={styles.container}>
         {this.state.currPage === '/login' ? <LoginForm loginRequest={loginRequest} /> : null}
         {this.state.currPage === '/signup' ? <SignupForm userSignupRequest={userSignupRequest} /> : null}
       </div>

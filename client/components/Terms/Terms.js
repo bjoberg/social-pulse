@@ -1,13 +1,16 @@
 import React from 'react';
 // import { placeHolderText1, placeHolderText2 } from '../placeHolderText';
 
+// Styles
+import styles from '../../main.css';
+
 export function Terms() {
   const divStyle = {
     margin: 20,
   };
 
   return (
-    <div>
+    <div className={styles.contianer}>
       <h1>Terms</h1>
       <p>Last Updated: April 17, 2017</p>
       <p>These terms are subject to change; users will be notified if this occurs.</p>

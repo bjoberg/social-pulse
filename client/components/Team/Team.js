@@ -8,6 +8,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Importing styles for Team Page
 import styles from './Team.css';
+import mainStyles from '../../main.css';
 
 export class Team extends Component {
   getChildContext() {
@@ -16,7 +17,7 @@ export class Team extends Component {
 
   render() {
     return (
-      <div>
+      <div className={mainStyles.container}>
         <h1>The Team</h1>
         <h2>Meet the Social Pulse Developers.</h2>
         <div className={styles.teamContainer}>
