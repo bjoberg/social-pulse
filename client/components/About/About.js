@@ -1,15 +1,24 @@
 import React from 'react';
-
+import { problem, solution, customer, testing, justification } from "./aboutText";
 export function About() {
   return (
     <div>
-      <h1>Social Pulse</h1>
-      <p>
-          We have created a platform for users to post pictures to multiple social media sites.
-          Suppose you have a picture that you want to share with your facebook or Flickr friends, 
-	   - well now you can at the click of a button.	  
-      </p>
-      <p>If you want to get started, just hit Sign Up and you will be on your way!</p>		  
+      <h1>About Social Pulse</h1>
+      <h2>The idea behind the project.</h2>
+      <br/>
+      <h3>Problem</h3>
+      <p> {problem} </p>
+      <h3>Solution</h3>
+      <p> {solution} </p>
+      <h3>Customer</h3>
+      <p> {customer} </p>
+      <h3>Testing</h3>
+      <p> {testing} </p>
+      <h3>Justification</h3>
+      <p> {justification} </p>
+      <br/>
+      <i>Social Pulse proposal provided by Brett Oberg </i>
+
     </div>
   );
 }

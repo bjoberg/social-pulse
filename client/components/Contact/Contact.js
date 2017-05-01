@@ -16,7 +16,6 @@ const buttonStyle = {
 export function Contact() {
   function createEmail()
   {
-      console.log("sending email?");
       var email = "jsp506@outlook.com";
       var subject = document.getElementById("Subject").value;
       var msg = document.getElementById("Message").value;
@@ -29,8 +28,8 @@ export function Contact() {
   return (
     <div>
       <h1>Contact Page</h1>
-      <p>To contact us, please fill out the following form and hit submit.
-      It will generate the email in your default email application.</p>		  
+      <h2>To contact us, use the following form below.</h2>	
+      <br/>	  
       <Paper zDepth={2}>
         <TextField hintText="Subject" id="Subject" style={style} underlineShow={false} />
         <Divider />
