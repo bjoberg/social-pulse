@@ -30,7 +30,12 @@ export function Contact() {
     <div>
       <h1>Contact Page</h1>
       <p>To contact us, please fill out the following form and hit submit.
-      It will generate the email in your default email application.</p>		  
+      It will generate the email in your default email application.
+      </p>
+      <p>
+          Note: if you don't have a default email application on your machine,
+	  or if the link looks broken, please contact jsp506@outlook.com with your issues.		
+      </p>		  
       <Paper zDepth={2}>
         <TextField hintText="Subject" id="Subject" style={style} underlineShow={false} />
         <Divider />
