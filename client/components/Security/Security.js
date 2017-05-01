@@ -1,12 +1,14 @@
 import React from 'react';
-import {placeHolderText1, placeHolderText2} from '../placeHolderText'
+import { SecurityDescription } from './SecurityDescription';
+// import {placeHolderText1, placeHolderText2} from '../placeHolderText'
 
 
 export function Security() {
   return (
     <div>
       <h1> Security </h1>
-      <p> {placeHolderText1} </p>
+      <br/>
+      <p> { SecurityDescription } </p>
     </div>
   );
 }

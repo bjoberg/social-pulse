@@ -16,7 +16,6 @@ const buttonStyle = {
 export function Contact() {
   function createEmail()
   {
-      console.log("sending email?");
       var email = "jsp506@outlook.com";
       var subject = document.getElementById("Subject").value;
       var msg = document.getElementById("Message").value;
