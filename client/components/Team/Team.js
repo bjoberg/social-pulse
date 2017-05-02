@@ -21,8 +21,8 @@ export class Team extends Component {
         <h1>The Team</h1>
         <h2>Meet the Social Pulse Developers.</h2>
         <div className={styles.teamContainer}>
-          <Card className={styles.card}>
-            <div>
+          <Card>
+            <div className={styles.card}>
               <CardTitle 
                 className={styles.name} 
                 title="Brett Oberg" 
@@ -32,8 +32,6 @@ export class Team extends Component {
                 src='https://avatars0.githubusercontent.com/u/8784586?v=3&s=460'
                 size= '200'
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {brettOberg}
               </CardText>
@@ -42,18 +40,16 @@ export class Team extends Component {
         </div>
         <div className={styles.teamContainer}>
           <Card className={styles.card}>
-            <div>
-              <CardTitle 
-                className={styles.name} 
-                title="Lucas Stefanski" 
+            <div className={styles.card}>
+              <CardTitle
+                className={styles.name}
+                title="Lucas Stefanski"
               />
               <Avatar
                 className={styles.avatar}
                 src='https://avatars2.githubusercontent.com/u/15217450?v=3&s=460'
                 size='200'
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {lucasStefanski}
               </CardText>
@@ -62,18 +58,16 @@ export class Team extends Component {
         </div>
         <div className={styles.teamContainer}>
           <Card className={styles.card}>
-            <div>
-              <CardTitle 
-                className={styles.name} 
-                title="Ivan Pereda-Zorrilla" 
+            <div className={styles.card}>
+              <CardTitle
+                className={styles.name}
+                title="Ivan Pereda-Zorrilla"
               />
               <Avatar
                 className={styles.avatar}
                 src='https://avatars0.githubusercontent.com/u/13071149?v=3&s=460'
                 size='200'
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {ivanPereda}
               </CardText>
@@ -82,18 +76,16 @@ export class Team extends Component {
         </div>
         <div className={styles.teamContainer}>
           <Card className={styles.card}>
-            <div>
-              <CardTitle 
-                className={styles.name} 
-                title="Casey Jordan" 
+            <div className={styles.card}>
+              <CardTitle
+                className={styles.name}
+                title="Casey Jordan"
               />
               <Avatar
                 className={styles.avatar}
                 src='https://avatars0.githubusercontent.com/u/25598640?v=3&s=460'
                 size='200'
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {caseyJordan}
               </CardText>
@@ -102,18 +94,16 @@ export class Team extends Component {
         </div>
         <div className={styles.teamContainer}>
           <Card className={styles.card}>
-            <div>
-              <CardTitle 
-                className={styles.name} 
-                title="Oscar Juarez" 
+            <div className={styles.card}>
+              <CardTitle
+                className={styles.name}
+                title="Oscar Juarez"
               />
               <Avatar
                 className={styles.avatar}
                 src='https://avatars1.githubusercontent.com/u/17089781?v=3&s=460'
                 size='200'
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {oscarJuarez}
               </CardText>
@@ -122,18 +112,16 @@ export class Team extends Component {
         </div>
         <div className={styles.teamContainer}>
           <Card className={styles.card}>
-            <div>
-              <CardTitle 
-                className={styles.name} 
-                title="Eli Wrenn" 
+            <div className={styles.card}>
+              <CardTitle
+                className={styles.name}
+                title="Eli Wrenn"
               />
               <Avatar
                 className={styles.avatar}
                 src='https://avatars3.githubusercontent.com/u/25535984?v=3&s=460'
                 size="200"
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {eliWrenn}
               </CardText>
@@ -142,25 +130,22 @@ export class Team extends Component {
         </div>
         <div className={styles.teamContainer}>
           <Card className={styles.card}>
-            <div>
-              <CardTitle 
-                className={styles.name} 
-                title="Kenny Gao" 
+            <div className={styles.card}>
+              <CardTitle
+                className={styles.name}
+                title="Kenny Gao"
               />
               <Avatar
                 className={styles.avatar}
                 src='https://avatars3.githubusercontent.com/u/11130849?v=3&s=460'
                 size='200'
               />
-            </div>
-            <div>
               <CardText className={styles.bio}>
                 {kennyGao}
               </CardText>
             </div>
           </Card>
         </div>
-
       </div>
     );
   }

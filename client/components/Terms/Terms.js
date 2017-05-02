@@ -10,7 +10,7 @@ export function Terms() {
   };
 
   return (
-    <div className={styles.contianer}>
+    <div className={styles.container}>
       <h1>Terms</h1>
       <p>Last Updated: April 17, 2017</p>
       <p>These terms are subject to change; users will be notified if this occurs.</p>

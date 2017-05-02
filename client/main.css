@@ -25,15 +25,16 @@ body {
 
 /* *************** Strips *************** */
 .strip {
-  width: '100%';
-  min-height: 475px;
+  width: 100%;
+  min-height: calc(100vh - 150px);
   padding: 5%;
 }
 
 /* *************** Images *************** */
 .background_mountain {
   background-image: url("./images/mountains.jpg") !important;
-  background-repeat: 'no-repeat';
+  background-repeat: no-repeat;
+  background-size: cover;
  }
 
 /* *************** Fonts *************** */
@@ -42,14 +43,21 @@ body {
 }
 
 h1 {
-  color: #000000;
+  color: #424242;
+  font-weight: 400;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #424242;
   font-weight: 400;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
 h3 {
-  color: #000000;
+  color: #424242;
   font-weight: 300;
   margin-top: 10px;
   margin-bottom: 10px;

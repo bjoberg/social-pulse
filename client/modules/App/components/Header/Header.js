@@ -62,7 +62,7 @@ class Header extends Component {
                   <i className="material-icons">blur_on</i>
                 </Link>
                 <Link to="/">
-                  <span style={{ marginLeft: 7 }}>SOCIAL PULSE</span>
+                  <span style={{ marginLeft: 7, position: 'relative', bottom: 2 }}>SOCIAL PULSE</span>
                 </Link>
               </div>
               {this.checkCurrPage() === 'normal' ? <div id={styles.links}>

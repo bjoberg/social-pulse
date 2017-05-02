@@ -8,7 +8,6 @@ export function About() {
     <div className={styles.container}>
       <h1>About Social Pulse</h1>
       <h2>The idea behind the project.</h2>
-      <br/>
       <h3>Problem</h3>
       <p> {problem} </p>
       <h3>Solution</h3>
